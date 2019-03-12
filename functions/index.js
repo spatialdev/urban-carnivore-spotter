@@ -3,53 +3,68 @@ const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
 admin.initializeApp(functions.config().firebase);
-// const database = admin.database().ref('/reports');
 const database = admin.firestore();
 
-// exports.addReport = functions.https.onRequest((req, res) => {
-//   return cors(req, res, () => {
-//     if (req.method !== 'POST') {
-//       return res.status(401).json({
-//         message: 'Not allowed'
-//       });
-//     }
+exports.addReport = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => {
+    if (req.method !== 'POST') {
+      return res.status(401).json({
+        message: 'Not allowed'
+      });
+    }
 
-//     const report = req.body;
+    const report = req.body;
 
-//     database.push(report);
-//     let reports = [];
+    database.collection('reports').add(report)
+    .then(ref => {
+      return res.status(200).send('Success!');  
+    })
+    .catch(error => {
+      return res.status(500).send('Error :(');
+    });
+  });
+});
 
-//     return database.on('value', snapshot => {
-//       snapshot.forEach(report => {
-//         reports.push(report);
-//       });
-//       res.status(200).json(reports);
-//     }, (error) => {
-//       res.status(error.code).json({
-//         message: `Something went wrong. ${error.message}`
-//       });
-//     });
-//   });
-// });
+/**
+ * Internal helper method to build queries database queries given some parameters.
+ * Currently accepts species, neighborhood, season, year, and time_of_day as fields
+ * that are acceptable to search. Always filters by at least one week old and 
+ * species_confidence == high.
+ */
+buildQuery = (queryParams, collection) => {
+  // always filter by confidence and time_submitted
+  let week_ago = moment().subtract(1, 'week').toDate();
+  let initialQuery = collection
+    .where('species_confidence', '==', 'high')
+    .where('time_submitted', '<=', week_ago);
+  // This is a little ugly -- open to suggestions on how to parse these in!
+  if (queryParams.species) {
+    initialQuery = initialQuery.where('species', '==', queryParams.species);
+  }
+  if (queryParams.neighborhood) {
+    initialQuery = initialQuery.where('neighborhood', '==', queryParams.neighborhood);
+  }
+  if (queryParams.season) {
+    initialQuery = initialQuery.where('season', '==', queryParams.season);
+  }
+  if (queryParams.year) {
+    initialQuery = initialQuery.where('year', '==', queryParams.year);
+  }
+  if (queryParams.timeOfDay) {
+    initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
+  }
+  return initialQuery;
+}
 
 exports.getReports = functions.https.onRequest((req, res) => {
-  console.log('got request')
   return cors(req, res, () => {
-    console.log('inside cors');
     if (req.method !== 'GET') {
       return res.status(404).json({
         message: `Not Allowed`
       });
     }
-    console.log('allowed method');
     let reports = database.collection('reports');
-    let week_ago = moment().subtract(1, 'week').toDate();
-    console.log(`A week ago: ${week_ago}`);
-    return reports
-      // confidence of at least 70
-      .where('species_confidence', '==', 'high')
-      // submitted at least a week ago
-      .where('time_submitted', '<=', week_ago)
+    return buildQuery(req.query, reports)
       .get()
       .then(snapshot => {
         if (snapshot.empty) {
