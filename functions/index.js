@@ -20,7 +20,7 @@ exports.addReport = functions.https.onRequest((req, res) => {
       return res.status(200).send('Success!');  
     })
     .catch(error => {
-      return res.status(500).send('Error :(');
+      return res.status(500).send(`Error adding document: ${error}`);
     });
   });
 });
@@ -28,16 +28,13 @@ exports.addReport = functions.https.onRequest((req, res) => {
 /**
  * Internal helper method to build queries database queries given some parameters.
  * Currently accepts species, neighborhood, season, year, and time_of_day as fields
- * that are acceptable to search. Always filters by at least one week old and 
- * species_confidence == high.
+ * that are acceptable to search. Always filters by at least one week old.
  */
 buildQuery = (queryParams, collection) => {
-  // always filter by confidence and time_submitted
+  // always filter by time_submitted
   let week_ago = moment().subtract(1, 'week').toDate();
   let initialQuery = collection
-    .where('species_confidence', '==', 'high')
     .where('time_submitted', '<=', week_ago);
-  // This is a little ugly -- open to suggestions on how to parse these in!
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
