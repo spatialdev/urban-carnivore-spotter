@@ -26,7 +26,7 @@ exports.addReport = functions.https.onRequest((req, res) => {
 });
 
 /**
- * Internal helper method to build queries database queries given some parameters.
+ * Internal helper method to build database queries given some parameters.
  * Currently accepts species, neighborhood, season, year, and time_of_day as fields
  * that are acceptable to search. Always filters by at least one week old.
  */
