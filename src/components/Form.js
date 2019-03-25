@@ -12,7 +12,7 @@ import TextField from '@material-ui/core/TextField';
 const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 120,
+    minWidth: 200,
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
@@ -40,43 +40,44 @@ class Form extends Component {
     const { classes } = this.props;
     return (
       <form className="formWizardBody" autoComplete="off">
-        <div>
-          <h4>Which animal did you see?</h4>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="species">Species</InputLabel>
-            <Select
-              value={this.state.species}
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'species',
-                id: 'species',
-              }}
-            >
-              {species.map((type, idx) => <MenuItem key={idx} value={type}>{type}</MenuItem>)}
-            </Select>
-          </FormControl>
-        </div>
-        <div>
+        {/*<div>*/}
+          {/*<h4>Which animal did you see?</h4>*/}
+          {/*<FormControl className={classes.formControl}>*/}
+            {/*<TextField*/}
+              {/*value={this.state.species}*/}
+              {/*select*/}
+              {/*variant="outlined"*/}
+              {/*onChange={this.handleChange}x*/}
+              {/*inputProps={{*/}
+                {/*name: 'species',*/}
+                {/*id: 'species',*/}
+              {/*}}*/}
+            {/*>*/}
+              {/*{species.map((type, idx) => <MenuItem key={idx} value={type}>{type}</MenuItem>)}*/}
+            {/*</TextField>*/}
+          {/*</FormControl>*/}
+        {/*</div>*/}
+        {/*<div>*/}
 
-        </div>
-      <div>
-        <h4>When did you see the animal?</h4>
-        <TextField
-          value={this.state.timestamp}
-          id="datetime-local"
-          label="Observation date and time"
-          type="datetime-local"
-          className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            name: 'timestamp',
-            id: 'timestamp',
-          }}
-          onChange={this.handleChange}
-        />
-      </div>
+        {/*</div>*/}
+      {/*<div>*/}
+        {/*<h4>When did you see the animal?</h4>*/}
+        {/*<TextField*/}
+          {/*value={this.state.timestamp}*/}
+          {/*id="datetime-local"*/}
+          {/*variant="outlined"*/}
+          {/*type="datetime-local"*/}
+          {/*className={classes.textField}*/}
+          {/*InputLabelProps={{*/}
+            {/*shrink: true,*/}
+          {/*}}*/}
+          {/*inputProps={{*/}
+            {/*name: 'timestamp',*/}
+            {/*id: 'timestamp',*/}
+          {/*}}*/}
+          {/*onChange={this.handleChange}*/}
+        {/*/>*/}
+      {/*</div>*/}
 
       </form>);
   }

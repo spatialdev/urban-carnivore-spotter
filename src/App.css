@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 /*
@@ -7,9 +7,35 @@ Form Wizard Styles
  */
 
 .formWizard {
-  text-align: center;
+    text-align: center;
 }
 
 .formWizardBody {
-  background-color: #f1f1f1;
+    background-color: #f1f1f1;
+}
+
+/*
+Footer Styles
+ */
+
+.plusButton {
+    position: relative;
+    top: -40px;
+}
+
+.footerIconDiv {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 25px;
+}
+.footerIcons span {
+    display: block;
+}
+
+.footerIcons p {
+    text-transform: capitalize;
+    margin: 0;
+    color: gray;
 }
