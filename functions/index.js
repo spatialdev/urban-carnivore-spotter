@@ -70,8 +70,6 @@ buildQuery = (queryParams, collection) => {
     let longBound = (distance/radius/Math.cos(latitude*(Math.PI/180)));
     let maxLongitude = longitude + longBound;
     let minLongitude = longitude - longBound;
-    geolib.computeDestinationPoint()
-    geolib.computeDestinationPoint({lat: 51.3, lng: 7.45}, 5000, 180)
 
     let lesserGeoPoint = new GeoPoint(minLatitude,minLongitude);
     let greaterGeoPoint = new GeoPoint(maxLatitude,maxLongitude);
