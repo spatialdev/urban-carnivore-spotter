@@ -12,6 +12,25 @@ Form Wizard Styles
 
 .formWizardBody {
     background-color: #f1f1f1;
+    padding: 20px;
+    height: 100vh;
+}
+
+.formItem {
+    margin: 50px 0;
+}
+
+
+.paper {
+    height: 140px;
+    width: 120px;
+    border: dashed 2px gray;
+    padding-top: 20px;
+}
+.paper svg {
+    font-size: 40px;
+    display:block;
+    margin: 0 auto;
 }
 
 /*
@@ -30,6 +49,7 @@ Footer Styles
     left: 0;
     margin-bottom: 25px;
 }
+
 .footerIcons span {
     display: block;
 }
