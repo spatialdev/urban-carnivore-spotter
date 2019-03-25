@@ -1,9 +1,11 @@
+
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
+const GeoPoint = admin.firestore.GeoPoint;
 
 exports.addReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -31,10 +33,9 @@ exports.addReport = functions.https.onRequest((req, res) => {
  * that are acceptable to search. Always filters by at least one week old.
  */
 buildQuery = (queryParams, collection) => {
-  // always filter by time_submitted
-  let week_ago = moment().subtract(1, 'week').toDate();
+  let week_ago = moment().subtract(0, 'week').toDate();
   let initialQuery = collection
-    .where('time_submitted', '<=', week_ago);
+      //.where('time_submitted', '<=', week_ago);
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
@@ -50,8 +51,34 @@ buildQuery = (queryParams, collection) => {
   if (queryParams.timeOfDay) {
     initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
   }
+  if(queryParams.location) {
+    // Distance in km (1mile equivalent)
+    let distance = 1.60934;
+    // split into latitude and longitude
+    let [latitudeStr,longitudeStr] = queryParams.location.split(",");
+    let latitude = +latitudeStr;
+    let longitude = +longitudeStr;
+
+    // earth's radius in km = ~6371
+    let radius = 6371;
+
+    // latitude boundaries
+    let latBound = (distance/radius)*(180/Math.PI);
+    let maxLatitude = latitude + latBound;
+    let minLatitude = latitude - latBound;
+
+    // longitude boundaries (longitude gets smaller when latitude increases)
+    let longBound = (distance/radius/Math.cos(latitude*(Math.PI/180)));
+    let maxLongitude = longitude + longBound;
+    let minLongitude = longitude - longBound;
+
+    let lesserGeoPoint = new GeoPoint(minLatitude,minLongitude);
+    let greaterGeoPoint = new GeoPoint(maxLatitude,maxLongitude);
+    initialQuery = initialQuery.where('location','>=',lesserGeoPoint).
+    where('location','<=',greaterGeoPoint);
+  }
   return initialQuery;
-}
+};
 
 exports.getReports = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -60,14 +87,14 @@ exports.getReports = functions.https.onRequest((req, res) => {
         message: `Not Allowed`
       });
     }
-    let reports = database.collection('reports');
+    let reports = database.collection('reports')
     return buildQuery(req.query, reports)
       .get()
       .then(snapshot => {
         if (snapshot.empty) {
           res.status(200).send('No data!');
         } else {
-          let items = []
+          let items = [];
           snapshot.forEach(doc => {
             items.push({id: doc.id, data: doc.data()});
           });
