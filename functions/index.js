@@ -1,4 +1,3 @@
-
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
@@ -71,6 +70,8 @@ buildQuery = (queryParams, collection) => {
     let longBound = (distance/radius/Math.cos(latitude*(Math.PI/180)));
     let maxLongitude = longitude + longBound;
     let minLongitude = longitude - longBound;
+    geolib.computeDestinationPoint()
+    geolib.computeDestinationPoint({lat: 51.3, lng: 7.45}, 5000, 180)
 
     let lesserGeoPoint = new GeoPoint(minLatitude,minLongitude);
     let greaterGeoPoint = new GeoPoint(maxLatitude,maxLongitude);
@@ -87,14 +88,14 @@ exports.getReports = functions.https.onRequest((req, res) => {
         message: `Not Allowed`
       });
     }
-    let reports = database.collection('reports')
+    let reports = database.collection('reports');
     return buildQuery(req.query, reports)
       .get()
       .then(snapshot => {
         if (snapshot.empty) {
           res.status(200).send('No data!');
         } else {
-          let items = [];
+          let items = []
           snapshot.forEach(doc => {
             items.push({id: doc.id, data: doc.data()});
           });
