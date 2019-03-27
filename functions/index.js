@@ -78,8 +78,8 @@ exports.getReports = functions.https.onRequest((req, res) => {
             const locationData = data["location"];
             if(locationData!==undefined)
             {
-              let dataLatitude = data["location"]["_latitude"];
-              let dataLongitude = data["location"]["_longitude"];
+              let dataLatitude = locationData["_latitude"];
+              let dataLongitude = locationData["_longitude"];
               if(dataLatitude!==undefined && dataLongitude!==undefined)
               {
                 const to = turf.point([dataLatitude, dataLongitude]);
