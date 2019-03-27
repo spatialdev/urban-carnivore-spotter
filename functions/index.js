@@ -2,9 +2,9 @@ const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
+const turf = require('@turf/turf');
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
-const GeoPoint = admin.firestore.GeoPoint;
 
 exports.addReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -34,7 +34,7 @@ exports.addReport = functions.https.onRequest((req, res) => {
 buildQuery = (queryParams, collection) => {
   let week_ago = moment().subtract(0, 'week').toDate();
   let initialQuery = collection
-      //.where('time_submitted', '<=', week_ago);
+      .where('time_submitted', '<=', week_ago);
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
@@ -50,32 +50,6 @@ buildQuery = (queryParams, collection) => {
   if (queryParams.timeOfDay) {
     initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
   }
-  if(queryParams.location) {
-    // Distance in km (1mile equivalent)
-    let distance = 1.60934;
-    // split into latitude and longitude
-    let [latitudeStr,longitudeStr] = queryParams.location.split(",");
-    let latitude = +latitudeStr;
-    let longitude = +longitudeStr;
-
-    // earth's radius in km = ~6371
-    let radius = 6371;
-
-    // latitude boundaries
-    let latBound = (distance/radius)*(180/Math.PI);
-    let maxLatitude = latitude + latBound;
-    let minLatitude = latitude - latBound;
-
-    // longitude boundaries (longitude gets smaller when latitude increases)
-    let longBound = (distance/radius/Math.cos(latitude*(Math.PI/180)));
-    let maxLongitude = longitude + longBound;
-    let minLongitude = longitude - longBound;
-
-    let lesserGeoPoint = new GeoPoint(minLatitude,minLongitude);
-    let greaterGeoPoint = new GeoPoint(maxLatitude,maxLongitude);
-    initialQuery = initialQuery.where('location','>=',lesserGeoPoint).
-    where('location','<=',greaterGeoPoint);
-  }
   return initialQuery;
 };
 
@@ -90,15 +64,41 @@ exports.getReports = functions.https.onRequest((req, res) => {
     return buildQuery(req.query, reports)
       .get()
       .then(snapshot => {
+        let items = [];
         if (snapshot.empty) {
           res.status(200).send('No data!');
-        } else {
-          let items = []
+        } else if(req.query.location !== undefined) {
+          const [latitudeStr,longitudeStr] = req.query.location.split(",");
+          const queryLatitude = +latitudeStr;
+          const queryLongitude = +longitudeStr;
+          const from = turf.point([queryLatitude, queryLongitude]);
+          const options = {units: 'miles'};
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const locationData = data["location"];
+            if(locationData!==undefined)
+            {
+              let dataLatitude = data["location"]["_latitude"];
+              let dataLongitude = data["location"]["_longitude"];
+              if(dataLatitude!==undefined && dataLongitude!==undefined)
+              {
+                const to = turf.point([dataLatitude, dataLongitude]);
+                const distance = turf.distance(from, to, options);
+                // If distance is within 1 mile from the query lat long
+                if(distance<=1)
+                {
+                  items.push({id: doc.id, data: doc.data()});
+                }
+              }
+            }
+          });
+        }
+        else {
           snapshot.forEach(doc => {
             items.push({id: doc.id, data: doc.data()});
           });
-          res.status(200).send(items);
         }
+        items.length===0 ? res.status(200).send('No data!'): res.status(200).send(items);
       })
       .catch(err => {
         res.status(500).send(`Error getting documents: ${err}`);
