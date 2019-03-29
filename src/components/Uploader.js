@@ -34,7 +34,6 @@ class Uploader extends Component {
 
   render() {
     const { acceptType, reference } = this.props;
-    console.log(this.props);
 
     return (
       <div>
