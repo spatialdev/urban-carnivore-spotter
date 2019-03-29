@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import MediaUpload from './MediaUpload';
+import FormMap from './FormMap';
 
 
 const styles = theme => ({
@@ -15,13 +18,9 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     minWidth: 200,
   },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 250,
   },
 });
 
@@ -30,15 +29,29 @@ const species = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opos
 class Form extends Component {
   state = {
     species: '',
-    timestamp: '',
+    timestamp: new Date(),
+    mapLat: 47.608013,
+    mapLng: -122.335167,
   };
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  getMapCoordinates = dataFromMap => {
+    this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
+  };
+
+  handleTimestampChange = timestamp => {
+    this.setState({
+      timestamp: new Date(timestamp)
+    });
+  };
+
   render() {
     const { classes } = this.props;
+    const { mapLat, mapLng, timestamp } = this.state;
+
     return (
       <form className="formWizardBody" autoComplete="off">
         <div className="formItem">
@@ -48,6 +61,7 @@ class Form extends Component {
               value={this.state.species}
               select
               variant="outlined"
+              label="Species"
               onChange={this.handleChange}
               inputProps={{
                 name: 'species',
@@ -65,21 +79,25 @@ class Form extends Component {
         </div>
 
         <div className="formItem">
+          <h4>Identify the location of your sighting</h4>
+          <p> Drag the point on the map to mark your sighting</p>
+
+          <FormMap passMapCoordinates={this.getMapCoordinates}
+                   centerLng={mapLng} centerLat={mapLat}/>
+          {mapLat && mapLng ?
+            <p>{mapLat.toFixed(6)}, {mapLng.toFixed(6)}</p> : null}
+        </div>
+
+        <div className="formItem">
           <h4>When did you see the animal?</h4>
-          <TextField
-            value={this.state.timestamp}
-            id="datetime-local"
-            variant="outlined"
-            type="datetime-local"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            inputProps={{
-              name: 'timestamp',
-              id: 'timestamp',
-            }}
-            onChange={this.handleChange}
+          <DatePicker
+            selected={timestamp}
+            onChange={this.handleTimestampChange}
+            showTimeSelect
+            timeFormat="HH:mm"
+            timeIntervals={15}
+            dateFormat="MMMM d, yyyy h:mm aa"
+            timeCaption="time"
           />
         </div>
 

@@ -13,26 +13,37 @@ Form Wizard Styles
 .formWizardBody {
     background-color: #f1f1f1;
     padding: 20px;
-    height: 100vh;
+    height: 100%;
 }
 
 .formItem {
     margin: 50px 0;
 }
 
-
 .paper {
     height: 140px;
-    width: 120px;
+    width: 100px;
     border: dashed 2px gray;
     padding-top: 20px;
 }
+
 .paper svg {
     font-size: 40px;
-    display:block;
+    display: block;
     margin: 0 auto;
 }
 
+.formMap {
+    height: 300px;
+}
+
+.react-datepicker-wrapper > div > input {
+    height: 50px;
+    width: 200px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
 /*
 Footer Styles
  */
