@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import AddIcon from '@material-ui/icons/Add';
-import CameraAltIcon from '@material-ui/icons/CameraAlt'
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow'
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import { withStyles } from '@material-ui/core/styles';
+import Uploader from './Uploader';
 
 const styles = theme => ({
   root: {
@@ -34,25 +35,35 @@ class MediaUpload extends Component {
       <Grid container className={classes.root} spacing={16}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={16}>
-              <Grid key={0} item>
-                <Paper className="paper">
+            <Grid key={0} item>
+              <Paper className="paper">
+                <label style={{ cursor: 'pointer' }}>
                   <CameraAltIcon/>
                   <AddIcon/>
                   <p>Photos</p>
-                </Paper>
-              </Grid>
+                  <Uploader acceptType="images/*" reference="images"/>
+                </label>
+              </Paper>
+            </Grid>
             <Grid key={1} item>
               <Paper className="paper">
-                <PlayArrowIcon/>
-                <AddIcon/>
-                <p>Videos</p>
+                <label style={{ cursor: 'pointer' }}>
+                  <PlayArrowIcon/>
+                  <AddIcon/>
+                  <p>Videos</p>
+                  <Uploader acceptType="video/*" reference="videos"/>
+                </label>
               </Paper>
             </Grid>
             <Grid key={2} item>
               <Paper className="paper">
-                <VolumeUpIcon/>
-                <AddIcon/>
-                <p>Sound files</p>
+                <label style={{ cursor: 'pointer' }}>
+
+                  <VolumeUpIcon/>
+                  <AddIcon/>
+                  <p>Sound files</p>
+                  <Uploader acceptType="audio/*" reference="audio"/>
+                </label>
               </Paper>
             </Grid>
           </Grid>
