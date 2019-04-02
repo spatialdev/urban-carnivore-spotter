@@ -45,6 +45,21 @@ Form Wizard Styles
     cursor: pointer;
 }
 
+.react-datepicker__input-container > input {
+    border-radius: 5px;
+    border: 1px solid lightgray;
+}
+
+.react-datepicker__input-container > input:hover {
+    border: 1px solid black;
+}
+
+.childrenAgeText {
+    font-size: 14px;
+    margin-bottom: 0;
+    color: gray;
+}
+
 /*
 Footer Styles
  */

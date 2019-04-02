@@ -13,6 +13,12 @@ class Uploader extends Component {
     this.setState({ isUploading: true });
   };
 
+  handleChangeImage = e => {
+    const image = e.target.files[0];
+    if (image) {
+      this.setState({ image },);
+    }
+  };
 
   handleUploadError = error => {
     this.setState({ isUploading: false });
@@ -38,12 +44,12 @@ class Uploader extends Component {
     return (
       <div>
         <FileUploader
-          style={{display: 'none'}}
+          style={{ display: 'none' }}
           accept={acceptType}
           name="avatar"
           randomizeFilename
           storageRef={firebase.storage().ref(reference)}
-          onUploadStart={this.handleUploadStart}
+          onChange={this.handleChangeImage}
           onUploadError={this.handleUploadError}
           onUploadSuccess={this.handleUploadSuccess}
         />

@@ -57,7 +57,7 @@ class Footer extends Component {
           onOpen={this.toggleDrawer(!open)}
           className="formWizard"
         >
-          <div tabIndex={0} style={{ height: '100vh' }}>
+          <div tabIndex={0}>
             <div>
               <Fab color="primary" aria-label="Add" className={classes.fab}>
                 <ClearIcon onClick={this.toggleDrawer(!open)}/>

@@ -27,6 +27,10 @@ const styles = theme => ({
 
 class MediaUpload extends Component {
 
+  getMedia = dataFromChild => {
+
+  };
+
 
   render() {
     const { classes } = this.props;
@@ -58,11 +62,10 @@ class MediaUpload extends Component {
             <Grid key={2} item>
               <Paper className="paper">
                 <label style={{ cursor: 'pointer' }}>
-
                   <VolumeUpIcon/>
                   <AddIcon/>
                   <p>Sound files</p>
-                  <Uploader acceptType="audio/*" reference="audio"/>
+                  <Uploader acceptType="audio/*" reference="audio" getMedia={this.getMedia}/>
                 </label>
               </Paper>
             </Grid>

@@ -13,7 +13,6 @@ class FormMap extends Component {
     const lat = e.lngLat.lat;
 
     passMapCoordinates({ lng, lat });
-
   };
 
   render() {
