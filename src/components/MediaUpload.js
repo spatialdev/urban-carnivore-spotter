@@ -32,9 +32,13 @@ class MediaUpload extends Component {
     uploadMedia(dataFromChild, uploader);
   };
 
+  getUploaderPaths = paths => {
+    const { getMediaPaths } = this.props;
+    getMediaPaths(paths);
+  };
 
   render() {
-    const { classes, ref } = this.props;
+    const { classes } = this.props;
 
     return (
       <Grid container className={classes.root} spacing={16}>
@@ -46,7 +50,8 @@ class MediaUpload extends Component {
                   <CameraAltIcon/>
                   <AddIcon/>
                   <p>Photos</p>
-                  <Uploader acceptType="images/*" reference="images" getMedia={this.getMedia}/>
+                  <Uploader acceptType="images/*" reference="images" getMedia={this.getMedia}
+                            passPaths={this.getUploaderPaths}/>
                 </label>
               </Paper>
             </Grid>
@@ -56,7 +61,8 @@ class MediaUpload extends Component {
                   <PlayArrowIcon/>
                   <AddIcon/>
                   <p>Videos</p>
-                  <Uploader acceptType="video/*" reference="videos" getMedia={this.getMedia}/>
+                  <Uploader acceptType="video/*" reference="videos" getMedia={this.getMedia}
+                            passPaths={this.getUploaderPaths}/>
                 </label>
               </Paper>
             </Grid>
@@ -66,7 +72,8 @@ class MediaUpload extends Component {
                   <VolumeUpIcon/>
                   <AddIcon/>
                   <p>Sound files</p>
-                  <Uploader acceptType="audio/*" reference="audio" getMedia={this.getMedia}/>
+                  <Uploader acceptType="audio/*" reference="audio" getMedia={this.getMedia}
+                            passPaths={this.getUploaderPaths}/>
                 </label>
               </Paper>
             </Grid>

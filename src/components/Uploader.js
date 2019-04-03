@@ -5,6 +5,9 @@ import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
 
 class Uploader extends Component {
+  state = {
+    mediaPaths: [],
+  };
 
   handleChangeImage = e => {
     const { target: { files } } = e;
@@ -24,19 +27,21 @@ class Uploader extends Component {
     console.error(error);
   };
 
-  handleUploadSuccess = filename => {
-    const { reference } = this.props;
-
-    firebase
+  handleUploadSuccess = async filename => {
+    const { passPaths } = this.props;
+    const { mediaPaths } = this.state;
+    await firebase
       .storage()
-      .ref(reference)
+      .ref('images')
       .child(filename)
       .getDownloadURL()
-      .then(url => console.log(url));
+      .then(url => mediaPaths.push(url));
+
+    passPaths(mediaPaths);
+
   };
 
   render() {
-    console.log(this.fileUploader);
     const { acceptType, reference } = this.props;
 
     return (
@@ -44,7 +49,6 @@ class Uploader extends Component {
         <FileUploader
           style={{ display: 'none' }}
           accept={acceptType}
-          name="avatar"
           multiple
           randomizeFilename
           storageRef={firebase.storage().ref(reference)}
