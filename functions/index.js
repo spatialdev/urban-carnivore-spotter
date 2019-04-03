@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
+const turf = require('@turf/turf');
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
 
@@ -64,15 +65,37 @@ exports.getReports = functions.https.onRequest((req, res) => {
     return buildQuery(req.query, reports)
       .get()
       .then(snapshot => {
+        let items = [];
         if (snapshot.empty) {
           res.status(200).send('No data!');
+        } else if (req.query.location !== undefined) {
+          const [latitudeStr, longitudeStr] = req.query.location.split(',');
+          const queryLatitude = +latitudeStr;
+          const queryLongitude = +longitudeStr;
+          const from = turf.point([queryLatitude, queryLongitude]);
+          const options = { units: 'miles' };
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const locationData = data['location'];
+            if (locationData !== undefined) {
+              let dataLatitude = locationData['_latitude'];
+              let dataLongitude = locationData['_longitude'];
+              if (dataLatitude !== undefined && dataLongitude !== undefined) {
+                const to = turf.point([dataLatitude, dataLongitude]);
+                const distance = turf.distance(from, to, options);
+                // If distance is within 1 mile from the query lat long
+                if (distance <= 1) {
+                  items.push({ id: doc.id, data: doc.data() });
+                }
+              }
+            }
+          });
         } else {
-          let items = [];
           snapshot.forEach(doc => {
             items.push({ id: doc.id, data: doc.data() });
           });
-          res.status(200).send(items);
         }
+        items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
       })
       .catch(err => {
         res.status(500).send(`Error getting documents: ${err}`);
