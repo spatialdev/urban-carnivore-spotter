@@ -120,7 +120,7 @@ class Form extends Component {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict, conflictDesc,
-      contactName, contactEmail, contactPhone, generalComments, media
+      contactName, contactEmail, contactPhone, generalComments, mediaPaths
     } = this.state;
 
     return (
@@ -395,8 +395,9 @@ class Form extends Component {
         <div className="formItem">
           <h4>Upload pictures, videos or sound files</h4>
           <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
+          {mediaPaths.length > 0 ? <p>{mediaPaths.length} files uploaded</p> : null}
         </div>
-        <Button size="small" onClick={() => this.uploadMedia()}>Upload Media</Button>
+        <Button size="small"  color="secondary" variant="contained" onClick={() => this.uploadMedia()}>Upload</Button>
 
         {/*<div className="formItem">*/}
         {/*<h4>How many humans were in your group?</h4>*/}
