@@ -65,7 +65,7 @@ class Form extends Component {
 
   constructor(props) {
     super(props);
-    this.fileUploader = null;
+    this.fileUploader = React.createRef();
   }
 
   handleChange = event => {
@@ -78,7 +78,7 @@ class Form extends Component {
 
   handleSubmit = () => {
     const { history } = this.props;
-    const {media} = this.state;
+    const { media } = this.state;
     return axios.post(addReportUrl, { report: this.state })
       .then(response => {
         if (response.status === 200) {
@@ -94,12 +94,12 @@ class Form extends Component {
     });
   };
 
-  uploadMedia = dataFromChild => {
+  uploadMedia = (dataFromChild, uploader) => {
     this.setState({ media: dataFromChild });
+    this.fileUploader = uploader;
   };
 
   render() {
-    console.log(this.fileUploader);
     const {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
@@ -378,7 +378,7 @@ class Form extends Component {
 
         <div className="formItem">
           <h4>Upload pictures, videos or sound files</h4>
-          <MediaUpload uploadMedia={this.uploadMedia}/>
+          <MediaUpload uploadMedia={this.uploadMedia} ref={this.fileUploader}/>
         </div>
 
         <div className="formItem">

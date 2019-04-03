@@ -5,14 +5,10 @@ import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
 
 class Uploader extends Component {
-  state = {
-    paths: [],
-  };
 
   handleChangeImage = e => {
     const { target: { files } } = e;
     const { getMedia } = this.props;
-    const { paths } = this.state;
     const filesToStore = [];
 
     for (let key in files) {
@@ -20,7 +16,7 @@ class Uploader extends Component {
       filesToStore.push(file);
     }
 
-    getMedia(filesToStore, this.fileUploader, paths);
+    getMedia(filesToStore, this.fileUploader);
 
   };
 
@@ -30,17 +26,17 @@ class Uploader extends Component {
 
   handleUploadSuccess = filename => {
     const { reference } = this.props;
-    const { paths } = this.state;
 
     firebase
       .storage()
       .ref(reference)
       .child(filename)
       .getDownloadURL()
-      .then(url => paths.push(url));
+      .then(url => console.log(url));
   };
 
   render() {
+    console.log(this.fileUploader);
     const { acceptType, reference } = this.props;
 
     return (

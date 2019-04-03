@@ -27,14 +27,14 @@ const styles = theme => ({
 
 class MediaUpload extends Component {
 
-  getMedia = (dataFromChild, uploader, paths) => {
+  getMedia = (dataFromChild, uploader) => {
     const { uploadMedia } = this.props;
-    uploadMedia(dataFromChild, uploader, paths);
+    uploadMedia(dataFromChild, uploader);
   };
 
 
   render() {
-    const { classes } = this.props;
+    const { classes, ref } = this.props;
 
     return (
       <Grid container className={classes.root} spacing={16}>
