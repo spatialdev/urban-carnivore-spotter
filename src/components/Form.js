@@ -62,7 +62,8 @@ class Form extends Component {
     contactPhone: '',
     generalComments: '',
     media: null,
-    mediaPaths: null,
+    mediaPaths: [],
+    isUploading: false,
   };
 
   constructor(props) {
@@ -78,23 +79,20 @@ class Form extends Component {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
   };
 
-  handleSubmit = async () => {
-    const { media, mediaPaths } = this.state;
+  handleSubmit = () => {
 
-    await media.forEach(file => this.fileUploader.startUpload(file));
-
-    if (media && mediaPaths && media.length === mediaPaths.length) {
-      return axios.post(addReportUrl, this.state)
-        .then(response => {
-          if (response.status === 200) {
-            // history.push('/');
-          }
-        });
-    }
+    return axios.post(addReportUrl, this.state)
+      .then(response => {
+        if (response.status === 200) {
+          // history.push('/');
+        }
+      });
   };
+
 
   handleUploadSuccess = files => {
     this.setState({ mediaPaths: files });
+
   };
 
   handleTimestampChange = timestamp => {
@@ -103,17 +101,26 @@ class Form extends Component {
     });
   };
 
-  uploadMedia = (dataFromChild, uploader) => {
-    this.setState({ media: dataFromChild });
+  setMedia = (dataFromChild, uploader) => {
+    const { media } = this.state;
     this.fileUploader = uploader;
+    this.setState({ media: dataFromChild });
   };
+
+  uploadMedia = () => {
+    const {media} = this.state;
+    if (media) {
+      media.forEach(file => this.fileUploader.startUpload(file));
+    }
+  };
+
 
   render() {
     const {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict, conflictDesc,
-      contactName, contactEmail, contactPhone, generalComments
+      contactName, contactEmail, contactPhone, generalComments, media
     } = this.state;
 
     return (
@@ -387,8 +394,9 @@ class Form extends Component {
 
         <div className="formItem">
           <h4>Upload pictures, videos or sound files</h4>
-          <MediaUpload uploadMedia={this.uploadMedia} getMediaPaths={this.handleUploadSuccess}/>
+          <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
         </div>
+        <Button size="small" onClick={() => this.uploadMedia()}>Upload Media</Button>
 
         {/*<div className="formItem">*/}
         {/*<h4>How many humans were in your group?</h4>*/}
