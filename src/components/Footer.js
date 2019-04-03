@@ -38,6 +38,13 @@ class Footer extends Component {
     });
   };
 
+  handleDrawer = state => {
+    this.setState({
+      open: state
+    });
+  };
+
+
   render() {
     const { open } = this.state;
     const { classes } = this.props;
@@ -64,7 +71,7 @@ class Footer extends Component {
               </Fab>
               <h2>Report a carnivore sighting</h2>
             </div>
-            <Form/>
+            <Form handleDrawerState={this.handleDrawer} fromDrawer/>
           </div>
         </SwipeableDrawer>
         <Button className="footerIcons" style={{ float: 'right', marginRight: '50px' }}>
