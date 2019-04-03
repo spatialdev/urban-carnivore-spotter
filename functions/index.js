@@ -16,12 +16,12 @@ exports.addReport = functions.https.onRequest((req, res) => {
     const report = req.body;
 
     database.collection('reports').add(report)
-    .then(ref => {
-      return res.status(200).send('Success!');  
-    })
-    .catch(error => {
-      return res.status(500).send(`Error adding document: ${error}`);
-    });
+      .then(ref => {
+        return res.status(200).send('Success!');
+      })
+      .catch(error => {
+        return res.status(500).send(`Error adding document: ${error}`);
+      });
   });
 });
 
@@ -51,7 +51,7 @@ buildQuery = (queryParams, collection) => {
     initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
   }
   return initialQuery;
-}
+};
 
 exports.getReports = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -67,9 +67,9 @@ exports.getReports = functions.https.onRequest((req, res) => {
         if (snapshot.empty) {
           res.status(200).send('No data!');
         } else {
-          let items = []
+          let items = [];
           snapshot.forEach(doc => {
-            items.push({id: doc.id, data: doc.data()});
+            items.push({ id: doc.id, data: doc.data() });
           });
           res.status(200).send(items);
         }

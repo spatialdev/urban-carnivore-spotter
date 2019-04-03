@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
 import MapIcon from '@material-ui/icons/Map';
@@ -8,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { withStyles } from '@material-ui/core/styles';
+
 
 import Form from './Form';
 

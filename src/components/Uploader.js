@@ -6,36 +6,38 @@ import FileUploader from 'react-firebase-file-uploader';
 
 class Uploader extends Component {
   state = {
-    isUploading: false,
-  };
-
-  handleUploadStart = () => {
-    this.setState({ isUploading: true });
+    paths: [],
   };
 
   handleChangeImage = e => {
-    const image = e.target.files[0];
-    if (image) {
-      this.setState({ image },);
+    const { target: { files } } = e;
+    const { getMedia } = this.props;
+    const { paths } = this.state;
+    const filesToStore = [];
+
+    for (let key in files) {
+      let file = files[key];
+      filesToStore.push(file);
     }
+
+    getMedia(filesToStore, this.fileUploader, paths);
+
   };
 
   handleUploadError = error => {
-    this.setState({ isUploading: false });
     console.error(error);
   };
 
   handleUploadSuccess = filename => {
     const { reference } = this.props;
-
-    this.setState({ isUploading: false });
+    const { paths } = this.state;
 
     firebase
       .storage()
       .ref(reference)
       .child(filename)
       .getDownloadURL()
-      .then(url => console.log(url));
+      .then(url => paths.push(url));
   };
 
   render() {
@@ -47,11 +49,13 @@ class Uploader extends Component {
           style={{ display: 'none' }}
           accept={acceptType}
           name="avatar"
+          multiple
           randomizeFilename
           storageRef={firebase.storage().ref(reference)}
           onChange={this.handleChangeImage}
           onUploadError={this.handleUploadError}
           onUploadSuccess={this.handleUploadSuccess}
+          ref={instance => this.fileUploader = instance}
         />
       </div>
     );

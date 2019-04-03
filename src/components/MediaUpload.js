@@ -27,8 +27,9 @@ const styles = theme => ({
 
 class MediaUpload extends Component {
 
-  getMedia = dataFromChild => {
-
+  getMedia = (dataFromChild, uploader, paths) => {
+    const { uploadMedia } = this.props;
+    uploadMedia(dataFromChild, uploader, paths);
   };
 
 
@@ -45,7 +46,7 @@ class MediaUpload extends Component {
                   <CameraAltIcon/>
                   <AddIcon/>
                   <p>Photos</p>
-                  <Uploader acceptType="images/*" reference="images"/>
+                  <Uploader acceptType="images/*" reference="images" getMedia={this.getMedia}/>
                 </label>
               </Paper>
             </Grid>
@@ -55,7 +56,7 @@ class MediaUpload extends Component {
                   <PlayArrowIcon/>
                   <AddIcon/>
                   <p>Videos</p>
-                  <Uploader acceptType="video/*" reference="videos"/>
+                  <Uploader acceptType="video/*" reference="videos" getMedia={this.getMedia}/>
                 </label>
               </Paper>
             </Grid>

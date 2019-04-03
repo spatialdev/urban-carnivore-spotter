@@ -39,7 +39,7 @@ Form Wizard Styles
 
 .react-datepicker-wrapper > div > input {
     height: 50px;
-    width: 200px;
+    width: 300px;
     font-size: 16px;
     text-align: center;
     cursor: pointer;
@@ -59,6 +59,11 @@ Form Wizard Styles
     margin-bottom: 0;
     color: gray;
 }
+
+input {
+    background-color: transparent;
+}
+
 
 /*
 Footer Styles
