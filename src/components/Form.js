@@ -87,7 +87,6 @@ class Form extends Component {
         if (response.status === 200) {
           history.push('/');
           if (fromDrawer) {
-            console.log(fromDrawer);
             handleDrawerState(false);
           }
         }
