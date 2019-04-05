@@ -72,7 +72,7 @@ const ListCard = (props) => {
       />
       <CardContent className={classes.info}>
         <Typography variant={'h3'}>{data.species.toUpperCase()}</Typography>
-        <Typography variant={'subtitle1'}>{timeToString(data.time_seen ? data.time_seen : data.time_submitted)}</Typography>
+        <Typography variant={'subtitle1'}>{timeToString(data.time_seen)}</Typography>
         <Typography variant={'subtitle1'}>{locationToString(data.location)}</Typography>
       </CardContent>
     </CardContent>
