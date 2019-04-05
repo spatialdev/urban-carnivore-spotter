@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 /*
@@ -7,9 +7,87 @@ Form Wizard Styles
  */
 
 .formWizard {
-  text-align: center;
+    text-align: center;
 }
 
 .formWizardBody {
-  background-color: #f1f1f1;
+    background-color: #f1f1f1;
+    padding: 20px;
+    height: 100%;
+}
+
+.formItem {
+    margin: 50px 0;
+}
+
+.paper {
+    height: 140px;
+    width: 100px;
+    border: dashed 2px gray;
+    padding-top: 20px;
+}
+
+.paper svg {
+    font-size: 40px;
+    display: block;
+    margin: 0 auto;
+}
+
+.formMap {
+    height: 300px;
+}
+
+.react-datepicker-wrapper > div > input {
+    height: 50px;
+    width: 300px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.react-datepicker__input-container > input {
+    border-radius: 5px;
+    border: 1px solid lightgray;
+}
+
+.react-datepicker__input-container > input:hover {
+    border: 1px solid black;
+}
+
+.childrenAgeText {
+    font-size: 14px;
+    margin-bottom: 0;
+    color: gray;
+}
+
+input {
+    background-color: transparent;
+}
+
+
+/*
+Footer Styles
+ */
+
+.plusButton {
+    position: relative;
+    top: -40px;
+}
+
+.footerIconDiv {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 25px;
+}
+
+.footerIcons span {
+    display: block;
+}
+
+.footerIcons p {
+    text-transform: capitalize;
+    margin: 0;
+    color: gray;
 }

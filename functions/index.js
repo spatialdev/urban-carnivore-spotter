@@ -17,12 +17,12 @@ exports.addReport = functions.https.onRequest((req, res) => {
     const report = req.body;
 
     database.collection('reports').add(report)
-    .then(ref => {
-      return res.status(200).send('Success!');  
-    })
-    .catch(error => {
-      return res.status(500).send(`Error adding document: ${error}`);
-    });
+      .then(ref => {
+        return res.status(200).send('Success!');
+      })
+      .catch(error => {
+        return res.status(500).send(`Error adding document: ${error}`);
+      });
   });
 });
 
@@ -52,7 +52,7 @@ buildQuery = (queryParams, collection) => {
     initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
   }
   return initialQuery;
-}
+};
 
 exports.getReports = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -65,41 +65,37 @@ exports.getReports = functions.https.onRequest((req, res) => {
     return buildQuery(req.query, reports)
       .get()
       .then(snapshot => {
-        let items = []
+        let items = [];
         if (snapshot.empty) {
           res.status(200).send('No data!');
-        } else if(req.query.location !== undefined) {
-          const [latitudeStr,longitudeStr] = req.query.location.split(",");
+        } else if (req.query.location !== undefined) {
+          const [latitudeStr, longitudeStr] = req.query.location.split(',');
           const queryLatitude = +latitudeStr;
           const queryLongitude = +longitudeStr;
           const from = turf.point([queryLatitude, queryLongitude]);
-          const options = {units: 'miles'};
+          const options = { units: 'miles' };
           snapshot.forEach(doc => {
             const data = doc.data();
-            const locationData = data["location"];
-            if(locationData!==undefined)
-            {
-              let dataLatitude = locationData["_latitude"];
-              let dataLongitude = locationData["_longitude"];
-              if(dataLatitude!==undefined && dataLongitude!==undefined)
-              {
+            const locationData = data['location'];
+            if (locationData !== undefined) {
+              let dataLatitude = locationData['_latitude'];
+              let dataLongitude = locationData['_longitude'];
+              if (dataLatitude !== undefined && dataLongitude !== undefined) {
                 const to = turf.point([dataLatitude, dataLongitude]);
                 const distance = turf.distance(from, to, options);
                 // If distance is within 1 mile from the query lat long
-                if(distance<=1)
-                {
-                  items.push({id: doc.id, data: doc.data()});
+                if (distance <= 1) {
+                  items.push({ id: doc.id, data: doc.data() });
                 }
               }
             }
           });
-        }
-        else {
+        } else {
           snapshot.forEach(doc => {
-            items.push({id: doc.id, data: doc.data()});
+            items.push({ id: doc.id, data: doc.data() });
           });
         }
-        items.length===0 ? res.status(200).send('No data!'): res.status(200).send(items);
+        items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
       })
       .catch(err => {
         res.status(500).send(`Error getting documents: ${err}`);
