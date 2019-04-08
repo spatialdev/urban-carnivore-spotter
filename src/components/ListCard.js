@@ -40,7 +40,7 @@ const styles = theme => ({
  * Get a string for a timestamp in the format that Cloud Firestore sends us.
  * Time should be an object with _nanoseconds and _seconds as fields.
  */
-const timeToString = (time) => {
+const timeToString = time => {
   const nanosInMillis = time._nanoseconds / 1000000;
   const secondsInMillis = time._seconds * 1000;
   return new Date(nanosInMillis + secondsInMillis).toLocaleString();
@@ -53,7 +53,7 @@ const timeToString = (time) => {
  * TODO: once we handle neighborhoods properly, we should return a string representing
  * the neighborhood here.
  */
-const locationToString = (location) => {
+const locationToString = location => {
   if (!location) {
     return "No location provided";
   }
@@ -63,7 +63,7 @@ const locationToString = (location) => {
   return location.toString();
 }
 
-const ListCard = (props) => {
+const ListCard = props => {
   const { classes, data } = props;
   return <Card className={classes.card}>
     <CardContent className={classes.allContent}>

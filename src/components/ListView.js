@@ -12,10 +12,8 @@ const styles = theme => ({
 });
 
 class ListView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {reports: []}
-  }
+
+  state = {reports: []};
 
   componentDidMount() {
     fetch(process.env.REACT_APP_GET_REPORTS, {method: 'GET', headers: {'Content-Length': 0}})
@@ -27,11 +25,13 @@ class ListView extends React.Component {
   }
 
   render() {
+    const {reports} = this.state;
+    const {classes} = this.props;
     return (
-    <div className={this.props.classes.container}>
+    <div className={classes.container}>
     {
-      this.state.reports
-      ? this.state.reports.map((report) => <ListCard data={report.data} key={report.id}/>)
+      reports
+      ? reports.map((report) => <ListCard data={report.data} key={report.id}/>)
       : 'Loading...'
     }
     </div>
