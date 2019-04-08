@@ -3,6 +3,71 @@
 }
 
 /*
+Header
+ */
+.moreIcon > span > svg {
+    color: white;
+    left: 0;
+    top: 0;
+    height: 100%;
+}
+
+.topHeader {
+    display: table-cell;
+    vertical-align: middle;
+    width: 10%;
+}
+
+.drawerItem h3 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: #484848;
+    border-bottom: 1px solid #f4f4f4;
+    margin: 10px;
+    padding-bottom: 15px;
+    cursor: pointer;
+}
+
+.headerDiv {
+    background-color: dimgray;
+    position: relative;
+    height: 50px;
+    display: table;
+    width: 100%;
+    text-align: left;
+}
+
+.header {
+    color: #FFFFFF;
+    font-size: 16px;
+    margin: 0;
+    vertical-align: middle;
+    text-align: left;
+    display: table-cell;
+    cursor: pointer;
+}
+
+.filterButton > span {
+    text-transform: none;
+    display: table-cell;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.filterButton {
+    height: 70px;
+    float: right;
+    display: table-cell;
+}
+
+.toolbar {
+    display: table !important;
+    background-color: white;
+    height: 70px;
+}
+
+/*
 Form Wizard Styles
  */
 
