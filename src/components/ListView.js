@@ -1,25 +1,26 @@
 import React from 'react';
 import ListCard from '../components/ListCard';
 import { withStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   container: {
     backgroundColor: 'grey',
     display: 'flex',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   }
 });
 
 class ListView extends React.Component {
 
-  state = {reports: []};
+  state = {reports: null};
 
   componentDidMount() {
-    fetch(process.env.REACT_APP_GET_REPORTS, {method: 'GET', headers: {'Content-Length': 0}})
-      .then(response => response.json())
+    axios.get(process.env.REACT_APP_GET_REPORTS)
       .then(reports => {
-        this.setState({...this.state, reports})
+        this.setState({...this.state, reports: reports.data});
       })
       .catch(error => error);
   }
@@ -32,7 +33,7 @@ class ListView extends React.Component {
     {
       reports
       ? reports.map((report) => <ListCard data={report.data} key={report.id}/>)
-      : 'Loading...'
+      : <CircularProgress className={classes.progress}/>
     }
     </div>
   )}
