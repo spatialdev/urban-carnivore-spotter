@@ -68,6 +68,73 @@ Header
 }
 
 /*
+Desktop Header
+ */
+.categories {
+    display: inline-block;
+    text-transform: uppercase;
+    color: black;
+    cursor: pointer;
+    height: 37px !important;
+}
+
+.categories > h4 {
+    margin: 10px 5px;
+    font-size: 12px;
+}
+
+.nav {
+    display: inline-block;
+    float: right;
+}
+
+.appBar {
+    background-color: black !important;
+    display: table !important;
+}
+
+#explore {
+    background-color: #8acc25;
+}
+
+#report {
+    background-color: #ffd700;
+}
+
+#resources {
+    background-color: #39c9bb;
+}
+
+.headerTitle {
+    display: inline;
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    left: 27%;
+}
+
+@media (min-width: 960px) {
+    .headerTitle {
+        left: 24%;
+    }
+}
+
+@media (min-width: 1440px) {
+    .headerTitle {
+        left: 20%;
+    }
+}
+
+.logo {
+    height: 120px;
+    width: 120px;
+    background: url('assets/logo.png') no-repeat;
+    background-size: contain;
+    position: absolute;
+    left: 10%;
+}
+
+/*
 Form Wizard Styles
  */
 
