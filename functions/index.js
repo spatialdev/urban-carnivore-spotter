@@ -16,13 +16,14 @@ exports.addReport = functions.https.onRequest((req, res) => {
 
     const report = req.body;
 
-    database.collection('reports').add(report)
+    const result = database.collection('reports').add(report)
       .then(ref => {
         return res.status(200).send('Success!');
       })
       .catch(error => {
         return res.status(500).send(`Error adding document: ${error}`);
       });
+    return result;
   });
 });
 
@@ -70,8 +71,8 @@ exports.getReports = functions.https.onRequest((req, res) => {
           res.status(200).send('No data!');
         } else if (req.query.location !== undefined) {
           const [latitudeStr, longitudeStr] = req.query.location.split(',');
-          const queryLatitude = +latitudeStr;
-          const queryLongitude = +longitudeStr;
+          const queryLatitude = Number(latitudeStr);
+          const queryLongitude = Number(longitudeStr);
           const from = turf.point([queryLatitude, queryLongitude]);
           const options = { units: 'miles' };
           snapshot.forEach(doc => {
@@ -95,7 +96,7 @@ exports.getReports = functions.https.onRequest((req, res) => {
             items.push({ id: doc.id, data: doc.data() });
           });
         }
-        items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
+        return items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
       })
       .catch(err => {
         res.status(500).send(`Error getting documents: ${err}`);
