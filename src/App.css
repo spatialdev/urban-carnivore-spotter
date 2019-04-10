@@ -76,10 +76,11 @@ Footer Styles
 
 .footerIconDiv {
     width: 100%;
-    position: absolute;
+    position: sticky;
     bottom: 0;
     left: 0;
-    margin-bottom: 25px;
+    padding-bottom: 25px;
+    background-color: white;
 }
 
 .footerIcons span {
@@ -90,4 +91,10 @@ Footer Styles
     text-transform: capitalize;
     margin: 0;
     color: gray;
+}
+
+.App {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }

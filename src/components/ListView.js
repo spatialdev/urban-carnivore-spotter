@@ -10,6 +10,8 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
+    height: '100%',
+    justifyContent: 'center'
   }
 });
 
