@@ -5,7 +5,7 @@ import Map from './Map';
 import ListView from './ListView';
 
 const Main = () => (
-  <main>
+  <main className="Main">
     <Switch>
       <Route exact path="/" component={Map}/>
       <Route exact path="/reports/create" component={Form}/>

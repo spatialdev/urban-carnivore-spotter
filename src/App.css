@@ -5,6 +5,11 @@
     height: 100vh;
 }
 
+.Main {
+    background-color: lightgray;
+    padding-bottom: 120px;
+}
+
 /*
 Header
  */
@@ -56,18 +61,21 @@ Header
     display: table-cell;
     vertical-align: middle;
     font-weight: bold;
+    color: white;
 }
 
 .filterButton {
     height: 70px;
     float: right;
-    display: table-cell;
+}
+
+.filterButton > span {
+    margin-right: 15px;
 }
 
 .toolbar {
     display: table !important;
     background-color: white;
-    height: 70px;
 }
 
 /*
@@ -207,6 +215,55 @@ input {
     background-color: transparent;
 }
 
+/*
+List + Card
+ */
+
+.cardContainer {
+    margin-top: 30px;
+    margin-bottom: 80px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+}
+
+
+.card {
+    margin: 16px;
+    height: 150px;
+    width: 400px;
+}
+
+.cardPicture {
+    height: 150px;
+    width: 150px;
+}
+
+@media (min-width: 600px) {
+    .card {
+        width: 550px;
+    }
+}
+
+@media (min-width: 768px) {
+
+    .cardContainer {
+        margin-top: 80px;
+        margin-bottom: 0;
+    }
+
+    .card {
+        width: 650px;
+        height: 200px;
+    }
+
+    .cardPicture {
+        height: 200px;
+        width: 200px;
+    }
+}
 
 /*
 Footer Styles

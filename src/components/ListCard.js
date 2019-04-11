@@ -9,24 +9,11 @@ import { withStyles } from '@material-ui/core/styles';
 const DEFAULT_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/2010-brown-bear.jpg/200px-2010-brown-bear.jpg";
 
 const styles = theme => ({
-  picture: {
-    width: 150,
-    height: 150
-  },
   info: {
     flexDirection: 'column',
     flexGrow: 1,
     flex: 1,
     textAlign: 'left'
-  },
-  card: {
-    marginBottom: 16,
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: 16,
-    height: 150,
-    maxWidth: 500,
-    minWidth: 500
   },
   allContent: {
     display: 'flex',
@@ -56,22 +43,22 @@ const locationToString = location => {
     return "No location provided";
   }
   if (location._longitude && location._latitude) {
-    return `${location._longitude} ${location._longitude}`;
+    return `${location._longitude.toFixed(6)}, ${location._longitude.toFixed(6)}`;
   }
   return location.toString();
 }
 
 const ListCard = props => {
   const { classes, data } = props;
-  return <Card className={classes.card}>
+  return <Card className="card">
     <CardContent className={classes.allContent}>
-      <CardMedia className={classes.picture}
+      <CardMedia className="cardPicture"
                  image={data.image_url ? data.image_url : DEFAULT_IMAGE_URL}
       />
       <CardContent className={classes.info}>
         <Typography variant={'h3'}>{data.species.toUpperCase()}</Typography>
         <Typography variant={'subtitle1'}>{timeToString(data.time_seen)}</Typography>
-        <Typography variant={'subtitle1'}>{locationToString(data.location)}</Typography>
+        <Typography style={{ color: 'grey' }}>{locationToString(data.location)}</Typography>
       </CardContent>
     </CardContent>
   </Card>

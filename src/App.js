@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import DesktopHeader from "./components/DesktopHeader";
-import Header from './components/Header';
+import Header from './components/MobileHeader';
 import Footer from './components/Footer';
 import Main from './components/Main';
 
