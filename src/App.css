@@ -77,13 +77,14 @@ Desktop Header
     display: inline-block;
     text-transform: uppercase;
     color: black;
-    cursor: pointer;
     height: 37px !important;
+
 }
 
 .categories > h4 {
     margin: 10px 5px;
     font-size: 12px;
+    cursor: pointer;
 }
 
 .nav {
