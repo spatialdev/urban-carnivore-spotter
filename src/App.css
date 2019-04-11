@@ -4,6 +4,7 @@
     flex-direction: column;
     height: 100vh;
 }
+
 /*
 Header
  */
@@ -122,9 +123,9 @@ Desktop Header
 }
 
 @media (min-width: 1024px) {
-   .headerTitle {
-       left: 23%;
-   }
+    .headerTitle {
+        left: 23%;
+    }
 }
 
 @media (min-width: 1280px) {
@@ -141,7 +142,6 @@ Desktop Header
     position: absolute;
     left: 10%;
     box-shadow: 1px 1px 1px grey;
-
 }
 
 /*
