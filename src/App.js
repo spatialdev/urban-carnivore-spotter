@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import Main from './components/Main';
+import DesktopHeader from "./components/DesktopHeader";
+import Header from './components/MobileHeader';
 import Footer from './components/Footer';
+import Main from './components/Main';
 
 import './App.css';
 
@@ -21,13 +23,14 @@ class App extends Component {
   }
 
   checkIfMobile = () => {
-    this.setState({ isMobile: window.innerWidth < 600 });
+    this.setState({ isMobile: window.innerWidth < 768 });
   };
 
   render() {
     const { isMobile } = this.state;
     return (
       <div className="App">
+        {isMobile ? <Header/> : <DesktopHeader/>}
         <Main/>
         {isMobile ? <Footer/> : null}
       </div>

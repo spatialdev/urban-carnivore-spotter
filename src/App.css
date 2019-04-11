@@ -1,5 +1,156 @@
 .App {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.Main {
+    background-color: lightgray;
+    padding-bottom: 120px;
+}
+
+/*
+Header
+ */
+.moreIcon > span > svg {
+    color: white;
+    left: 0;
+    top: 0;
+    height: 100%;
+}
+
+.topHeader {
+    display: table-cell;
+    vertical-align: middle;
+    width: 10%;
+}
+
+.drawerItem h3 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: #484848;
+    border-bottom: 1px solid #f4f4f4;
+    margin: 10px;
+    padding-bottom: 15px;
+    cursor: pointer;
+}
+
+.headerDiv {
+    background-color: dimgray;
+    position: relative;
+    height: 50px;
+    display: table;
+    width: 100%;
+    text-align: left;
+}
+
+.header {
+    color: #FFFFFF;
+    font-size: 16px;
+    margin: 0;
+    vertical-align: middle;
+    text-align: left;
+    display: table-cell;
+    cursor: pointer;
+}
+
+.filterButton > span {
+    text-transform: none;
+    display: table-cell;
+    vertical-align: middle;
+    font-weight: bold;
+    color: white;
+}
+
+.filterButton {
+    height: 70px;
+    float: right;
+}
+
+.filterButton > span {
+    margin-right: 15px;
+}
+
+.toolbar {
+    display: table !important;
+    background-color: white;
+}
+
+/*
+Desktop Header
+ */
+.categories {
+    display: inline-block;
+    text-transform: uppercase;
+    color: black;
+    height: 37px !important;
+
+}
+
+.categories > h4 {
+    margin: 10px 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.nav {
+    display: inline-block;
+    float: right;
+}
+
+.appBar {
+    background-color: black !important;
+    display: table !important;
+}
+
+#explore {
+    background-color: #8acc25;
+}
+
+#report {
+    background-color: #ffd700;
+}
+
+#resources {
+    background-color: #39c9bb;
+}
+
+.headerTitle {
+    display: inline;
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    left: 27%;
+}
+
+@media (min-width: 768px) {
+    .headerTitle {
+        left: 26%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .headerTitle {
+        left: 23%;
+    }
+}
+
+@media (min-width: 1280px) {
+    .headerTitle {
+        left: 20%;
+    }
+}
+
+.logo {
+    height: 120px;
+    width: 120px;
+    background: url('assets/logo.png') no-repeat;
+    background-size: contain;
+    position: absolute;
+    left: 10%;
+    box-shadow: 1px 1px 1px grey;
 }
 
 /*
@@ -64,6 +215,55 @@ input {
     background-color: transparent;
 }
 
+/*
+List + Card
+ */
+
+.cardContainer {
+    margin-top: 30px;
+    margin-bottom: 80px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+}
+
+
+.card {
+    margin: 16px;
+    height: 150px;
+    width: 400px;
+}
+
+.cardPicture {
+    height: 150px;
+    width: 150px;
+}
+
+@media (min-width: 600px) {
+    .card {
+        width: 550px;
+    }
+}
+
+@media (min-width: 768px) {
+
+    .cardContainer {
+        margin-top: 80px;
+        margin-bottom: 0;
+    }
+
+    .card {
+        width: 650px;
+        height: 200px;
+    }
+
+    .cardPicture {
+        height: 200px;
+        width: 200px;
+    }
+}
 
 /*
 Footer Styles
@@ -71,15 +271,16 @@ Footer Styles
 
 .plusButton {
     position: relative;
-    top: -40px;
+    top: -50px;
 }
 
 .footerIconDiv {
     width: 100%;
-    position: absolute;
     bottom: 0;
     left: 0;
-    margin-bottom: 25px;
+    padding: 25px 0;
+    background-color: white;
+    position: sticky;
 }
 
 .footerIcons span {
@@ -91,3 +292,5 @@ Footer Styles
     margin: 0;
     color: gray;
 }
+
+
