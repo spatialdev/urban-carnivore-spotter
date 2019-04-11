@@ -8,6 +8,8 @@ import ListItem from '@material-ui/core/ListItem/ListItem';
 import Menu from '@material-ui/icons/Menu';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer/SwipeableDrawer';
 
+import FilterDrawer from './FilterDrawer';
+
 import '../App.css';
 
 class MobileHeader extends Component {
@@ -63,15 +65,9 @@ class MobileHeader extends Component {
               <div
                 tabIndex={0}
                 role="button"
-                onClick={this.toggleDrawer('right', false)}
-                onKeyDown={this.toggleDrawer('right', false)}
                 style={{ width: '250px' }}
               >
-                <List>
-                  <ListItem className="drawerItem"><h3>Item</h3></ListItem>
-                  <ListItem className="drawerItem"><h3>Item</h3></ListItem>
-                  <ListItem className="drawerItem"><h3>Item</h3></ListItem>
-                </List>
+                <FilterDrawer/>
               </div>
             </SwipeableDrawer>
           </div>
