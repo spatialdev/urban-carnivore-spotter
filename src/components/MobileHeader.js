@@ -7,13 +7,10 @@ import List from '@material-ui/core/List/List';
 import ListItem from '@material-ui/core/ListItem/ListItem';
 import Menu from '@material-ui/icons/Menu';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer/SwipeableDrawer';
-import Toolbar from '@material-ui/core/Toolbar';
 
 import '../App.css';
 
-const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-class Header extends Component {
+class MobileHeader extends Component {
   state = {
     left: false,
     right: false,
@@ -28,15 +25,12 @@ class Header extends Component {
   render() {
     const { history } = this.props;
     return (
-      <div>
+      <div style={{ position: 'fixed', width: '100%' }}>
         <AppBar position="static" color="default">
           <div className="headerDiv">
             <div className="topHeader">
-              <Button className="moreIcon"
-                      onClick={this.toggleDrawer('left', true)}><Menu/></Button>
+              <Button className="moreIcon" onClick={this.toggleDrawer('left', true)}><Menu/></Button>
               <SwipeableDrawer
-                disableBackdropTransition={!iOS}
-                disableDiscovery={iOS}
                 anchor="left"
                 open={this.state.left}
                 onClose={this.toggleDrawer('left', false)}
@@ -59,12 +53,8 @@ class Header extends Component {
             </div>
             <h1 style={{ display: 'table-cell', cursor: 'pointer' }}
                 onClick={() => history.push('/')} className="header">Urban Carnivore Spotter</h1>
-          </div>
-          <Toolbar className="toolbar">
             <Button className="filterButton" onClick={this.toggleDrawer('right', true)}>Filter</Button>
             <SwipeableDrawer
-              disableBackdropTransition={!iOS}
-              disableDiscovery={iOS}
               anchor="right"
               open={this.state.right}
               onClose={this.toggleDrawer('right', false)}
@@ -84,11 +74,11 @@ class Header extends Component {
                 </List>
               </div>
             </SwipeableDrawer>
-          </Toolbar>
+          </div>
         </AppBar>
       </div>
     );
   }
 }
 
-export default withRouter(Header);
+export default withRouter(MobileHeader);
