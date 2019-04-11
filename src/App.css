@@ -140,6 +140,8 @@ Desktop Header
     background-size: contain;
     position: absolute;
     left: 10%;
+    box-shadow: 1px 1px 1px grey;
+
 }
 
 /*
