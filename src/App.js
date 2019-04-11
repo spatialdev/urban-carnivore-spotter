@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import Main from './components/Main';
+import Header from './components/Header';
 import Footer from './components/Footer';
+import Main from './components/Main';
 
 import './App.css';
 
@@ -28,6 +29,7 @@ class App extends Component {
     const { isMobile } = this.state;
     return (
       <div className="App">
+        {isMobile ? <Header/> : null}
         <Main/>
         {isMobile ? <Footer/> : null}
       </div>
