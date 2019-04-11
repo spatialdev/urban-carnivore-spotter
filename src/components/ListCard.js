@@ -66,7 +66,7 @@ const ListCard = props => {
   return <Card className={classes.card}>
     <CardContent className={classes.allContent}>
       <CardMedia className={classes.picture}
-        image={data.image_url ? data.image_url : DEFAULT_IMAGE_URL}
+                 image={data.image_url ? data.image_url : DEFAULT_IMAGE_URL}
       />
       <CardContent className={classes.info}>
         <Typography variant={'h3'}>{data.species.toUpperCase()}</Typography>

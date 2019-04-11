@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -19,27 +19,28 @@ const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.n
 
 class ListView extends Component {
 
-  state = {reports: null};
+  state = { reports: null };
 
   componentDidMount() {
     axios.get(getReports)
       .then(reports => {
-        this.setState({reports: reports.data});
+        this.setState({ reports: reports.data });
       })
       .catch(error => error);
   }
 
   render() {
-    const {reports} = this.state;
-    const {classes} = this.props;
+    const { reports } = this.state;
+    const { classes } = this.props;
     if (!reports) {
-      return <CircularProgress />;
+      return <CircularProgress/>;
     }
     return (
-    <div className={classes.container}>
-      {reports.map((report) => <ListCard data={report.data} key={report.id}/>)}
-    </div>
-  )}
+      <div className={classes.container}>
+        {reports.map((report) => <ListCard data={report.data} key={report.id}/>)}
+      </div>
+    )
+  }
 }
 
 export default withStyles(styles)(ListView);

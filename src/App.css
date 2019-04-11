@@ -1,7 +1,9 @@
 .App {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
-
 /*
 Header
  */
@@ -113,13 +115,19 @@ Desktop Header
     left: 27%;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 768px) {
     .headerTitle {
-        left: 24%;
+        left: 26%;
     }
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1024px) {
+   .headerTitle {
+       left: 23%;
+   }
+}
+
+@media (min-width: 1280px) {
     .headerTitle {
         left: 20%;
     }
@@ -203,16 +211,16 @@ Footer Styles
 
 .plusButton {
     position: relative;
-    top: -40px;
+    top: -50px;
 }
 
 .footerIconDiv {
     width: 100%;
-    position: sticky;
     bottom: 0;
     left: 0;
-    padding-bottom: 25px;
+    padding: 25px 0;
     background-color: white;
+    position: sticky;
 }
 
 .footerIcons span {
@@ -225,8 +233,4 @@ Footer Styles
     color: gray;
 }
 
-.App {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
+

@@ -23,9 +23,6 @@ const styles = {
 
 };
 
-const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-
 class DesktopHeader extends Component {
   state = {
     right: false,
@@ -49,8 +46,6 @@ class DesktopHeader extends Component {
           </h1>
           <Button className={classes.moreIcon} onClick={this.toggleDrawer('right', true)}><Menu/></Button>
           <SwipeableDrawer
-            disableBackdropTransition={!iOS}
-            disableDiscovery={iOS}
             anchor="right"
             open={this.state.right}
             onClose={this.toggleDrawer('right', false)}
