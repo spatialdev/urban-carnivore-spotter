@@ -11,9 +11,7 @@ const DEFAULT_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/
 const styles = theme => ({
   picture: {
     width: 150,
-    height: 150,
-    minWidth: 150,
-    minHeight: 150
+    height: 150
   },
   info: {
     flexDirection: 'column',

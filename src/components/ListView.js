@@ -1,12 +1,12 @@
-import React from 'react';
-import ListCard from '../components/ListCard';
-import { withStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
 import axios from 'axios';
+import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import ListCard from '../components/ListCard';
 
 const styles = theme => ({
   container: {
-    backgroundColor: 'grey',
+    backgroundColor: '#D3D3D3',
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
@@ -15,14 +15,16 @@ const styles = theme => ({
   }
 });
 
-class ListView extends React.Component {
+const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
+
+class ListView extends Component {
 
   state = {reports: null};
 
   componentDidMount() {
-    axios.get(process.env.REACT_APP_GET_REPORTS)
+    axios.get(getReports)
       .then(reports => {
-        this.setState({...this.state, reports: reports.data});
+        this.setState({reports: reports.data});
       })
       .catch(error => error);
   }
@@ -30,13 +32,12 @@ class ListView extends React.Component {
   render() {
     const {reports} = this.state;
     const {classes} = this.props;
+    if (!reports) {
+      return <CircularProgress />;
+    }
     return (
     <div className={classes.container}>
-    {
-      reports
-      ? reports.map((report) => <ListCard data={report.data} key={report.id}/>)
-      : <CircularProgress className={classes.progress}/>
-    }
+      {reports.map((report) => <ListCard data={report.data} key={report.id}/>)}
     </div>
   )}
 }
