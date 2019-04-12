@@ -12,7 +12,6 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer/SwipeableDrawer';
 
 import '../App.css';
 
-
 const styles = {
   moreIcon: {
     float: 'right',
@@ -20,7 +19,6 @@ const styles = {
     color: 'white',
     paddingBottom: 0,
   },
-
 };
 
 class DesktopHeader extends Component {

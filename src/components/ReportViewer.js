@@ -1,0 +1,49 @@
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+
+import ImageGallery from 'react-image-gallery';
+import { Toolbar } from "@material-ui/core";
+import { KeyboardArrowLeft } from "@material-ui/icons";
+import Button from "@material-ui/core/Button";
+
+class ReportViewer extends Component {
+  componentDidMount() {
+    // get request for report using id in props from map
+  }
+
+  render() {
+    const { history } = this.props;
+
+    const images = [
+      {
+        original: 'http://lorempixel.com/1000/600/nature/1/',
+        thumbnail: 'http://lorempixel.com/250/150/nature/1/',
+      },
+      {
+        original: 'http://lorempixel.com/1000/600/nature/2/',
+        thumbnail: 'http://lorempixel.com/250/150/nature/2/'
+      },
+      {
+        original: 'http://lorempixel.com/1000/600/nature/3/',
+        thumbnail: 'http://lorempixel.com/250/150/nature/3/'
+      },
+      {
+        original: 'https://www.youtube.com/watch?v=YE7VzlLtp-4',
+      }];
+
+    return (
+      <div>
+        <Toolbar className="reportViewerToolbar">
+          <Button className="backToExplore" onClick={() => history.push('/map')}> <KeyboardArrowLeft/>Explore</Button>
+          <h4>ANIMAL</h4>
+        </Toolbar>
+        <ImageGallery items={images}
+                      showBullets={true} showIndex={true}
+                      showThumbnails={false} showVideo={true}/>
+      </div>
+    )
+      ;
+  }
+}
+
+export default withRouter(ReportViewer);

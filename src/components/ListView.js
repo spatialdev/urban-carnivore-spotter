@@ -21,6 +21,7 @@ class ListView extends Component {
 
   render() {
     const { reports } = this.state;
+    console.log(reports);
     if (!reports) {
       return <CircularProgress/>;
     }

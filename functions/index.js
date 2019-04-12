@@ -13,7 +13,6 @@ exports.addReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-
     const report = req.body;
 
     const result = database.collection('reports').add(report)
@@ -27,16 +26,37 @@ exports.addReport = functions.https.onRequest((req, res) => {
   });
 });
 
+exports.getReport = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => {
+    if (req.method !== 'GET') {
+      return res.status(401).json({
+        message: 'Not allowed'
+      })
+    }
+    let reports = database.collection('reports');
+    return buildQuery(req.query, reports).get().then(resp => {
+      return resp;
+    })
+      .catch(err => {
+        res.status(500).send(`Error getting documents: ${err}`);
+      });
+  }, error => {
+    res.status(error.code).json({ message: `Something went wrong. ${error.message}` });
+  });
+});
+
 /**
  * Internal helper method to build database queries given some parameters.
  * Currently accepts species, neighborhood, season, year, and time_of_day as fields
  * that are acceptable to search. Always filters by at least one week old.
  */
-buildQuery = (queryParams, collection) => {
+const buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  let week_ago = moment().subtract(1, 'week').toDate();
-  let initialQuery = collection
-    .where('time_submitted', '<=', week_ago);
+  let week_ago = moment().subtract(1, 'week').toISOString();
+  let initialQuery = collection.where('timestamp', '<=', week_ago);
+  if (queryParams.id) {
+    initialQuery = initialQuery.where('id', '==', queryParams.id);
+  }
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
@@ -50,7 +70,7 @@ buildQuery = (queryParams, collection) => {
     initialQuery = initialQuery.where('year', '==', queryParams.year);
   }
   if (queryParams.timeOfDay) {
-    initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
+    initialQuery = initialQuery.where('time_of_day', '==', queryParams.timeOfDay);
   }
   return initialQuery;
 };
