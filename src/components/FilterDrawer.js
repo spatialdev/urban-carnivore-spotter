@@ -1,7 +1,12 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Button, Collapse } from '@material-ui/core';
+import { Typography, Button, Collapse, Fab, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import FilterCheckboxes from './FilterCheckboxes';
+import CheckBoxIntermediateIcon from 'mdi-react/CheckboxIntermediateIcon'
+
 
 const styles = {
     allContent: {},
@@ -9,19 +14,33 @@ const styles = {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        position: 'sticky',
+        top: 0,
+        backgroundColor: 'white',
+        zIndex: 1
     },
     filterBox: {},
     resultsButton: {
-        width: '100%'
+        position: 'sticky',
+        bottom: 0,
+        width: '100%',
+        backgroundColor: 'white'
     },
-    filterCheckboxItem: {
-        margin: '0 !important'
+    expandButton: {
+        boxShadow: 'none',
+        float: 'right',
+        position: 'relative',
+        top: -8
+    },
+    expandHeader: {
+        margin: 16
     }
 }
 
 const allCarnivores = ['Bears', 'Bobcats', 'Coyotes', 'Mountain Lions', 'Racoons', 'Other'];
 const allNeighborhoods = ['Ballard', 'Beacon Hill', 'Bothell', 'Broadview', 'Burien', 'Capitol Hill', 'Chinatown', 'Downtown'] // and more...
+const allTimes = ['Early Morning (12:00am-4:59am)', 'Morning (5:00am-11:59am)', 'Afternoon (12:00pm-5:59pm)', 'Evening (6:00pm-11:59pm)'];
 const briefNeighborhoodsCount = 5;
 
 class FilterDrawer extends React.Component {
@@ -29,59 +48,130 @@ class FilterDrawer extends React.Component {
     constructor(props) {
         super(props);
         
-        // Initialize carnivore and neighborhood state
-        const defaultCarnivoreFilter = {};
+        // Carnivore, neighborhood, and times defaults
+        const defaultCarnivoreFilter = {all: true};
         allCarnivores.forEach(carnivore => defaultCarnivoreFilter[carnivore] = false);
-        const defaultNeighborhoodFilter = {};
+        const defaultNeighborhoodFilter = {all: true};
         allNeighborhoods.forEach(neighborhood => defaultNeighborhoodFilter[neighborhood] = false);
-        this.state = {
-            carnivoreFilter: defaultCarnivoreFilter,
-            neighborhoodFilter: defaultNeighborhoodFilter,
-            showCarnivores: false,
-            showNeighborhoods: false
+        const defaultTimeFilter = {all: true};
+        allTimes.forEach(time => defaultTimeFilter[time] = false);
+
+        // We want to save a copy of the initial state so we can reset easily
+        this.initialState = {
+            carnivoreFilter: {...defaultCarnivoreFilter},
+            neighborhoodFilter: {...defaultNeighborhoodFilter},
+            date: new Date(),
+            timeFilter: {...defaultTimeFilter},
+            confidenceFilterActive: false,
+            show: {
+                showCarnivores: false,
+                showNeighborhoods: false,
+                showTime: false,
+                showConfidence: false
+            }
         }
+
+        // Initialize state
+        this.state = {...this.initialState}
     }
 
-    setCarnivores = (carnivores) => {
+    updateFilter = filterName => (key, newValue) => {
         this.setState(state => ({...state,
-            carnivoreFilter: carnivores}));
+            [filterName]: {...state[filterName],
+                [key]: newValue}}));
     }
 
-    setNeighborhoods = (neighborhoods) => {
+
+    toggleShow = groupName => () => {
         this.setState(state => ({...state,
-            neighborhoodFilter: neighborhoods}));
+            show: {...state.show,
+                [groupName]: !state.show[groupName]}}));
     }
 
-    showCarnivores = () => {
+    handleDateChange = newDate => {
         this.setState(state => ({...state,
-            showCarnivores: !state.showCarnivores}));
+            date: new Date(newDate)}));
     }
 
-    showNeighborhoods = () => {
+    toggleConfidence = () => {
         this.setState(state => ({...state,
-            showNeighborhoods: !state.showNeighborhoods}));
+            confidenceFilterActive: !state.confidenceFilterActive}));
+    }
+
+    applyFilter = () => {
+        console.log(this.state);
+    }
+
+    reset = () => {
+        // Don't reset the state of expansions
+        this.setState(state => ({...this.initialState,
+            show: state.show}));
+    }
+
+    getCollapse = (classes, headerTitle, onClick, expand, child) => {
+        return <>
+            <div className={classes.expandHeader}>
+                {headerTitle}
+                <Fab
+                    className={classes.expandButton}
+                    onClick={onClick}
+                    size="small"
+                    disableRipple={true}>
+                        {expand ? <RemoveIcon /> : <AddIcon />}
+                </Fab>
+            </div>
+            <Collapse in={expand}>
+                {child}
+            </Collapse>
+        </>
     }
 
     render() {
-        const {classes} = this.props;
-        const {showCarnivores, showNeighborhoods} = this.state;
+        const {classes, cancel} = this.props;
+        const {show: {showCarnivores, showNeighborhoods, showTime, showConfidence},
+            date, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter} = this.state;
         return (
             <div className={classes.allContent}>
                 <div className={classes.header}>
-                    <Button>Cancel</Button>
+                    <Button onClick={cancel}>Cancel</Button>
                     <Typography variant={'h5'}>Filters</Typography>
-                    <Button>Reset</Button>
+                    <Button onClick={this.reset}>Reset</Button>
                 </div>
-                Type of Carnivore <Button onClick={this.showCarnivores}>+</Button>
-                <Collapse in={showCarnivores}>
-                    <FilterCheckboxes allItems={allCarnivores} allLabel="All Carnivores" updateValues={this.setCarnivores} briefNumber={allCarnivores.length}/>
-                </Collapse>
-                Neighborhood <Button onClick={this.showNeighborhoods}>+</Button>
-                <Collapse in={showNeighborhoods}>
-                    <FilterCheckboxes allItems={allNeighborhoods} allLabel="All Neighborhoods" updateValues={this.setNeighborhoods} briefNumber={briefNeighborhoodsCount}/>
-                </Collapse>
-                <div>Time of Sighting</div>
-                <Button className={classes.resultsButton}>See Results</Button>
+
+                {/* Carnivores */}
+                {this.getCollapse(classes, "Type of Carnivore", this.toggleShow('showCarnivores'), showCarnivores,
+                    <FilterCheckboxes filter={carnivoreFilter} allLabel="All Carnivores" updateValues={this.updateFilter('carnivoreFilter')} briefNumber={allCarnivores.length}/>
+                )}
+
+                {/* Neighborhoods */}
+                {this.getCollapse(classes, "Neighborhood", this.toggleShow('showNeighborhoods'), showNeighborhoods,
+                    <FilterCheckboxes filter={neighborhoodFilter} allLabel="All Neighborhoods" updateValues={this.updateFilter('neighborhoodFilter')} briefNumber={briefNeighborhoodsCount}/>
+                )}
+
+                {/* Time and Day */}
+                {this.getCollapse(classes, "Time of Sighting", this.toggleShow('showTime'), showTime,
+                    <>
+                        Date: <DatePicker
+                            selected={date}
+                            dateFormat="MMMM d, yyyy"
+                            onChange={this.handleDateChange}
+                        />
+                        Time of Day:
+                        <FilterCheckboxes filter={timeFilter} allLabel="Any time of day" updateValues={this.updateFilter('timeFilter')} briefNumber={allTimes.length}/>
+                    </>
+                )}
+
+                {/* Confidence */}
+                {this.getCollapse(classes, "Confidence of Sighting", this.toggleShow('showConfidence'), showConfidence,
+                    <FormControl component="fieldset">
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox checked={confidenceFilterActive} onChange={this.toggleConfidence} checkedIcon={<CheckBoxIntermediateIcon/>} />}
+                                label="Only show high-confidence sightings" />
+                        </FormGroup>
+                    </FormControl>
+                )}
+                <Button variant="contained" className={classes.resultsButton} onClick={this.applyFilter}>See Results</Button>
             </div>)
     }
 }

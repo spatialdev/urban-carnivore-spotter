@@ -67,7 +67,7 @@ class MobileHeader extends Component {
                 role="button"
                 style={{ width: '250px' }}
               >
-                <FilterDrawer/>
+                <FilterDrawer cancel={this.toggleDrawer('right', false)}/>
               </div>
             </SwipeableDrawer>
           </div>

@@ -1,76 +1,55 @@
-import React from 'react';
-import { FormControlLabel, FormGroup, FormControl, Checkbox } from '@material-ui/core';
+import React, {Component} from 'react';
+import { FormControlLabel, FormGroup, FormControl, Checkbox, Button, Collapse } from '@material-ui/core';
+import CheckBoxIntermediateIcon from 'mdi-react/CheckboxIntermediateIcon'
 
-class FilterCheckboxes extends React.Component {
-    
+export default class FilterCheckboxes extends Component {
+
     constructor(props) {
         super(props);
-        
-        // Initialize carnivore and neighborhood state
-        const {allItems} = this.props;
-        const defaultFilter = {};
-        allItems.forEach(item => defaultFilter[item] = false);
+
         this.state = {
-            showAllItems: true,
-            itemFilter: defaultFilter
+            viewAll: false
         }
     }
 
-    toggleAllItems = () => {
-        const {updateValues} = this.props;
-        const {showAllItems, itemFilter} = this.state;
-        if (showAllItems) {
-            this.setState(state => {
-                // if we currently have all items on, then we want to go back to the plain itemFilter
-                updateValues(itemFilter);
-                return ({...state,
-                    showAllItems: false
-                })
-            });
-        } else {
-            this.setState(state => {
-                // otherwise, everything should be true
-                const allTrue = {};
-                Object.keys(itemFilter).forEach(key => allTrue[key] = true);
-                updateValues(allTrue);
-                return ({...state,
-                    showAllItems: true
-                })}
-            );
-        }
+    getButton = (itemKey, checked, disabled, onChange) => {
+        return <FormControlLabel key={itemKey}
+                    control={<Checkbox
+                        checkedIcon={<CheckBoxIntermediateIcon/>}
+                        checked={checked}
+                        onChange={onChange}
+                        disabled={disabled}/>} label={itemKey}/>
     }
 
-    toggleItem = (itemName) => () => {
-        const {updateValues} = this.props;
-        this.setState(state => {
-            const newState = {...state,
-                itemFilter: {...state.itemFilter,
-                    [itemName]: !state.itemFilter[itemName]}};
-            // If we're toggling an item, then showAllItems must be false, so we can safely update the parent value. 
-            updateValues(newState.itemFilter);
-            return newState;
-        });
-    }
-
-    // props: label, callback to update state, all items, number of items to show without expanding
     render() {
-        const {allLabel, briefNumber} = this.props;
-        const {itemFilter, showAllItems} = this.state;
+        const {allLabel, briefNumber, filter, updateValues} = this.props;
+        const {viewAll} = this.state;
         return <FormControl component="fieldset">
             <FormGroup>
                 <FormControlLabel
-                    control={<Checkbox checked={showAllItems} onChange={this.toggleAllItems}/>}
+                    control={<Checkbox checked={filter['all']}
+                                onChange={() => updateValues('all', !filter['all'])}
+                                checkedIcon={<CheckBoxIntermediateIcon/>}
+                                />}
                     label={allLabel} />
-                {Object.keys(itemFilter).slice(0, briefNumber).map(item =>
-                    <FormControlLabel key={item} 
-                        control={<Checkbox 
-                            checked={itemFilter[item]} 
-                            onChange={this.toggleItem(item)}
-                            disabled={showAllItems}/>} label={item}/>
+                {Object.entries(filter)
+                    .filter(([key, value]) => key != 'all').slice(0, briefNumber).map(([itemKey, checked]) =>
+                    this.getButton(itemKey, checked, filter['all'], () => updateValues(itemKey, !checked))
                 )}
+                {/* Button to display the rest. Subtracting 1 to account for the all button, which has a field in filter
+                    but doesn't count towards the briefNumber total since it's rendered separately. */}
+                {briefNumber !== Object.keys(filter).length - 1 ?
+                    <>
+                    <Collapse in={viewAll}>
+                        {Object.entries(filter).filter(([key, value]) => key != 'all').slice(briefNumber)
+                            .map(([itemKey, checked]) =>
+                                this.getButton(itemKey, checked, filter['all'], () => updateValues(itemKey, !checked)))}
+                    </Collapse>
+                    <Button onClick={() => this.setState(state => ({...state, viewAll: !state.viewAll}))}>
+                        {viewAll ? 'Hide Some' : 'Show All'}</Button>
+                    </>
+                    : null}
             </FormGroup>
         </FormControl>
     }
 }
-
-export default FilterCheckboxes;
