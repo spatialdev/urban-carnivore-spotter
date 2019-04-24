@@ -36,7 +36,7 @@ class DesktopHeader extends Component {
     const { classes, history } = this.props;
 
     return (
-      <div style={{ position: 'fixed', width: '100%' }}>
+      <div style={{ position: 'fixed', width: '100%', zIndex: 100 }}>
         <AppBar position="static" className="appBar">
           <div className="logo"/>
           <h1 className="headerTitle" onClick={() => history.push('/')} style={{ cursor: 'pointer' }}>
