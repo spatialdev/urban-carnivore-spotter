@@ -5,11 +5,12 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
-    "axios": "^0.18.0",
     "@turf/turf": "^5.1.6",
+    "axios": "^0.18.0",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "firebase": "^5.8.3",
+    "immutable": "^4.0.0-rc.12",
     "mapbox-gl": "^0.53.1",
     "material-ui-icons": "^1.0.0-beta.36",
     "react": "^16.8.2",

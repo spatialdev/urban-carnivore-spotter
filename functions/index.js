@@ -69,25 +69,21 @@ exports.getReports = functions.https.onRequest((req, res) => {
         let items = [];
         if (snapshot.empty) {
           res.status(200).send('No data!');
-        } else if (req.query.location !== undefined) {
-          const [latitudeStr, longitudeStr] = req.query.location.split(',');
-          const queryLatitude = Number(latitudeStr);
-          const queryLongitude = Number(longitudeStr);
+        } else if (req.query.mapLat !== undefined && req.query.mapLng !== undefined) {
+          const queryLatitude = Number(req.query.mapLat);
+          const queryLongitude = Number(req.query.mapLng);
           const from = turf.point([queryLatitude, queryLongitude]);
           const options = { units: 'miles' };
           snapshot.forEach(doc => {
             const data = doc.data();
-            const locationData = data['location'];
-            if (locationData !== undefined) {
-              let dataLatitude = locationData['_latitude'];
-              let dataLongitude = locationData['_longitude'];
-              if (dataLatitude !== undefined && dataLongitude !== undefined) {
-                const to = turf.point([dataLatitude, dataLongitude]);
-                const distance = turf.distance(from, to, options);
-                // If distance is within 1 mile from the query lat long
-                if (distance <= 1) {
-                  items.push({ id: doc.id, data: doc.data() });
-                }
+            const dataLatitude = data['mapLat'];
+            const dataLongitude = data['mapLng'];
+            if (dataLatitude !== undefined && dataLongitude !== undefined) {
+              const to = turf.point([dataLatitude, dataLongitude]);
+              const distance = turf.distance(from, to, options);
+              // If distance is within 1 mile from the query lat long
+              if (distance <= 1) {
+                items.push({ id: doc.id, data: doc.data() });
               }
             }
           });
