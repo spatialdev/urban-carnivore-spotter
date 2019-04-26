@@ -6,10 +6,19 @@ import { Toolbar } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
+import axios from "axios";
+
+const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
 
 class ReportViewer extends Component {
   componentDidMount() {
-    // get request for report using id in props from map
+    const {match: {params: {id}}} = this.props;
+    axios.get(getReport + `?id=${id}`)
+      .then(report => {
+        console.log(report);
+        this.setState({ report: report.data });
+      })
+      .catch(error => error);
   }
 
   _renderVideo(item) {

@@ -37,8 +37,15 @@ exports.getReport = functions.https.onRequest((req, res) => {
     return database.collection('reports').doc(req.query.id)
       .get()
       .then(doc => {
-        return res.status(200).send(doc.data());
-      });
+        if (doc.exists) {
+          return res.status(200).send(doc.data());
+        } else {
+          return res.status(200).send('No data!');
+        }
+      })
+      .catch(error => {
+        return res.status(500).send(`Error getting documents: ${error}`);
+      })
   });
 });
 
