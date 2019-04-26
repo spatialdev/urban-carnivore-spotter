@@ -115,7 +115,6 @@ class Form extends Component {
     }
   };
 
-
   render() {
     const {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,

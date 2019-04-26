@@ -32,7 +32,6 @@ const timeToString = time => {
 
 const ListCard = props => {
   const { classes, data } = props;
-  console.log(data);
   return <Card className="card">
     <CardContent className={classes.allContent}>
       <CardMedia className="cardPicture"

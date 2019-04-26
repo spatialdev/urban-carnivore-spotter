@@ -8,9 +8,7 @@ import Fab from '@material-ui/core/Fab';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { withStyles } from '@material-ui/core/styles';
 
-
 import Form from './Form';
-
 
 const styles = theme => ({
   list: {
@@ -80,7 +78,6 @@ class Footer extends Component {
         </Button>
       </div>
     );
-
   }
 }
 

@@ -67,7 +67,7 @@ class DesktopHeader extends Component {
             </div>
           </SwipeableDrawer>
           <div className="nav">
-            <div id="explore" className="categories" onClick={() => history.push('/map')}><h4>Explore</h4></div>
+            <div id="explore" className="categories" onClick={() => history.push('/')}><h4>Explore</h4></div>
             <div id="resources" className="categories" onClick={() => history.push('/resources')}><h4>Resources</h4>
             </div>
             <div id="report" className="categories" onClick={() => history.push('/reports/create')}><h4>Report
