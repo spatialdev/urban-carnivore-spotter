@@ -50,7 +50,7 @@ buildQuery = (queryParams, collection) => {
     initialQuery = initialQuery.where('year', '==', queryParams.year);
   }
   if (queryParams.timeOfDay) {
-    initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
+    initialQuery = initialQuery.where('time_of_day', '==', queryParams.timeOfDay);
   }
   return initialQuery;
 };
@@ -72,23 +72,25 @@ exports.getReports = functions.https.onRequest((req, res) => {
         } else if (req.query.mapLat !== undefined && req.query.mapLng !== undefined) {
           const queryLatitude = Number(req.query.mapLat);
           const queryLongitude = Number(req.query.mapLng);
-          const from = turf.point([queryLatitude, queryLongitude]);
+          const from = turf.point([queryLongitude, queryLatitude]);
           const options = { units: 'miles' };
           snapshot.forEach(doc => {
             const data = doc.data();
             const dataLatitude = data['mapLat'];
             const dataLongitude = data['mapLng'];
             if (dataLatitude !== undefined && dataLongitude !== undefined) {
-              const to = turf.point([dataLatitude, dataLongitude]);
+              const to = turf.point([dataLongitude, dataLatitude]);
               const distance = turf.distance(from, to, options);
+              console.log(distance)
               // If distance is within 1 mile from the query lat long
-              if (distance <= 1) {
+              if (distance <= 1000) {
                 items.push({ id: doc.id, data: doc.data() });
               }
             }
           });
         } else {
           snapshot.forEach(doc => {
+            console.log(doc)
             items.push({ id: doc.id, data: doc.data() });
           });
         }
