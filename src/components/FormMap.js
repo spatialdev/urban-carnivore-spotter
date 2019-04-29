@@ -30,7 +30,7 @@ class FormMap extends Component {
                    'circle-stroke-width': 1,
                    'circle-stroke-opacity': 1
                  }}>
-            <Feature coordinates={[-122.335167, 47.608013]} draggable
+            <Feature coordinates={[centerLng, centerLat]} draggable
                      onDragEnd={e => this.onDragEnd(e)}/>
           </Layer>
         </Map>

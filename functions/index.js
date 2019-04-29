@@ -1,8 +1,10 @@
+const firebase = require('firebase');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
 const turf = require('@turf/turf');
+
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
 
@@ -13,17 +15,37 @@ exports.addReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-
     const report = req.body;
 
-    const result = database.collection('reports').add(report)
+    return database.collection('reports').add(report)
       .then(ref => {
         return res.status(200).send('Success!');
       })
       .catch(error => {
         return res.status(500).send(`Error adding document: ${error}`);
       });
-    return result;
+  });
+});
+
+exports.getReport = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => {
+    if (req.method !== 'GET') {
+      return res.status(401).json({
+        message: 'Not allowed'
+      });
+    }
+    return database.collection('reports').doc(req.query.id)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return res.status(200).send(doc.data());
+        } else {
+          return res.status(200).send('No data!');
+        }
+      })
+      .catch(error => {
+        return res.status(500).send(`Error getting documents: ${error}`);
+      })
   });
 });
 
@@ -34,9 +56,8 @@ exports.addReport = functions.https.onRequest((req, res) => {
  */
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  let week_ago = moment().subtract(1, 'week').toDate();
-  let initialQuery = collection
-    .where('time_submitted', '<=', week_ago);
+  let week_ago = moment().subtract(1, 'week').toISOString();
+  let initialQuery = collection.where('timestamp', '<=', week_ago);
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
