@@ -54,7 +54,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
  * Currently accepts species, neighborhood, season, year, and time_of_day as fields
  * that are acceptable to search. Always filters by at least one week old.
  */
-const buildQuery = (queryParams, collection) => {
+buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
   let week_ago = moment().subtract(1, 'week').toISOString();
   let initialQuery = collection.where('timestamp', '<=', week_ago);
