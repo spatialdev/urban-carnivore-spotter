@@ -57,7 +57,8 @@ exports.getReport = functions.https.onRequest((req, res) => {
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
   let week_ago = moment().subtract(1, 'week').toISOString();
-  let initialQuery = collection.where('timestamp', '<=', week_ago);
+  //let initialQuery = collection.where('timestamp', '<=', week_ago);
+  let initialQuery = collection;
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
@@ -97,14 +98,13 @@ exports.getReports = functions.https.onRequest((req, res) => {
           const options = { units: 'miles' };
           snapshot.forEach(doc => {
             const data = doc.data();
-            const dataLatitude = data['mapLat'];
-            const dataLongitude = data['mapLng'];
+            let dataLatitude = data['mapLat'];
+            let dataLongitude = data['mapLng'];
             if (dataLatitude !== undefined && dataLongitude !== undefined) {
-              const to = turf.point([dataLongitude, dataLatitude]);
+              const to = turf.point([dataLongitude,dataLatitude]);
               const distance = turf.distance(from, to, options);
-              console.log(distance)
-              // If distance is within 1 mile from the query lat long
-              if (distance <= 1000) {
+              // If distance is within 500 miles from the query lat long
+              if (distance <= 500) {
                 items.push({ id: doc.id, data: doc.data() });
               }
             }

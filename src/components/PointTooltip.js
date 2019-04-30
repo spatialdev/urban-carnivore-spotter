@@ -8,19 +8,19 @@ import { withStyles } from '@material-ui/core/styles';
 const DEFAULT_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/2010-brown-bear.jpg/200px-2010-brown-bear.jpg";
 
 const timeToString = time => {
-    const nanosInMillis = time._nanoseconds / 1000000;
-    const secondsInMillis = time._seconds * 1000;
-    return new Date(nanosInMillis + secondsInMillis).toLocaleString();
+    const date = new Date(time);
+    return `${date.toDateString()} ${date.getHours()}:${date.getMinutes()}`;
 };
 
+/* TODO: Should be updated with neighborhood info */
 const PointTooltip = props => {
     const { data } = props;
-    return <div width = {100}>
-        <img width={50} src={data.image_url ? data.image_url : DEFAULT_IMAGE_URL} />
-        <div>{data.species}</div>
-        <div>Date & Time:</div>
+    return <div >
+        <img width = {40} src = {data.image_url ? data.image_url : DEFAULT_IMAGE_URL}  />
+        <div className = "caption">{data.species}</div>
+        <div className = "caption">Date & Time:</div>
         <div>{timeToString(data.timestamp)}</div>
-        <div>Location: {data.mapLat},{data.mapLng}</div>
+        <div className = "caption">Location: {data.mapLat},{data.mapLng}</div>
     </div>
 };
 
