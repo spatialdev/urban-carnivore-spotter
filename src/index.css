@@ -8,6 +8,6 @@ body, .react-datepicker-wrapper > div > input {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.MuiFab-primary-96 {
+button[class*="MuiFab-primary-"] {
     background-color: #8acc25 !important;
 }
