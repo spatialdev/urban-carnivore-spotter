@@ -42,12 +42,10 @@ class MapView extends Component {
 
     };
 
-    getColor(species) {
-        return speciesColorMap.get(species)!== undefined ? speciesColorMap.get(species) : '#805b14';
-    }
-    // getReport(report) {
-    //    return
-    // }
+    getColor = species => {
+        return speciesColorMap.get(species) ? speciesColorMap.get(species) : '#805b14';
+    };
+
     renderPopup() {
         const {popupInfo} = this.state;
         if(popupInfo)
@@ -57,7 +55,6 @@ class MapView extends Component {
                        anchor="bottom"
                        coordinates={[popupInfo.mapLng, popupInfo.mapLat]}
                        className="cardContainer"
-                    //onClick={() => this.getReport(popupInfo)}
                        onMouseLeave={() => this.setState({popupInfo: false})}>
                     <PointTooltip className="mapboxgl-popup-content" data={popupInfo} key={popupInfo.id}/>
                 </Popup>
