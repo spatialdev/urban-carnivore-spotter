@@ -2,8 +2,8 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Form from './Form';
-import MapView from './MapView';
 import ListView from './ListView';
+import MapView from "./MapView";
 import ReportViewer from "./ReportViewer";
 
 const Main = () => (

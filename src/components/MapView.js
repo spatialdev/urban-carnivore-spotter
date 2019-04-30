@@ -45,11 +45,9 @@ class MapView extends Component {
     getColor(species) {
         return speciesColorMap.get(species)!== undefined ? speciesColorMap.get(species) : '#805b14';
     }
-
     // getReport(report) {
     //    return
     // }
-
     renderPopup() {
         const {popupInfo} = this.state;
 
