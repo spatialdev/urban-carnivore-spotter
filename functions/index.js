@@ -111,7 +111,6 @@ exports.getReports = functions.https.onRequest((req, res) => {
           });
         } else {
           snapshot.forEach(doc => {
-            console.log(doc)
             items.push({ id: doc.id, data: doc.data() });
           });
         }
