@@ -17,7 +17,7 @@ class MapView extends Component {
             center: [-122.335167, 47.608013],
             zoom: [10],
         },
-        popupInfo: false,
+        popupInfo: null,
         reports: null,
     };
 
@@ -50,18 +50,21 @@ class MapView extends Component {
     // }
     renderPopup() {
         const {popupInfo} = this.state;
-
-        return popupInfo && (
-            <Popup tipSize={5}
-                   anchor="bottom"
-                   coordinates={[popupInfo.mapLng, popupInfo.mapLat]}
-                   className="cardContainer"
-                   //onClick={() => this.getReport(popupInfo)}
-                   onMouseLeave={() => this.setState({popupInfo: false})}>
-                <PointTooltip className="mapboxgl-popup-content" data={popupInfo} key={popupInfo.id}/>
-            </Popup>
-        );
+        if(popupInfo)
+        {
+            return (
+                <Popup tipSize={5}
+                       anchor="bottom"
+                       coordinates={[popupInfo.mapLng, popupInfo.mapLat]}
+                       className="cardContainer"
+                    //onClick={() => this.getReport(popupInfo)}
+                       onMouseLeave={() => this.setState({popupInfo: false})}>
+                    <PointTooltip className="mapboxgl-popup-content" data={popupInfo} key={popupInfo.id}/>
+                </Popup>
+            );
+        }
     }
+
     render() {
         const {reports} = this.state;
         if (!reports) {
