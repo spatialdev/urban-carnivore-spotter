@@ -38,7 +38,7 @@ class ReportViewer extends Component {
     let media = [];
 
     if (report.mediaPaths.length > 0) {
-      report.media.map(med => {
+      report.mediaPaths.map(med => {
         media.push({ original: med, thumbnail: med });
       })
     }
@@ -51,7 +51,7 @@ class ReportViewer extends Component {
           <h4>{report.species.toUpperCase()}</h4>
         </Toolbar>
         <Card className="reportCard">
-          {report.media ?
+          {media ?
             <ImageGallery items={media}
                           showBullets={true} showIndex={true}
                           showThumbnails={false} showVideo={true}/> : null}

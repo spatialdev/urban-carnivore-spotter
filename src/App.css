@@ -9,7 +9,6 @@
 
 .Main {
     margin-top: 70px;
-    height: 100vh;
     z-index: 99;
 }
 
@@ -262,15 +261,12 @@ List + Card
 Report Viewer
  */
 
-.reportViewer {
-    overflow: hidden;
-}
-
 .reportViewerToolbar {
     background-color: white;
     position: fixed;
     z-index: 103;
     width: 100%;
+    border-bottom: 1px solid lightgrey;
 }
 
 .reportViewerToolbar > h4 {
