@@ -10,7 +10,6 @@
 .Main {
     background-color: lightgray;
     /*padding-bottom: 120px;*/
-    margin-top: 70px;
     height: 100vh;
     z-index: 99;
 }
@@ -342,5 +341,20 @@ Footer Styles
     margin: 0;
     color: gray;
 }
+
+.map {
+    height: 100vh;
+}
+
+.mapboxgl-popup-wrapper{
+    width: fit-content;
+    height: fit-content;
+
+}
+
+.caption {
+    font-weight: bold;
+}
+
 
 
