@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import {Link} from "react-router-dom";
 
 const DEFAULT_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/2010-brown-bear.jpg/200px-2010-brown-bear.jpg";
 
@@ -17,6 +18,9 @@ const PointTooltip = props => {
         <div className = "caption">Date & Time:</div>
         <div>{timeToString(data.timestamp)}</div>
         <div className = "caption">Location: {data.mapLat},{data.mapLng}</div>
+        <li>
+            <Link to={`/reports/${data.id}`}>See Report</Link>
+        </li>
     </div>
 };
 
