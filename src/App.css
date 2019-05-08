@@ -8,10 +8,7 @@
 }
 
 .Main {
-    background-color: lightgray;
-    /*padding-bottom: 120px;*/
     margin-top: 70px;
-    height: 100vh;
     z-index: 99;
 }
 
@@ -166,12 +163,6 @@ Form Wizard Styles
     text-align: center;
 }
 
-.formWizardBody {
-    background-color: #f1f1f1;
-    padding: 20px;
-    height: 100%;
-}
-
 .formItem {
     margin: 50px 0;
 }
@@ -179,7 +170,6 @@ Form Wizard Styles
 .paper {
     height: 140px;
     width: 100px;
-    border: dashed 2px gray;
     padding-top: 20px;
 }
 
@@ -271,14 +261,12 @@ List + Card
 Report Viewer
  */
 
-.reportViewer {
-    overflow: hidden;
-}
 .reportViewerToolbar {
     background-color: white;
     position: fixed;
     z-index: 103;
     width: 100%;
+    border-bottom: 1px solid lightgrey;
 }
 
 .reportViewerToolbar > h4 {
@@ -328,7 +316,7 @@ Footer Styles
     left: 0;
     padding: 25px 0;
     background-color: white;
-    position: sticky;
+    position: fixed;
     z-index: 101;
 
 }
