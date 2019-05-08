@@ -18,9 +18,6 @@ const PointTooltip = props => {
         <div className = "caption">Date & Time:</div>
         <div>{timeToString(data.timestamp)}</div>
         <div className = "caption">Location: {data.mapLat},{data.mapLng}</div>
-        <li>
-            <Link to={`/reports/${data.id}`}>See Report</Link>
-        </li>
     </div>
 };
 
