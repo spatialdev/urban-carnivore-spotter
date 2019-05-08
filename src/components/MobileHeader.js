@@ -24,7 +24,7 @@ class MobileHeader extends Component {
 
   render() {
     const { history, location } = this.props;
-    console.log(this.props);
+
     return (
       <div style={{ position: 'fixed', width: '100%', zIndex: 100 }}>
         <AppBar position="static" color="default">
