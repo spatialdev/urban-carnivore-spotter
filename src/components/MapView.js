@@ -3,6 +3,8 @@ import ReactMapboxGl, {Layer, Feature, Popup} from 'react-mapbox-gl';
 import axios from "axios";
 import { Map } from 'immutable';
 import PointTooltip from '../components/PointTooltip';
+import FilterDrawer from './FilterDrawer';
+import { withStyles } from '@material-ui/core/styles';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -11,6 +13,17 @@ const Map2 = ReactMapboxGl({
 const speciesColorMap = Map({'black bear':'#801e78','bobcat': '#498029','coyote': '#561480','cougar/mountain lion': '#802a00','raccoon': '#093c80','opossum': '#FFDC26','river otter': '#7083ff'});
 const getReports = "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports";
 
+const styles = {
+    filterContainer: {
+        backgroundColor: 'white',
+        position: 'fixed',
+        left: '10%',
+        top: '20%',
+        width: 250,
+        zIndex: 1,
+        height: '60%'
+    }
+}
 class MapView extends Component {
     state = {
         viewport: {
@@ -63,6 +76,7 @@ class MapView extends Component {
     }
 
     render() {
+        const {classes} = this.props;
         const {reports} = this.state;
         if (!reports) {
             return <Map2 style="mapbox://styles/mapbox/streets-v9"
@@ -73,6 +87,9 @@ class MapView extends Component {
         }
         return (
             <div className="mapContainer ">
+                <div className={classes.filterContainer}>
+                    <FilterDrawer cancel={() => {}}/>
+                </div>
                 <Map2 style="mapbox://styles/mapbox/streets-v9"
                       className="map"
                       {...this.state.viewport}
@@ -93,4 +110,4 @@ class MapView extends Component {
     }
 }
 
-export default MapView;
+export default withStyles(styles)(MapView);
