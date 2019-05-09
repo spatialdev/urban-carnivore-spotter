@@ -57,7 +57,8 @@ exports.getReport = functions.https.onRequest((req, res) => {
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
   let week_ago = moment().subtract(1, 'week').toISOString();
-  let initialQuery = collection.where('timestamp', '<=', week_ago);
+  //let initialQuery = collection.where('timestamp', '<=', week_ago);
+  let initialQuery = collection;
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
@@ -90,25 +91,21 @@ exports.getReports = functions.https.onRequest((req, res) => {
         let items = [];
         if (snapshot.empty) {
           res.status(200).send('No data!');
-        } else if (req.query.location !== undefined) {
-          const [latitudeStr, longitudeStr] = req.query.location.split(',');
-          const queryLatitude = Number(latitudeStr);
-          const queryLongitude = Number(longitudeStr);
-          const from = turf.point([queryLatitude, queryLongitude]);
+        } else if (req.query.mapLat !== undefined && req.query.mapLng !== undefined) {
+          const queryLatitude = Number(req.query.mapLat);
+          const queryLongitude = Number(req.query.mapLng);
+          const from = turf.point([queryLongitude, queryLatitude]);
           const options = { units: 'miles' };
           snapshot.forEach(doc => {
             const data = doc.data();
-            const locationData = data['location'];
-            if (locationData !== undefined) {
-              let dataLatitude = locationData['_latitude'];
-              let dataLongitude = locationData['_longitude'];
-              if (dataLatitude !== undefined && dataLongitude !== undefined) {
-                const to = turf.point([dataLatitude, dataLongitude]);
-                const distance = turf.distance(from, to, options);
-                // If distance is within 1 mile from the query lat long
-                if (distance <= 1) {
-                  items.push({ id: doc.id, data: doc.data() });
-                }
+            let dataLatitude = data['mapLat'];
+            let dataLongitude = data['mapLng'];
+            if (dataLatitude !== undefined && dataLongitude !== undefined) {
+              const to = turf.point([dataLongitude,dataLatitude]);
+              const distance = turf.distance(from, to, options);
+              // If distance is within 500 miles from the query lat long
+              if (distance <= 500) {
+                items.push({ id: doc.id, data: doc.data() });
               }
             }
           });
