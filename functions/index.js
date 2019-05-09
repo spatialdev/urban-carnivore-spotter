@@ -1,8 +1,10 @@
+const firebase = require('firebase');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
 const turf = require('@turf/turf');
+
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
 
@@ -13,17 +15,37 @@ exports.addReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-
     const report = req.body;
 
-    const result = database.collection('reports').add(report)
+    return database.collection('reports').add(report)
       .then(ref => {
         return res.status(200).send('Success!');
       })
       .catch(error => {
         return res.status(500).send(`Error adding document: ${error}`);
       });
-    return result;
+  });
+});
+
+exports.getReport = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => {
+    if (req.method !== 'GET') {
+      return res.status(401).json({
+        message: 'Not allowed'
+      });
+    }
+    return database.collection('reports').doc(req.query.id)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return res.status(200).send(doc.data());
+        } else {
+          return res.status(200).send('No data!');
+        }
+      })
+      .catch(error => {
+        return res.status(500).send(`Error getting documents: ${error}`);
+      })
   });
 });
 
@@ -34,9 +56,9 @@ exports.addReport = functions.https.onRequest((req, res) => {
  */
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  let week_ago = moment().subtract(1, 'week').toDate();
-  let initialQuery = collection
-    .where('time_submitted', '<=', week_ago);
+  let week_ago = moment().subtract(1, 'week').toISOString();
+  //let initialQuery = collection.where('timestamp', '<=', week_ago);
+  let initialQuery = collection;
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
@@ -50,7 +72,7 @@ buildQuery = (queryParams, collection) => {
     initialQuery = initialQuery.where('year', '==', queryParams.year);
   }
   if (queryParams.timeOfDay) {
-    initialQuery = initalQuery.where('time_of_day', '==', queryParams.timeOfDay);
+    initialQuery = initialQuery.where('time_of_day', '==', queryParams.timeOfDay);
   }
   return initialQuery;
 };
@@ -69,25 +91,21 @@ exports.getReports = functions.https.onRequest((req, res) => {
         let items = [];
         if (snapshot.empty) {
           res.status(200).send('No data!');
-        } else if (req.query.location !== undefined) {
-          const [latitudeStr, longitudeStr] = req.query.location.split(',');
-          const queryLatitude = Number(latitudeStr);
-          const queryLongitude = Number(longitudeStr);
-          const from = turf.point([queryLatitude, queryLongitude]);
+        } else if (req.query.mapLat !== undefined && req.query.mapLng !== undefined) {
+          const queryLatitude = Number(req.query.mapLat);
+          const queryLongitude = Number(req.query.mapLng);
+          const from = turf.point([queryLongitude, queryLatitude]);
           const options = { units: 'miles' };
           snapshot.forEach(doc => {
             const data = doc.data();
-            const locationData = data['location'];
-            if (locationData !== undefined) {
-              let dataLatitude = locationData['_latitude'];
-              let dataLongitude = locationData['_longitude'];
-              if (dataLatitude !== undefined && dataLongitude !== undefined) {
-                const to = turf.point([dataLatitude, dataLongitude]);
-                const distance = turf.distance(from, to, options);
-                // If distance is within 1 mile from the query lat long
-                if (distance <= 1) {
-                  items.push({ id: doc.id, data: doc.data() });
-                }
+            let dataLatitude = data['mapLat'];
+            let dataLongitude = data['mapLng'];
+            if (dataLatitude !== undefined && dataLongitude !== undefined) {
+              const to = turf.point([dataLongitude,dataLatitude]);
+              const distance = turf.distance(from, to, options);
+              // If distance is within 500 miles from the query lat long
+              if (distance <= 500) {
+                items.push({ id: doc.id, data: doc.data() });
               }
             }
           });

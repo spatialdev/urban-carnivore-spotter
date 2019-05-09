@@ -8,9 +8,8 @@ import Fab from '@material-ui/core/Fab';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import { withStyles } from '@material-ui/core/styles';
 
-
 import Form from './Form';
-
+import { withRouter } from "react-router";
 
 const styles = theme => ({
   list: {
@@ -32,9 +31,25 @@ class Footer extends Component {
     open: false,
   };
 
+  componentDidMount() {
+    const { location } = this.props;
+    if (window.innerWidth < 768 && location.pathname === '/reports/create') {
+      this.handleDrawer(true);
+    }
+  }
+
   toggleDrawer = drawerState => () => {
+    const { history } = this.props;
+    const { open } = this.state;
+
     this.setState({
       open: drawerState
+    }, () => {
+      if (open) {
+        history.push('/');
+      } else {
+        history.push('/reports/create');
+      }
     });
   };
 
@@ -44,10 +59,10 @@ class Footer extends Component {
     });
   };
 
-
   render() {
     const { open } = this.state;
     const { classes } = this.props;
+
     return (
       <div className="footerIconDiv">
         <Button className="footerIcons" style={{ float: 'left', marginLeft: '50px' }}>
@@ -69,7 +84,6 @@ class Footer extends Component {
               <Fab color="primary" aria-label="Add" className={classes.fab}>
                 <ClearIcon onClick={this.toggleDrawer(!open)}/>
               </Fab>
-              <h2>Report a carnivore sighting</h2>
             </div>
             <Form handleDrawerState={this.handleDrawer} fromDrawer/>
           </div>
@@ -80,8 +94,7 @@ class Footer extends Component {
         </Button>
       </div>
     );
-
   }
 }
 
-export default withStyles(styles)(Footer);
+export default withRouter(withStyles(styles)(Footer));

@@ -25,9 +25,10 @@ class MobileHeader extends Component {
   };
 
   render() {
-    const { history } = this.props;
+    const { history, location } = this.props;
+
     return (
-      <div style={{ position: 'fixed', width: '100%' }}>
+      <div style={{ position: 'fixed', width: '100%', zIndex: 100 }}>
         <AppBar position="static" color="default">
           <div className="headerDiv">
             <div className="topHeader">
@@ -55,7 +56,10 @@ class MobileHeader extends Component {
             </div>
             <h1 style={{ display: 'table-cell', cursor: 'pointer' }}
                 onClick={() => history.push('/')} className="header">Urban Carnivore Spotter</h1>
-            <Button className="filterButton" onClick={this.toggleDrawer('right', true)}>Filter</Button>
+            {location.pathname === '/' || location.pathname === '/list' ?
+              <Button className="filterButton" onClick={this.toggleDrawer('right', true)}>Filter</Button> :
+              null
+            }
             <SwipeableDrawer
               anchor="right"
               open={this.state.right}

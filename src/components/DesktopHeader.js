@@ -12,7 +12,6 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer/SwipeableDrawer';
 
 import '../App.css';
 
-
 const styles = {
   moreIcon: {
     float: 'right',
@@ -20,7 +19,6 @@ const styles = {
     color: 'white',
     paddingBottom: 0,
   },
-
 };
 
 class DesktopHeader extends Component {
@@ -38,7 +36,7 @@ class DesktopHeader extends Component {
     const { classes, history } = this.props;
 
     return (
-      <div style={{ position: 'fixed', width: '100%' }}>
+      <div style={{ position: 'fixed', width: '100%', zIndex: 100 }}>
         <AppBar position="static" className="appBar">
           <div className="logo"/>
           <h1 className="headerTitle" onClick={() => history.push('/')} style={{ cursor: 'pointer' }}>
@@ -69,7 +67,7 @@ class DesktopHeader extends Component {
             </div>
           </SwipeableDrawer>
           <div className="nav">
-            <div id="explore" className="categories" onClick={() => history.push('/map')}><h4>Explore</h4></div>
+            <div id="explore" className="categories" onClick={() => history.push('/')}><h4>Explore</h4></div>
             <div id="resources" className="categories" onClick={() => history.push('/resources')}><h4>Resources</h4>
             </div>
             <div id="report" className="categories" onClick={() => history.push('/reports/create')}><h4>Report
