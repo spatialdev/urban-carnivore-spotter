@@ -214,7 +214,7 @@ class FilterDrawer extends React.Component {
                                     control={<Checkbox
                                                 checked={confidenceFilterActive}
                                                 onChange={this.toggleConfidence}
-                                                checkedIcon={<CheckBoxIntermediateIcon/>}
+                                                checkedIcon={<CheckBoxIntermediateIcon style={{color: '#93C838'}}/>}
                                                 style={{margin: '0px 0px 0px 8px'}}/>}
                                     label="Only show high-confidence sightings" />
                             </FormGroup>

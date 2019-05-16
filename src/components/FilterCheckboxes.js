@@ -8,7 +8,10 @@ import PlaceIcon from '@material-ui/icons/Place';
 
 const styles = {
     checkbox: {
-        margin: '0px 0px 0px 8px'
+        margin: '0px 0px 0px 8px',
+    },
+    checkedCheckbox: {
+        color: '#93C838'
     },
     showAllButton: {
         margin: 'auto'
@@ -32,7 +35,7 @@ class FilterCheckboxes extends Component {
         const label = keyColorMap ? <span><PlaceIcon style={{color: keyColorMap[itemKey]}}/>{itemKey}</span> : <span>{itemKey}</span>;
         return <FormControlLabel key={itemKey}
                     control={<Checkbox
-                        checkedIcon={<CheckBoxIntermediateIcon/>}
+                        checkedIcon={<CheckBoxIntermediateIcon className={classes.checkedCheckbox}/>}
                         checked={checked}
                         onChange={onChange}
                         disabled={disabled}
@@ -47,7 +50,7 @@ class FilterCheckboxes extends Component {
                 <FormControlLabel
                     control={<Checkbox checked={filter['all']}
                                 onChange={() => updateValues('all', !filter['all'])}
-                                checkedIcon={<CheckBoxIntermediateIcon/>}
+                                checkedIcon={<CheckBoxIntermediateIcon className={classes.checkedCheckbox}/>}
                                 className={classes.checkbox}/>}
                     label={allLabel} />
                 {Object.entries(filter)
