@@ -4,6 +4,9 @@ import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
@@ -62,6 +65,7 @@ class Form extends Component {
     generalComments: '',
     media: null,
     mediaPaths: [],
+    thanksOpen: false,
   };
 
   constructor(props) {
@@ -78,17 +82,12 @@ class Form extends Component {
   };
 
   handleSubmit = () => {
-    const { history, handleDrawerState, fromDrawer } = this.props;
-    let report = this.state;
+    let {thanksOpen, ...report} = this.state;
     delete report['media'];
-
     return axios.post(addReportUrl, report)
       .then(response => {
         if (response.status === 200) {
-          history.push('/');
-          if (fromDrawer) {
-            handleDrawerState(false);
-          }
+          this.setState({thanksOpen: true}); // Open the submission recieved dialog
         }
       });
   };
@@ -115,12 +114,22 @@ class Form extends Component {
     }
   };
 
+  handleClose = () => {
+    const { history, handleDrawerState, fromDrawer } = this.props;
+    this.setState({thanksOpen: false}, () => {
+      history.push('/');
+      if (fromDrawer) {
+        handleDrawerState(false);
+      }
+    });
+  }
+
   render() {
     const {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
-      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths
+      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, thanksOpen
     } = this.state;
 
     return (
@@ -593,6 +602,16 @@ class Form extends Component {
             Submit
           </Button>
         </ValidatorForm>
+        <Dialog
+          open={thanksOpen}
+          onClose={this.handleClose}
+        >
+          <DialogContent>
+            <DialogContentText>
+              Thank you for submitting! Your submission should appear on the map within a week.
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </div>
 
     );
