@@ -17,11 +17,12 @@ const styles = {
     filterContainer: {
         backgroundColor: 'white',
         position: 'fixed',
-        left: '10%',
-        top: '20%',
+        left: '5%',
+        top: '15%',
         width: 250,
         zIndex: 1,
-        height: '60%'
+        height: '60%',
+        boxShadow: '2px 2px 2px'
     }
 }
 class MapView extends Component {
@@ -76,7 +77,7 @@ class MapView extends Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const {classes, isMobile} = this.props;
         const {reports} = this.state;
         if (!reports) {
             return <Map2 style="mapbox://styles/mapbox/streets-v9"
@@ -87,9 +88,9 @@ class MapView extends Component {
         }
         return (
             <div className="mapContainer ">
-                <div className={classes.filterContainer}>
-                    <FilterDrawer cancel={() => {}}/>
-                </div>
+                { !isMobile && <div className={classes.filterContainer}>
+                    <FilterDrawer/>
+                </div>}
                 <Map2 style="mapbox://styles/mapbox/streets-v9"
                       className="map"
                       {...this.state.viewport}

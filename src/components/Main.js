@@ -7,10 +7,10 @@ import ListView from './ListView';
 import MapView from "./MapView";
 import ReportViewer from "./ReportViewer";
 
-const Main = () => (
+const Main = (props) => (
   <main className="Main">
     <Switch>
-      <Route exact path="/" component={MapView}/>
+      <Route exact path="/" render={() => <MapView isMobile={props.isMobile}/>}/>
       <Route exact path="/reports/create" component={Form}/>
       <Route exact path="/filters" component={FilterDrawer}/>
       <Route exact path="/list" component={ListView}/>

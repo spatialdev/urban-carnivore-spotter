@@ -31,7 +31,7 @@ class App extends Component {
     return (
       <div className="App">
         {isMobile ? <Header/> : <DesktopHeader/>}
-        <Main/>
+        <Main isMobile={isMobile}/>
         {isMobile ? <Footer/> : null}
       </div>
     );
