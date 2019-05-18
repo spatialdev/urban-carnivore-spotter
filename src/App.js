@@ -5,13 +5,12 @@ import DesktopHeader from "./components/DesktopHeader";
 import Header from './components/MobileHeader';
 import Footer from './components/Footer';
 import Main from './components/Main';
+import { connect } from 'react-redux';
+import { setMobile } from './store/actions';
 
 import './App.css';
 
 class App extends Component {
-  state = {
-    isMobile: false,
-  };
 
   componentDidMount() {
     this.checkIfMobile();
@@ -23,19 +22,23 @@ class App extends Component {
   }
 
   checkIfMobile = () => {
-    this.setState({ isMobile: window.innerWidth < 768 });
+    setMobile(window.innerWidth < 768);
   };
 
   render() {
-    const { isMobile } = this.state;
+    const {isMobile} = this.props;
     return (
       <div className="App">
         {isMobile ? <Header/> : <DesktopHeader/>}
-        <Main isMobile={isMobile}/>
+        <Main/>
         {isMobile ? <Footer/> : null}
       </div>
     );
   }
 }
 
-export default withRouter(App);
+const mapStateToProps = (state) => {
+  return {isMobile: state.isMobile};
+}
+
+export default connect(mapStateToProps)(withRouter(App));

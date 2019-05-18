@@ -6,7 +6,8 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import FilterCheckboxes from './FilterCheckboxes';
 import CheckBoxIntermediateIcon from 'mdi-react/CheckboxIntermediateIcon'
-
+import { connect } from 'react-redux';
+import { updateFilter, updateFilterDate, toggleFilterConfidence, resetFilter } from '../store/actions'
 
 const styles = {
     allContent: {
@@ -60,7 +61,6 @@ const styles = {
     }
 }
 
-const allCarnivores = ['Bears', 'Bobcats', 'Coyotes', 'Mountain Lions', 'Racoons', 'Other'];
 const carnivoreColorMap = {
     Bears: 'pink',
     Bobcats: 'green',
@@ -69,8 +69,6 @@ const carnivoreColorMap = {
     Racoons: 'blue',
     Other: 'yellow'
 };
-const allNeighborhoods = ['Ballard', 'Beacon Hill', 'Bothell', 'Broadview', 'Burien', 'Capitol Hill', 'Chinatown', 'Downtown'] // and more...
-const allTimes = ['Early Morning (12:00am-4:59am)', 'Morning (5:00am-11:59am)', 'Afternoon (12:00pm-5:59pm)', 'Evening (6:00pm-11:59pm)'];
 const briefNeighborhoodsCount = 5;
 
 /**
@@ -80,65 +78,37 @@ class FilterDrawer extends React.Component {
 
     constructor(props) {
         super(props);
-        
-        // Carnivore, neighborhood, and times defaults
-        const defaultCarnivoreFilter = {all: true};
-        allCarnivores.forEach(carnivore => defaultCarnivoreFilter[carnivore] = false);
-        const defaultNeighborhoodFilter = {all: true};
-        allNeighborhoods.forEach(neighborhood => defaultNeighborhoodFilter[neighborhood] = false);
-        const defaultTimeFilter = {all: true};
-        allTimes.forEach(time => defaultTimeFilter[time] = false);
-
-        // We want to save a copy of the initial state so we can reset easily
-        this.initialState = {
-            carnivoreFilter: {...defaultCarnivoreFilter},
-            neighborhoodFilter: {...defaultNeighborhoodFilter},
-            date: null,
-            timeFilter: {...defaultTimeFilter},
-            confidenceFilterActive: false,
-            show: {
-                showCarnivores: false,
-                showNeighborhoods: false,
-                showTime: false,
-                showConfidence: false
-            }
-        }
 
         // Initialize state
-        this.state = {...this.initialState}
+        this.state = {
+            showCarnivores: false,
+            showNeighborhoods: false,
+            showTime: false,
+            showConfidence: false
+        }
     }
 
+    // TODO fix the name
     updateFilter = filterName => (key, newValue) => {
-        this.setState(state => ({...state,
-            [filterName]: {...state[filterName],
-                [key]: newValue}}));
+        updateFilter(filterName, key, newValue);
     }
-
 
     toggleShow = groupName => () => {
         this.setState(state => ({...state,
-            show: {...state.show,
-                [groupName]: !state.show[groupName]}}));
+                [groupName]: !state[groupName]}));
     }
 
     handleDateChange = newDate => {
         if (newDate) {
-            this.setState(({date: new Date(newDate)}));
+            updateFilterDate(new Date(newDate));
         }
         else {
-            this.setState(({date: newDate}));
+            updateFilterDate(newDate);
         }
     }
 
     toggleConfidence = () => {
-        this.setState(state => ({...state,
-            confidenceFilterActive: !state.confidenceFilterActive}));
-    }
-
-    reset = () => {
-        // Don't reset the state of expansions
-        this.setState(state => ({...this.initialState,
-            show: state.show}));
+        toggleFilterConfidence();
     }
 
     getCollapse = (classes, headerTitle, onClick, expand, child) => {
@@ -160,16 +130,15 @@ class FilterDrawer extends React.Component {
     }
 
     render = () => {
-        const {classes, cancel, children} = this.props;
-        const {show: {showCarnivores, showNeighborhoods, showTime, showConfidence},
-            date, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter} = this.state;
+        const {classes, cancel, children, filter: {date, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
+        const {showCarnivores, showNeighborhoods, showTime, showConfidence} = this.state;
         return (
             <div className={classes.allContent}>
                 {children}
                 <div className={classes.header}>
                     {cancel && <Button onClick={cancel}>Cancel</Button> }
                     <h3 style={{margin: 4}}>Filter</h3>
-                    <Button onClick={this.reset}>Reset</Button>
+                    <Button onClick={resetFilter}>Reset</Button>
                 </div>
                 <div className={classes.mainContent}>
                     {/* Carnivores */}
@@ -178,7 +147,7 @@ class FilterDrawer extends React.Component {
                             filter={carnivoreFilter}
                             allLabel="All Carnivores"
                             updateValues={this.updateFilter('carnivoreFilter')}
-                            briefNumber={allCarnivores.length}
+                            briefNumber={Object.keys(carnivoreFilter).length - 1}
                             keyColorMap={carnivoreColorMap}/>
                     )}
                     <hr/>
@@ -201,7 +170,11 @@ class FilterDrawer extends React.Component {
                                 value={date}
                                 onChange={this.handleDateChange}/> <br/>
                             Time of Day:
-                            <FilterCheckboxes filter={timeFilter} allLabel="Any time of day" updateValues={this.updateFilter('timeFilter')} briefNumber={allTimes.length}/>
+                            <FilterCheckboxes
+                                filter={timeFilter}
+                                allLabel="Any time of day"
+                                updateValues={this.updateFilter('timeFilter')}
+                                briefNumber={Object.keys(timeFilter).length - 1}/>
                         </>
                     )}
                     <hr/>
@@ -230,4 +203,16 @@ class FilterDrawer extends React.Component {
     }
 }
 
-export default withStyles(styles)(FilterDrawer);
+const mapStateToProps = (state) => {
+    return {
+        filter: {
+            carnivoreFilter: state.filter.carnivoreFilter,
+            neighborhoodFilter: state.filter.neighborhoodFilter,
+            timeFilter: state.filter.timeFilter,
+            date: state.filter.date,
+            confidenceFilterActive: state.filter.confidenceFilterActive,
+        }
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(styles)(FilterDrawer));

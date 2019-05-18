@@ -5,6 +5,7 @@ import { Map } from 'immutable';
 import PointTooltip from '../components/PointTooltip';
 import FilterDrawer from './FilterDrawer';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -111,4 +112,7 @@ class MapView extends Component {
     }
 }
 
-export default withStyles(styles)(MapView);
+const mapStateToProps = (state) => {
+    return {isMobile: state.isMobile};
+}
+export default connect(mapStateToProps)(withStyles(styles)(MapView));
