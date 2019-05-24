@@ -8,6 +8,7 @@ import FilterCheckboxes from './FilterCheckboxes';
 import CheckBoxIntermediateIcon from 'mdi-react/CheckboxIntermediateIcon'
 import { connect } from 'react-redux';
 import { updateFilter, updateFilterDate, toggleFilterConfidence, resetFilter } from '../store/actions'
+import { getColorForSpecies } from '../services/ColorService';
 
 const styles = {
     allContent: {
@@ -148,7 +149,7 @@ class FilterDrawer extends React.Component {
                             allLabel="All Carnivores"
                             updateValues={this.updateFilter('carnivoreFilter')}
                             briefNumber={Object.keys(carnivoreFilter).length - 1}
-                            keyColorMap={carnivoreColorMap}/>
+                            keyColorFunction={getColorForSpecies}/>
                     )}
                     <hr/>
 

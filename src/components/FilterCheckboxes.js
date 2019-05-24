@@ -31,8 +31,8 @@ class FilterCheckboxes extends Component {
         }
     }
 
-    getButton = (itemKey, checked, disabled, onChange, classes, keyColorMap) => {
-        const label = keyColorMap ? <span><PlaceIcon style={{color: keyColorMap[itemKey]}}/>{itemKey}</span> : <span>{itemKey}</span>;
+    getButton = (itemKey, checked, disabled, onChange, classes, keyColorFunction) => {
+        const label = keyColorFunction ? <span><PlaceIcon style={{color: keyColorFunction(itemKey)}}/>{itemKey}</span> : <span>{itemKey}</span>;
         return <FormControlLabel key={itemKey}
                     control={<Checkbox
                         checkedIcon={<CheckBoxIntermediateIcon className={classes.checkedCheckbox}/>}
@@ -43,7 +43,7 @@ class FilterCheckboxes extends Component {
     }
 
     render() {
-        const {allLabel, briefNumber, filter, updateValues, classes, keyColorMap} = this.props;
+        const {allLabel, briefNumber, filter, updateValues, classes, keyColorFunction} = this.props;
         const {viewAll} = this.state;
         return <FormControl component="fieldset" className={classes.allContent}>
             <FormGroup>
@@ -55,7 +55,7 @@ class FilterCheckboxes extends Component {
                     label={allLabel} />
                 {Object.entries(filter)
                     .filter(([key, value]) => key != 'all').slice(0, briefNumber).map(([itemKey, checked]) =>
-                    this.getButton(itemKey, checked, filter['all'], () => updateValues(itemKey, !checked), classes, keyColorMap)
+                    this.getButton(itemKey, checked, filter['all'], () => updateValues(itemKey, !checked), classes, keyColorFunction)
                 )}
             </FormGroup>
             {/* Button to display the rest. Subtracting 1 to account for the all button, which has a field in filter

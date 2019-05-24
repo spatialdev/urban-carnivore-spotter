@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import ReactMapboxGl, {Layer, Feature, Popup} from 'react-mapbox-gl';
 import axios from "axios";
-import { Map } from 'immutable';
 import PointTooltip from '../components/PointTooltip';
 import FilterDrawer from './FilterDrawer';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { dataMatchesFilter } from '../services/FilterService';
+import { getColorForSpecies } from '../services/ColorService';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
 });
 
-const speciesColorMap = Map({'black bear':'#801e78','bobcat': '#498029','coyote': '#561480','cougar/mountain lion': '#802a00','raccoon': '#093c80','opossum': '#FFDC26','river otter': '#7083ff'});
 const getReports = "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports";
 
 const styles = {
@@ -58,10 +57,6 @@ class MapView extends Component {
 
     };
 
-    getColor = species => {
-        return speciesColorMap.get(species) ? speciesColorMap.get(species) : '#805b14';
-    };
-
     renderPopup() {
         const {popupInfo} = this.state;
         if(popupInfo)
@@ -103,7 +98,7 @@ class MapView extends Component {
                         .map(report => (
                             <Layer type="circle"
                                 key ={report.id}
-                                paint={{'circle-color': this.getColor(report.data.species.toLowerCase())}}>
+                                paint={{'circle-color': getColorForSpecies(report.data.species.toLowerCase())}}>
                                 <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
                                         onClick={() => this.setState({popupInfo: report.data})}
                                 />
