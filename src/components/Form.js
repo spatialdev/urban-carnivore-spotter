@@ -4,6 +4,9 @@ import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 
 import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
@@ -11,6 +14,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
+import LoadingOverlay from 'react-loading-overlay';
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 
@@ -31,6 +35,9 @@ const conflictOptions = ['Animal made physical contact with pet or livestock',
   'Animal made physical contact with human(s)', 'Interacted with human-related item or place (e.g., trash can, birdfeeder, fence/yard, attic)'];
 const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+// constants
+const THANKS_FOR_SUBMITTING = 'Thank you for your submission! Please note that the system will display your observation on the map after a period of one week.';
+const ERROR_ON_SUBMISSION = 'Something went wrong during your submission. Please try again later.';
 
 class Form extends Component {
   state = {
@@ -62,6 +69,8 @@ class Form extends Component {
     generalComments: '',
     media: null,
     mediaPaths: [],
+    thanksMessage: null,
+    submitting: false
   };
 
   constructor(props) {
@@ -78,17 +87,16 @@ class Form extends Component {
   };
 
   handleSubmit = () => {
-    const { history, handleDrawerState, fromDrawer } = this.props;
-    let report = this.state;
+    let {thanksMessage, submitting, ...report} = this.state;
     delete report['media'];
-
+    this.setState({submitting: true});
     return axios.post(addReportUrl, report)
       .then(response => {
+        this.setState({submitting: false});
         if (response.status === 200) {
-          history.push('/');
-          if (fromDrawer) {
-            handleDrawerState(false);
-          }
+          this.setState({thanksMessage: THANKS_FOR_SUBMITTING}); // Open the submission recieved dialog
+        } else {
+          this.setState({thanksMessage: ERROR_ON_SUBMISSION});
         }
       });
   };
@@ -115,15 +123,26 @@ class Form extends Component {
     }
   };
 
+  handleClose = () => {
+    const { history, handleDrawerState, fromDrawer } = this.props;
+    this.setState({thanksMessage: null}, () => {
+      history.push('/');
+      if (fromDrawer) {
+        handleDrawerState(false);
+      }
+    });
+  }
+
   render() {
     const {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
-      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths
+      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, thanksMessage, submitting
     } = this.state;
 
     return (
+      <LoadingOverlay active={submitting} spinner text='Submitting...'>
       <div>
         <h2>Report a carnivore sighting</h2>
         <ValidatorForm onError={errors => console.log(errors)}
@@ -593,8 +612,18 @@ class Form extends Component {
             Submit
           </Button>
         </ValidatorForm>
+        <Dialog
+          open={thanksMessage}
+          onClose={this.handleClose}
+        >
+          <DialogContent>
+            <DialogContentText>
+              {thanksMessage}
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </div>
-
+      </LoadingOverlay>
     );
   }
 }
