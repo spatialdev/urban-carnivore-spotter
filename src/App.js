@@ -41,4 +41,4 @@ const mapStateToProps = (state) => {
   return {isMobile: state.isMobile};
 }
 
-export default connect(mapStateToProps)(withRouter(App));
+export default withRouter(connect(mapStateToProps)(App));
