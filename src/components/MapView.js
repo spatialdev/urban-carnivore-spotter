@@ -6,6 +6,7 @@ import PointTooltip from '../components/PointTooltip';
 import FilterDrawer from './FilterDrawer';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import { dataMatchesFilter } from '../services/FilterService';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -78,7 +79,7 @@ class MapView extends Component {
     }
 
     render() {
-        const {classes, isMobile} = this.props;
+        const {classes, isMobile, filter} = this.props;
         const {reports} = this.state;
         if (!reports) {
             return <Map2 style="mapbox://styles/mapbox/streets-v9"
@@ -98,14 +99,15 @@ class MapView extends Component {
                       onMoveEnd={e => this.onMoveEnd(e)}
                 >
                     {this.renderPopup()}
-                    {reports.map(report => (
-                        <Layer type="circle"
-                               key ={report.id}
-                               paint={{'circle-color': this.getColor(report.data.species.toLowerCase())}}>
-                            <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
-                                      onClick={() => this.setState({popupInfo: report.data})}
-                            />
-                        </Layer>))}
+                    {reports.filter(report => dataMatchesFilter(report, filter))
+                        .map(report => (
+                            <Layer type="circle"
+                                key ={report.id}
+                                paint={{'circle-color': this.getColor(report.data.species.toLowerCase())}}>
+                                <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
+                                        onClick={() => this.setState({popupInfo: report.data})}
+                                />
+                            </Layer>))}
                 </Map2>
             </div>
         );
@@ -113,6 +115,9 @@ class MapView extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {isMobile: state.isMobile};
+    return {
+        isMobile: state.isMobile,
+        filter: state.filter
+    };
 }
 export default connect(mapStateToProps)(withStyles(styles)(MapView));

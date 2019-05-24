@@ -62,11 +62,11 @@ const styles = {
 }
 
 const carnivoreColorMap = {
-    Bears: 'pink',
-    Bobcats: 'green',
-    Coyotes: 'purple',
-    'Mountain Lions': 'orange',
-    Racoons: 'blue',
+    'Black Bear': 'pink',
+    Bobcat: 'green',
+    Coyote: 'purple',
+    'Cougar/Mountain Lion': 'orange',
+    Racoon: 'blue',
     Other: 'yellow'
 };
 const briefNeighborhoodsCount = 5;
