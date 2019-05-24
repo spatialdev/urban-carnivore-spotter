@@ -18,6 +18,7 @@
     "react-dom": "^16.8.2",
     "react-firebase-file-uploader": "^2.4.2",
     "react-image-gallery": "^0.8.16",
+    "react-loading-overlay": "^1.0.1",
     "react-mapbox-gl": "^4.2.0",
     "react-material-ui-form-validator": "^2.0.7",
     "react-router": "^4.3.1",
