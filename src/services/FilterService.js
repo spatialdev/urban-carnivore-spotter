@@ -1,7 +1,7 @@
 const HIGH_CONFIDENCE = '100% confident';
 const MEDIUM_CONFIDENCE = 'More than 75% confident';
 
-const allCarnivores = ['Black Bear', 'Bobcat', 'Coyote', 'Cougar/Mountain Lion', 'Racoon', 'Other'];
+const allCarnivores = ['Black Bear', 'Bobcat', 'Coyote', 'Cougar/Mountain Lion', 'Raccoon', 'Opossum', 'River Otter', 'Other'];
 const allNeighborhoods = ['Ballard', 'Beacon Hill', 'Bothell', 'Broadview', 'Burien', 'Capitol Hill', 'Chinatown', 'Downtown'] // and more...
 const allTimes = ['Early Morning (12:00am-4:59am)', 'Morning (5:00am-11:59am)', 'Afternoon (12:00pm-5:59pm)', 'Evening (6:00pm-11:59pm)'];
 

@@ -62,14 +62,6 @@ const styles = {
     }
 }
 
-const carnivoreColorMap = {
-    'Black Bear': 'pink',
-    Bobcat: 'green',
-    Coyote: 'purple',
-    'Cougar/Mountain Lion': 'orange',
-    Racoon: 'blue',
-    Other: 'yellow'
-};
 const briefNeighborhoodsCount = 5;
 
 /**
@@ -89,9 +81,8 @@ class FilterDrawer extends React.Component {
         }
     }
 
-    // TODO fix the name
-    updateFilter = filterName => (key, newValue) => {
-        updateFilter(filterName, key, newValue);
+    updateFilterSubsection = subsectionName => (key, newValue) => {
+        updateFilter(subsectionName, key, newValue);
     }
 
     toggleShow = groupName => () => {
@@ -147,7 +138,7 @@ class FilterDrawer extends React.Component {
                         <FilterCheckboxes
                             filter={carnivoreFilter}
                             allLabel="All Carnivores"
-                            updateValues={this.updateFilter('carnivoreFilter')}
+                            updateValues={this.updateFilterSubsection('carnivoreFilter')}
                             briefNumber={Object.keys(carnivoreFilter).length - 1}
                             keyColorFunction={getColorForSpecies}/>
                     )}
@@ -158,7 +149,7 @@ class FilterDrawer extends React.Component {
                         <FilterCheckboxes
                             filter={neighborhoodFilter}
                             allLabel="All Neighborhoods"
-                            updateValues={this.updateFilter('neighborhoodFilter')}
+                            updateValues={this.updateFilterSubsection('neighborhoodFilter')}
                             briefNumber={briefNeighborhoodsCount}/>
                     )}
                     <hr/>
@@ -174,7 +165,7 @@ class FilterDrawer extends React.Component {
                             <FilterCheckboxes
                                 filter={timeFilter}
                                 allLabel="Any time of day"
-                                updateValues={this.updateFilter('timeFilter')}
+                                updateValues={this.updateFilterSubsection('timeFilter')}
                                 briefNumber={Object.keys(timeFilter).length - 1}/>
                         </>
                     )}

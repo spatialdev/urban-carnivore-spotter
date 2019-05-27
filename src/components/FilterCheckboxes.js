@@ -28,7 +28,7 @@ class FilterCheckboxes extends Component {
 
         this.state = {
             viewAll: false
-        }
+        };
     }
 
     getButton = (itemKey, checked, disabled, onChange, classes, keyColorFunction) => {
@@ -75,7 +75,6 @@ class FilterCheckboxes extends Component {
                     {viewAll ? <>Hide Some <ExpandLessIcon/></> : <>Show All <ExpandMoreIcon/></>}</Button>
                 </>
                 : null}
-            {/* </FormGroup> */}
         </FormControl>
     }
 }

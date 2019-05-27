@@ -39,6 +39,6 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {isMobile: state.isMobile};
-}
+};
 
 export default withRouter(connect(mapStateToProps)(App));
