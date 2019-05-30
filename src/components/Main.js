@@ -9,7 +9,7 @@ import ReportViewer from "./ReportViewer";
 const Main = () => (
   <main className="Main">
     <Switch>
-      <Route exact path="/" component={MapView}/>
+      <Route exact path="/" render={() => <MapView/>}/>
       <Route exact path="/reports/create" component={Form}/>
       <Route exact path="/list" component={ListView}/>
       <Route exact path="/reports/:id" component={ReportViewer}/>

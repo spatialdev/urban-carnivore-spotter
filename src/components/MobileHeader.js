@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-
+import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List/List';
@@ -8,8 +8,15 @@ import ListItem from '@material-ui/core/ListItem/ListItem';
 import Menu from '@material-ui/icons/Menu';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer/SwipeableDrawer';
 
+import FilterDrawer from './FilterDrawer';
+
 import '../App.css';
 
+const styles = {
+  filterContainer: {
+    height: '100vh'
+  }
+}
 class MobileHeader extends Component {
   state = {
     left: false,
@@ -23,7 +30,7 @@ class MobileHeader extends Component {
   };
 
   render() {
-    const { history, location } = this.props;
+    const { history, location, classes} = this.props;
 
     return (
       <div style={{ position: 'fixed', width: '100%', zIndex: 100 }}>
@@ -67,15 +74,11 @@ class MobileHeader extends Component {
               <div
                 tabIndex={0}
                 role="button"
-                onClick={this.toggleDrawer('right', false)}
-                onKeyDown={this.toggleDrawer('right', false)}
                 style={{ width: '250px' }}
               >
-                <List>
-                  <ListItem className="drawerItem"><h3>Item</h3></ListItem>
-                  <ListItem className="drawerItem"><h3>Item</h3></ListItem>
-                  <ListItem className="drawerItem"><h3>Item</h3></ListItem>
-                </List>
+                <div className={classes.filterContainer}>
+                  <FilterDrawer cancel={this.toggleDrawer('right', false)}/>
+                </div>
               </div>
             </SwipeableDrawer>
           </div>
@@ -85,4 +88,4 @@ class MobileHeader extends Component {
   }
 }
 
-export default withRouter(MobileHeader);
+export default withStyles(styles)(withRouter(MobileHeader));
