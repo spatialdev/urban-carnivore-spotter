@@ -33,7 +33,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build -r git@github.com:spatialdev/urban-carnivore-spotter.git",
+    "gh-pages-help": "gh-pages --help"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,6 +48,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "redux-devtools": "^3.5.0"
-  }
+    "redux-devtools": "^3.5.0",
+    "gh-pages": "^2.0.1"
+  },
+  "homepage": "http://spatialdev.github.io/urban-carnivore-spotter"
 }
