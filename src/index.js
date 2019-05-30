@@ -8,7 +8,6 @@ import { store } from './store/index';
 import './index.css';
 import App from './App';
 
-
 ReactDOM.render((
     <BrowserRouter basename="urban-carnivore-spotter">
       <Provider store={store}>
