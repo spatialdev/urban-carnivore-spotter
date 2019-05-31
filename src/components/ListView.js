@@ -28,9 +28,11 @@ class ListView extends Component {
       return <CircularProgress/>;
     }
     return (
-      <div className="cardContainer">
-        {reports.filter(report => dataMatchesFilter(report, filter))
-          .map((report) => <ListCard data={report.data} key={report.id}/>)}
+      <div className="backgroundCardContainer">
+        <div className="cardContainer">
+          {reports.filter(report => dataMatchesFilter(report, filter))
+            .map((report) => <ListCard data={report.data} key={report.id}/>)}
+        </div>
       </div>
     )
   }
