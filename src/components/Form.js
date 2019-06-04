@@ -12,10 +12,11 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import 'react-datepicker/dist/react-datepicker.css';
+import LoadingOverlay from 'react-loading-overlay';
 
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
-import LoadingOverlay from 'react-loading-overlay';
+import NeighborhoodService from '../services/NeighborhoodService';
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 
@@ -39,6 +40,7 @@ const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 // constants
 const THANKS_FOR_SUBMITTING = 'Thank you for your submission! Please note that the system will display your observation on the map after a period of one week.';
 const ERROR_ON_SUBMISSION = 'Something went wrong during your submission. Please try again later.';
+const neighborhoodService = new NeighborhoodService();
 
 class Form extends Component {
   state = {
@@ -68,6 +70,7 @@ class Form extends Component {
     contactName: '',
     contactPhone: '',
     generalComments: '',
+    neighborhood: '',
     media: null,
     mediaPaths: [],
     thanksMessage: null,
@@ -80,12 +83,21 @@ class Form extends Component {
     this.fileUploader = React.createRef();
   }
 
+  componentDidMount = () => {
+    // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
+    // initial location!
+    neighborhoodService.getNeighborhoodFor(this.state.mapLat, this.state.mapLng)
+      .then(neighborhood => this.setState({neighborhood}));
+  }
+
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
   getMapCoordinates = dataFromMap => {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
+    neighborhoodService.getNeighborhoodFor(dataFromMap.lat, dataFromMap.lng)
+      .then(neighborhood => this.setState({neighborhood}));
   };
 
   handleSubmit = () => {
@@ -148,9 +160,8 @@ class Form extends Component {
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
       conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, thanksMessage, submitting,
-      permissionOpen
+      permissionOpen, neighborhood
     } = this.state;
-
     return (
       <LoadingOverlay active={submitting} spinner text='Submitting...'>
       <div>
@@ -179,6 +190,7 @@ class Form extends Component {
                      centerLng={mapLng} centerLat={mapLat}/>
             {mapLat && mapLng ?
               <p>{mapLat.toFixed(6)}, {mapLng.toFixed(6)}</p> : null}
+            <p>{neighborhood}</p>
           </div>
 
           <div className="formItem">
