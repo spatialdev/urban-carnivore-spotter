@@ -8,6 +8,9 @@ const turf = require('@turf/turf');
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
 
+const NEIGHBORHOOD = 'neighborhood';
+const UNIQUES = 'uniques';
+
 exports.addReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== 'POST') {
@@ -16,14 +19,20 @@ exports.addReport = functions.https.onRequest((req, res) => {
       });
     }
     const report = req.body;
-
-    return database.collection('reports').add(report)
+    // Add neighborhood to the list of unique neighborhoods, if it's not already present
+    const updateNeighborhoodsPromise = database.collection(UNIQUES).doc(NEIGHBORHOOD)
+      .update({
+        values: admin.firestore.FieldValue.arrayUnion(report[NEIGHBORHOOD])
+      });
+    // Add the full report to the database.
+    const addReportPromise = database.collection('reports').add(report);
+    Promise.all([updateNeighborhoodsPromise, addReportPromise])
       .then(ref => {
         return res.status(200).send('Success!');
       })
       .catch(error => {
         return res.status(500).send(`Error adding document: ${error}`);
-      });
+    });
   });
 });
 
@@ -63,7 +72,7 @@ buildQuery = (queryParams, collection) => {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
   if (queryParams.neighborhood) {
-    initialQuery = initialQuery.where('neighborhood', '==', queryParams.neighborhood);
+    initialQuery = initialQuery.where(NEIGHBORHOOD, '==', queryParams.neighborhood);
   }
   if (queryParams.season) {
     initialQuery = initialQuery.where('season', '==', queryParams.season);
@@ -122,6 +131,34 @@ exports.getReports = functions.https.onRequest((req, res) => {
   }, (error) => {
     res.status(error.code).json({
       message: `Something went wrong. ${error.message}`
+    });
+  });
+});
+
+exports.getNeighborhoods = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => {
+    if (req.method !== 'GET') {
+      return res.status(401).json({
+        message: 'Not Allowed'
+      });
+    }
+    let allNeighborhoods = [];
+    return database.collection(UNIQUES)
+      .doc(NEIGHBORHOOD)
+      .get()
+      .then(snapshot => {
+        snapshot.get('values').forEach(neighborhood => {
+          allNeighborhoods.push(neighborhood);
+        });
+      })
+      .then(() => res.status(200).send(allNeighborhoods))
+      .catch(err => {
+        res.status(500).send(`Error getting documents: ${err}`);
+      });
+  },
+  (error) => {
+      res.status(error.code).json({
+      message: `Error getting documents: ${error.message}`
     });
   });
 });
