@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/urban-carnivore-spotter/precache-manifest.67676510459302e916e43c7655054eb8.js"
+  "/urban-carnivore-spotter/precache-manifest.a6b765f6985c84ad59a802dd8f6365bf.js"
 );
 
 workbox.clientsClaim();
