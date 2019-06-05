@@ -21,12 +21,6 @@ Header
     height: 100%;
 }
 
-.topHeader {
-    display: table-cell;
-    vertical-align: middle;
-    width: 10%;
-}
-
 .drawerItem h3 {
     font-family: 'Open Sans', sans-serif;
     font-weight: 600;
@@ -50,9 +44,8 @@ Header
 .header {
     color: #FFFFFF;
     font-size: 16px;
-    margin: 0;
+    padding: 16px;
     vertical-align: middle;
-    text-align: left;
     display: table-cell;
     cursor: pointer;
 }
