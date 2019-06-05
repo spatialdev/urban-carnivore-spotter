@@ -4,13 +4,10 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 .Main {
-    background-color: lightgray;
-    /*padding-bottom: 120px;*/
-    height: 100vh;
+    min-height: 100vh;
     z-index: 99;
 }
 
@@ -216,8 +213,16 @@ input {
 List + Card
  */
 
+.backgroundCardContainer {
+    padding-top: 100px;
+    padding-bottom: 20px;
+    background-color: #ececec;
+}
+
 .cardContainer {
-    margin-bottom: 80px;
+    position: relative;
+    top: -100px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -318,7 +323,8 @@ Footer Styles
     left: 0;
     padding: 25px 0;
     background-color: white;
-    position: fixed;
+    /* position: fixed; */
+    position: sticky;
     z-index: 101;
 
 }

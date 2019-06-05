@@ -33,7 +33,7 @@ class MobileHeader extends Component {
     const { history, location, classes} = this.props;
 
     return (
-      <div style={{ position: 'fixed', width: '100%', zIndex: 100 }}>
+      <div style={{ position: 'sticky', top: 0, width: '100%', zIndex: 100 }}>
         <AppBar position="static" color="default">
           <div className="headerDiv">
             <div className="topHeader">
