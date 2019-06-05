@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ListCard from '../components/ListCard';
 import { dataMatchesFilter } from '../services/FilterService';
+import FilterDrawer from './FilterDrawer';
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
 
@@ -23,12 +24,17 @@ class ListView extends Component {
 
   render() {
     const { reports } = this.state;
-    const { filter } = this.props;
+    const { filter, isMobile } = this.props;
     if (!reports) {
       return <CircularProgress/>;
     }
     return (
       <div className="backgroundCardContainer">
+        { isMobile ? null :
+          <div className="filterContainer">
+            <FilterDrawer />
+          </div>
+        }
         <div className="cardContainer">
           {reports.filter(report => dataMatchesFilter(report, filter))
             .map((report) => <ListCard data={report.data} key={report.id}/>)}
