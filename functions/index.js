@@ -26,7 +26,7 @@ exports.addReport = functions.https.onRequest((req, res) => {
       });
     // Add the full report to the database.
     const addReportPromise = database.collection('reports').add(report);
-    Promise.all([updateNeighborhoodsPromise, addReportPromise])
+    return Promise.all([updateNeighborhoodsPromise, addReportPromise])
       .then(ref => {
         return res.status(200).send('Success!');
       })
@@ -142,16 +142,11 @@ exports.getNeighborhoods = functions.https.onRequest((req, res) => {
         message: 'Not Allowed'
       });
     }
-    let allNeighborhoods = [];
     return database.collection(UNIQUES)
       .doc(NEIGHBORHOOD)
       .get()
-      .then(snapshot => {
-        snapshot.get('values').forEach(neighborhood => {
-          allNeighborhoods.push(neighborhood);
-        });
-      })
-      .then(() => res.status(200).send(allNeighborhoods))
+      .then(snapshot => snapshot.get('values'))
+      .then(neighborhoods => res.status(200).send(neighborhoods))
       .catch(err => {
         res.status(500).send(`Error getting documents: ${err}`);
       });
