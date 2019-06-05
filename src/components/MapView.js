@@ -7,6 +7,15 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { dataMatchesFilter } from '../services/FilterService';
 import { getColorForSpecies } from '../services/ColorService';
+import NavigationIcon from '@material-ui/icons/Navigation';
+import Fab from '@material-ui/core/Fab';
+import List from "@material-ui/icons/List";
+import Help from "@material-ui/icons/HelpOutline";
+import {withRouter} from "react-router-dom";
+import DialogContent from "./Form";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContentText from "@material-ui/core/DialogContentText";
+
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -25,7 +34,7 @@ const styles = {
         height: '60%',
         boxShadow: '2px 2px 2px'
     }
-}
+};
 class MapView extends Component {
     state = {
         viewport: {
@@ -34,6 +43,7 @@ class MapView extends Component {
         },
         popupInfo: null,
         reports: null,
+        legend: false
     };
 
     componentDidMount() {
@@ -73,9 +83,16 @@ class MapView extends Component {
         }
     }
 
+    handleClose = () => {
+        const { history} = this.props;
+        this.setState({legend: false}, () => {
+            history.push('/');})
+    };
+
+
     render() {
-        const {classes, isMobile, filter} = this.props;
-        const {reports} = this.state;
+        const {classes, isMobile, filter,history} = this.props;
+        const {reports,legend} = this.state;
         if (!reports) {
             return <Map2 style="mapbox://styles/mapbox/streets-v9"
                          className="map"
@@ -84,7 +101,7 @@ class MapView extends Component {
             />
         }
         return (
-            <div className="mapContainer ">
+            <div className="mapContainer">
                 { !isMobile && <div className={classes.filterContainer}>
                     <FilterDrawer/>
                 </div>}
@@ -103,6 +120,42 @@ class MapView extends Component {
                                         onClick={() => this.setState({popupInfo: report.data})}
                                 />
                             </Layer>))}
+                    <div>
+                        <Fab  aria-label="Add" className="navContainer" size="small">
+                            <NavigationIcon  onClick={() => this.setState({viewport: {
+                                    center: [-122.335167, 47.608013],
+                                    zoom: [10],
+                                }})}/>
+                        </Fab>
+                    </div>
+
+                    <div>
+                        <Fab  aria-label="Add" className="mapListToggle" size="small">
+                            <List onClick={() => history.push('/list')}/>
+                        </Fab>
+                    </div>
+
+                    <div>
+                        <Fab  aria-label="Add" className="legendContainer" size="small">
+                            <Help onClick={() => this.setState({legend: true})}/>
+                        </Fab>
+                    </div>
+
+                    <div>
+                        <Dialog
+                            open={legend}
+                            onClose={this.handleClose}
+                        >
+                            <DialogContent>
+                                <DialogContentText>
+                                    <div>
+                                        <h4>Population</h4>
+                                    </div>
+                                </DialogContentText>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
+
                 </Map2>
             </div>
         );
@@ -114,5 +167,5 @@ const mapStateToProps = (state) => {
         isMobile: state.isMobile,
         filter: state.filter
     };
-}
-export default connect(mapStateToProps)(withStyles(styles)(MapView));
+};
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(MapView)));

@@ -347,5 +347,43 @@ Footer Styles
     font-weight: bold;
 }
 
+.navigationButton {
+    justify-content: flex-end;
+    color: white;
+}
 
+.legend {
+    z-index: 1;
+}
 
+.legendContainer {
+    top: 5vh;
+    left:95%;
+    position: relative;
+}
+
+.navContainer {
+    top: 25vh;
+    left:95%;
+    position: relative;
+
+}
+
+.listMapToggle {
+    top: 83vh;
+    left:95%;
+    z-index: 1;
+    position: fixed;
+}
+
+.mapListToggle {
+    top: 83vh;
+    left:95%;
+    z-index: 1;
+    position: relative;
+}
+
+.legend {
+    background-color: #561480;
+    z-index: 1;
+}

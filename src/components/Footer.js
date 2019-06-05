@@ -61,12 +61,12 @@ class Footer extends Component {
 
   render() {
     const { open } = this.state;
-    const { classes } = this.props;
+    const { history,classes } = this.props;
 
     return (
       <div className="footerIconDiv">
-        <Button className="footerIcons" style={{ float: 'left', marginLeft: '50px' }}>
-          <MapIcon style={{ color: 'gray' }}/>
+        <Button className="footerIcons" style={{ float: 'left', marginLeft: '50px' }} >
+          <MapIcon style={{ color: 'gray' }} onClick={() => history.push('/')}/>
           <p>Explore</p>
         </Button>
         <Fab color="primary" aria-label="Add" className="plusButton" size="large" onClick={this.toggleDrawer(!open)}>
