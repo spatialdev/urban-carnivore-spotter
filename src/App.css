@@ -217,6 +217,7 @@ List + Card
     padding-top: 100px;
     padding-bottom: 20px;
     background-color: #ececec;
+    min-height: 100vh;
 }
 
 .cardContainer {
