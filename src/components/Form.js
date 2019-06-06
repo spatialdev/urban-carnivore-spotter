@@ -188,9 +188,7 @@ class Form extends Component {
 
             <FormMap passMapCoordinates={this.getMapCoordinates}
                      centerLng={mapLng} centerLat={mapLat}/>
-            {mapLat && mapLng ?
-              <p>{mapLat.toFixed(6)}, {mapLng.toFixed(6)}</p> : null}
-            <p>{neighborhood}</p>
+            {neighborhood ? <p>{neighborhood}</p> : null}
           </div>
 
           <div className="formItem">

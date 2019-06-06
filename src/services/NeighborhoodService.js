@@ -15,9 +15,7 @@ export default class NeighborhoodService {
             .send()
             .then(response => {
                 const neighborhoods = response.body.features;
-                console.log(neighborhoods);
-                if (neighborhoods) {
-                    console.log(neighborhoods[0].text);
+                if (neighborhoods && neighborhoods.length > 0) {
                     return neighborhoods[0].text;
                 }
                 return "Unknown";
