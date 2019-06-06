@@ -6,7 +6,6 @@ const ALL_NEIGHBORHOODS_ENDPOINT = 'https://us-central1-seattlecarnivores-edca2.
 export default class NeighborhoodService {
     constructor() {
         this.geocodingService = mbxGeocoding({ accessToken: process.env.REACT_APP_MAPBOX_TOKEN});
-        console.log(process.env.REACT_APP_MAPBOX_TOKEN);
     }
 
     getNeighborhoodFor = (lat, lng) => {
