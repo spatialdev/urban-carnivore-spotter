@@ -6,15 +6,19 @@ import Header from './components/MobileHeader';
 import Footer from './components/Footer';
 import Main from './components/Main';
 import { connect } from 'react-redux';
-import { setMobile } from './store/actions';
+import { setMobile, updateAllNeighborhoods } from './store/actions';
+import NeighborhoodService from './services/NeighborhoodService';
 
 import './App.css';
+
 
 class App extends Component {
 
   componentDidMount() {
     this.checkIfMobile();
     window.addEventListener('resize', this.checkIfMobile);
+    NeighborhoodService.getAllNeighborhoods()
+      .then(allNeighborhoods => updateAllNeighborhoods(allNeighborhoods));
   }
 
   componentWillUnmount() {

@@ -1,8 +1,8 @@
-import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER } from './constants';
+import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER, UPDATE_ALL_NEIGHBORHOODS } from './constants';
 import { getInitialFilter } from '../services/FilterService';
 
 const initialState = {
-    filter: getInitialFilter(),
+    filter: getInitialFilter([]),
     isMobile: false,
 }
 const reducer = (state, action) => {
@@ -17,7 +17,8 @@ const reducer = (state, action) => {
                 }}
             }
         case RESET_FILTER:
-            return {...state, filter: initialState.filter}
+            const allNeighborhoods = Object.keys(state.filter.neighborhoodFilter);
+            return {...state, filter: getInitialFilter(allNeighborhoods)};
         case UPDATE_FILTER_DATE:
             return {...state, filter: {...state.filter,
                 date: action.newDate}
@@ -26,6 +27,17 @@ const reducer = (state, action) => {
             return {...state, filter: {...state.filter,
                 confidenceFilterActive: !state.filter.confidenceFilterActive}
             }
+        // When we update the list of all neighborhoods, the filter should contain
+        // all neighborhoods: false, plus an all: true.
+        case UPDATE_ALL_NEIGHBORHOODS:
+            const newFilter = action.value.reduce((obj, neighborhood) => {
+                obj[neighborhood] = false;
+                return obj;
+            }, {all: true});
+            return {...state,
+                filter: {...state.filter,
+                    neighborhoodFilter: newFilter
+                }}
     }
     return state;
 }
