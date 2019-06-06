@@ -10,7 +10,6 @@ const styles = {
         color: '#8acc25',
         fontSize: '64px',
     },
-
     text: {
         fontSize: 20,
         marginLeft: '20%',
