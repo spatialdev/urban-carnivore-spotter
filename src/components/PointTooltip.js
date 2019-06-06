@@ -17,7 +17,7 @@ class PointTooltip extends Component {
     render() {
         const { report } = this.props;
         return <div >
-            <img width = {40} src = {report.data.mediaPaths!==undefined && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : DEFAULT_IMAGE_URL}  />
+            <img width = {40} src = {report.data.mediaPaths && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : DEFAULT_IMAGE_URL}  />
             <div className = "caption">{report.data.species}</div>
             <div className = "caption">Date & Time:</div>
             <div>{timeToString(report.data.timestamp)}</div>

@@ -47,7 +47,7 @@ class ReportViewer extends Component {
     return (
       <div className="reportViewer">
         <Toolbar className="reportViewerToolbar">
-          <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Explore</Button>
+          <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
           <h4>{report.species.toUpperCase()}</h4>
         </Toolbar>
         <Card className="reportCard">

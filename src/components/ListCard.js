@@ -36,7 +36,7 @@ const ListCard = props => {
   return <Card className="card">
     <CardContent className={classes.allContent}>
       <CardMedia className="cardPicture"
-                 image={report.data.mediaPaths!==undefined && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : DEFAULT_IMAGE_URL}
+                 image={report.data.mediaPaths && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : DEFAULT_IMAGE_URL}
       />
       <CardContent className={classes.info}>
         <Typography variant={'h3'}>{report.data.species.toUpperCase()}</Typography>
