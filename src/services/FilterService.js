@@ -63,8 +63,9 @@ export const getInitialFilter = (allNeighborhoods) => {
     // Carnivore, neighborhood, and times defaults
     const defaultCarnivoreFilter = {all: true};
     allCarnivores.forEach(carnivore => defaultCarnivoreFilter[carnivore] = false);
-    const defaultNeighborhoodFilter = {all: true};
-    allNeighborhoods.forEach(neighborhood => defaultNeighborhoodFilter[neighborhood] = false);
+    const defaultNeighborhoodFilter = allNeighborhoods
+        .filter(hood => hood !== 'all')
+        .reduce((obj, neighborhood) => obj[neighborhood] = false, {all: true});
     const defaultTimeFilter = {all: true};
     allTimes.forEach(time => defaultTimeFilter[time] = false);
 

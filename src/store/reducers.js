@@ -17,7 +17,8 @@ const reducer = (state, action) => {
                 }}
             }
         case RESET_FILTER:
-            return {...state, filter: getInitialFilter(state.allNeighborhoods)}
+            const allNeighborhoods = Object.keys(state.filter.neighborhoodFilter);
+            return {...state, filter: getInitialFilter(allNeighborhoods)};
         case UPDATE_FILTER_DATE:
             return {...state, filter: {...state.filter,
                 date: action.newDate}
