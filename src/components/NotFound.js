@@ -35,27 +35,39 @@ const styles = {
     button: {
         backgroundColor: '#8acc25',
         color: 'white',
+    },
+    container: {
+        zIndex: 0,
+    },
+    background: {
+        backgroundColor: '#f4f4f4',
+        minHeight: '100vh',
+        zIndex: -100,
+        position: 'fixed',
+        top: 0,
     }
 };
 
 const NotFound = (props) => {
     const { classes, history, isMobile } = props;
-    return <div>
-        <h1 className={classes.oops}><strong>oops!</strong></h1>
-        <h2>404 - Page not found</h2>
-        <p className={classes.text}>Sorry, the page you are looking for could not be found.</p>
-        <Button
-            variant="contained"
-            onClick={() => history.push('/')}
-            className={classes.button}
-            size="large">Back to Map</Button>
-        <br/>
-        <img src={raccoon} alt="Raccoon" className={isMobile ? classes.raccoonMobile : classes.raccoon}/>
-    </div>
+    return <>
+        <div className={classes.background}/>
+        <div className={classes.container}>
+            <h1 className={classes.oops}><strong>oops!</strong></h1>
+            <h2>404 - Page not found</h2>
+            <p className={classes.text}>Sorry, the page you are looking for could not be found.</p>
+            <Button
+                variant="contained"
+                onClick={() => history.push('/')}
+                className={classes.button}
+                size="large">Back to Map</Button>
+            <br/>
+            <img src={raccoon} alt="Raccoon" className={isMobile ? classes.raccoonMobile : classes.raccoon}/>
+        </div>
+    </>
 };
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return { isMobile: state.isMobile };
 };
 
