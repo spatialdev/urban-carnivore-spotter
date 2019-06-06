@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import axios from 'axios';
 
 import DesktopHeader from "./components/DesktopHeader";
 import Header from './components/MobileHeader';
@@ -8,18 +7,18 @@ import Footer from './components/Footer';
 import Main from './components/Main';
 import { connect } from 'react-redux';
 import { setMobile, updateAllNeighborhoods } from './store/actions';
+import NeighborhoodService from './services/NeighborhoodService';
 
 import './App.css';
 
-const ALL_NEIGHBORHOODS_ENDPOINT = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getNeighborhoods';
 
 class App extends Component {
 
   componentDidMount() {
     this.checkIfMobile();
     window.addEventListener('resize', this.checkIfMobile);
-    axios.get(ALL_NEIGHBORHOODS_ENDPOINT)
-      .then(allNeighborhoods => updateAllNeighborhoods(allNeighborhoods.data));
+    NeighborhoodService.getAllNeighborhoods()
+      .then(allNeighborhoods => updateAllNeighborhoods(allNeighborhoods));
   }
 
   componentWillUnmount() {

@@ -1,4 +1,7 @@
 import * as mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
+import axios from 'axios';
+
+const ALL_NEIGHBORHOODS_ENDPOINT = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getNeighborhoods';
 
 export default class NeighborhoodService {
     constructor() {
@@ -20,5 +23,10 @@ export default class NeighborhoodService {
                 }
                 return "Unknown";
             });
+    }
+
+    static getAllNeighborhoods = () => {
+        return axios.get(ALL_NEIGHBORHOODS_ENDPOINT)
+            .then(neighborhoods => neighborhoods.data.sort());
     }
 }
