@@ -37,7 +37,7 @@ class ListView extends Component {
         }
         <div className="cardContainer">
           {reports.filter(report => dataMatchesFilter(report, filter))
-            .map((report) => <ListCard data={report.data} key={report.id}/>)}
+            .map((report) => <ListCard report={report} key={report.id}/>)}
         </div>
       </div>
     )
