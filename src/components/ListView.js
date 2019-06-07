@@ -7,28 +7,9 @@ import ListCard from '../components/ListCard';
 import { dataMatchesFilter } from '../services/FilterService';
 import {withRouter} from "react-router-dom";
 import List from "@material-ui/icons/List";
-import {withStyles} from "@material-ui/core";
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
 
-
-const styles = {
-  filterContainer: {
-    backgroundColor: 'white',
-    position: 'fixed',
-    left: '5%',
-    top: '15%',
-    width: 250,
-    zIndex: 1,
-    height: '60%',
-    boxShadow: '2px 2px 2px'
-  },
-  toggleContainer:{
-    top: '50%',
-    left: '80%',
-    position:'fixed'
-  }
-};
 class ListView extends Component {
   state = {
     reports: null
@@ -67,5 +48,5 @@ const mapStateToProps = (state) => {
       isMobile: state.isMobile,
       filter: state.filter
   };
-}
-export default withRouter(connect(mapStateToProps)(withStyles(styles)(ListView)));
+};
+export default withRouter(connect(mapStateToProps)(ListView));
