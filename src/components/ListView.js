@@ -37,6 +37,7 @@ class ListView extends Component {
         }
         <div className="cardContainer">
           {reports.filter(report => dataMatchesFilter(report, filter))
+            .sort(report => report.time_submitted)
             .map((report) => <ListCard report={report} key={report.id}/>)}
         </div>
       </div>
