@@ -14,9 +14,7 @@ import Help from "@material-ui/icons/HelpOutline";
 import {withRouter} from "react-router-dom";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import { speciesColorMap } from '../services/ColorService';
-
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -100,7 +98,6 @@ class MapView extends Component {
 
         );
     };
-
 
     render() {
         const {classes, isMobile, filter,history} = this.props;

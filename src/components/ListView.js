@@ -50,7 +50,6 @@ class ListView extends Component {
     }
     return (
         <div>
-
           <div className="cardContainer" >
             {reports.filter(report => dataMatchesFilter(report, filter))
                 .map((report) => <ListCard data={report.data} key={report.id}/>)}

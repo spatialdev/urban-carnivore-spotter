@@ -355,15 +355,14 @@ Footer Styles
 .legendContainer {
     top: 5vh;
     left:95%;
-    position: relative;
+    position: fixed;
     z-index: 1;
 }
 
 .navContainer {
     top: 25vh;
     left:95%;
-    position: relative;
-
+    position: fixed;
 }
 
 .listMapToggle {
@@ -389,7 +388,6 @@ Footer Styles
 }
 
 .two-col-special {
-border: 1px dotted blue;
 margin: 0;
 padding: 0;
 }
