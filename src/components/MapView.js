@@ -73,10 +73,10 @@ class MapView extends Component {
             return (
                 <Popup tipSize={5}
                        anchor="bottom"
-                       coordinates={[popupInfo.mapLng, popupInfo.mapLat]}
+                       coordinates={[popupInfo.data.mapLng, popupInfo.data.mapLat]}
                        className="cardContainer"
                        onMouseLeave={() => this.setState({popupInfo: false})}>
-                    <PointTooltip className="mapboxgl-popup-content" data={popupInfo} key={popupInfo.id}/>
+                    <PointTooltip className="mapboxgl-popup-content" report={popupInfo} key={popupInfo.id}/>
                 </Popup>
             );
         }
@@ -126,7 +126,7 @@ class MapView extends Component {
                                 key ={report.id}
                                 paint={{'circle-color': getColorForSpecies(report.data.species.toLowerCase())}}>
                                 <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
-                                        onClick={() => this.setState({popupInfo: report.data})}
+                                        onClick={() => this.setState({popupInfo: report})}
                                 />
                             </Layer>))}
                     <div>

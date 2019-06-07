@@ -1,4 +1,3 @@
-const firebase = require('firebase');
 const functions = require('firebase-functions');
 const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
@@ -8,6 +7,18 @@ const turf = require('@turf/turf');
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
 
+const NEIGHBORHOOD = 'neighborhood';
+const UNIQUES = 'uniques';
+
+/**
+ * Internal helper method that converts JS Date objects to firebase timestamps.
+ * Thanks to https://stackoverflow.com/questions/53482750/convert-date-to-timestamp-for-storing-into-firebase-firestore-in-javascript
+ * for the hint
+ */
+const toTimestamp = (date) => {
+  return admin.firestore.Timestamp.fromDate(date);
+};
+
 exports.addReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== 'POST') {
@@ -16,14 +27,23 @@ exports.addReport = functions.https.onRequest((req, res) => {
       });
     }
     const report = req.body;
-
-    return database.collection('reports').add(report)
+    const reportWithTimestamp = {...report,
+      time_submitted: toTimestamp(new Date())
+    };
+    // Add neighborhood to the list of unique neighborhoods, if it's not already present
+    const updateNeighborhoodsPromise = database.collection(UNIQUES).doc(NEIGHBORHOOD)
+      .update({
+        values: admin.firestore.FieldValue.arrayUnion(report[NEIGHBORHOOD])
+      });
+    // Add the full report to the database.
+    const addReportPromise = database.collection('reports').add(reportWithTimestamp);
+    return Promise.all([updateNeighborhoodsPromise, addReportPromise])
       .then(ref => {
         return res.status(200).send('Success!');
       })
       .catch(error => {
         return res.status(500).send(`Error adding document: ${error}`);
-      });
+    });
   });
 });
 
@@ -49,6 +69,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
   });
 });
 
+
 /**
  * Internal helper method to build database queries given some parameters.
  * Currently accepts species, neighborhood, season, year, and time_of_day as fields
@@ -56,14 +77,13 @@ exports.getReport = functions.https.onRequest((req, res) => {
  */
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  let week_ago = moment().subtract(1, 'week').toISOString();
-  //let initialQuery = collection.where('timestamp', '<=', week_ago);
-  let initialQuery = collection;
+  let week_ago = toTimestamp(moment().subtract(1, 'week').toDate());
+  let initialQuery = collection.where('time_submitted', '<=', week_ago);
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
   if (queryParams.neighborhood) {
-    initialQuery = initialQuery.where('neighborhood', '==', queryParams.neighborhood);
+    initialQuery = initialQuery.where(NEIGHBORHOOD, '==', queryParams.neighborhood);
   }
   if (queryParams.season) {
     initialQuery = initialQuery.where('season', '==', queryParams.season);
@@ -122,6 +142,29 @@ exports.getReports = functions.https.onRequest((req, res) => {
   }, (error) => {
     res.status(error.code).json({
       message: `Something went wrong. ${error.message}`
+    });
+  });
+});
+
+exports.getNeighborhoods = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => {
+    if (req.method !== 'GET') {
+      return res.status(401).json({
+        message: 'Not Allowed'
+      });
+    }
+    return database.collection(UNIQUES)
+      .doc(NEIGHBORHOOD)
+      .get()
+      .then(snapshot => snapshot.get('values'))
+      .then(neighborhoods => res.status(200).send(neighborhoods))
+      .catch(err => {
+        res.status(500).send(`Error getting documents: ${err}`);
+      });
+  },
+  (error) => {
+      res.status(error.code).json({
+      message: `Error getting documents: ${error.message}`
     });
   });
 });

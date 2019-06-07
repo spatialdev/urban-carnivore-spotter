@@ -5,16 +5,18 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 
 import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import 'react-datepicker/dist/react-datepicker.css';
+import LoadingOverlay from 'react-loading-overlay';
 
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
-import LoadingOverlay from 'react-loading-overlay';
+import NeighborhoodService from '../services/NeighborhoodService';
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 
@@ -38,6 +40,7 @@ const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 // constants
 const THANKS_FOR_SUBMITTING = 'Thank you for your submission! Please note that the system will display your observation on the map after a period of one week.';
 const ERROR_ON_SUBMISSION = 'Something went wrong during your submission. Please try again later.';
+const neighborhoodService = new NeighborhoodService();
 
 class Form extends Component {
   state = {
@@ -67,15 +70,24 @@ class Form extends Component {
     contactName: '',
     contactPhone: '',
     generalComments: '',
+    neighborhood: '',
     media: null,
     mediaPaths: [],
     thanksMessage: null,
-    submitting: false
+    submitting: false,
+    permissionOpen: false,
   };
 
   constructor(props) {
     super(props);
     this.fileUploader = React.createRef();
+  }
+
+  componentDidMount = () => {
+    // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
+    // initial location!
+    neighborhoodService.getNeighborhoodFor(this.state.mapLat, this.state.mapLng)
+      .then(neighborhood => this.setState({neighborhood}));
   }
 
   handleChange = event => {
@@ -84,10 +96,12 @@ class Form extends Component {
 
   getMapCoordinates = dataFromMap => {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
+    neighborhoodService.getNeighborhoodFor(dataFromMap.lat, dataFromMap.lng)
+      .then(neighborhood => this.setState({neighborhood}));
   };
 
   handleSubmit = () => {
-    let {thanksMessage, submitting, ...report} = this.state;
+    let {thanksMessage, submitting, permissionOpen, ...report} = this.state;
     delete report['media'];
     this.setState({submitting: true});
     return axios.post(addReportUrl, report)
@@ -123,6 +137,13 @@ class Form extends Component {
     }
   };
 
+  handlePermissionResponse = (agree) => {
+    this.setState({permissionOpen: false});
+    if (agree) {
+      this.uploadMedia();
+    }
+  }
+
   handleClose = () => {
     const { history, handleDrawerState, fromDrawer } = this.props;
     this.setState({thanksMessage: null}, () => {
@@ -138,9 +159,9 @@ class Form extends Component {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
-      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, thanksMessage, submitting
+      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, thanksMessage, submitting,
+      permissionOpen, neighborhood
     } = this.state;
-
     return (
       <LoadingOverlay active={submitting} spinner text='Submitting...'>
       <div>
@@ -167,8 +188,7 @@ class Form extends Component {
 
             <FormMap passMapCoordinates={this.getMapCoordinates}
                      centerLng={mapLng} centerLat={mapLat}/>
-            {mapLat && mapLng ?
-              <p>{mapLat.toFixed(6)}, {mapLng.toFixed(6)}</p> : null}
+            {neighborhood ? <p>{neighborhood}</p> : null}
           </div>
 
           <div className="formItem">
@@ -419,7 +439,8 @@ class Form extends Component {
             <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
             {mediaPaths.length > 0 ? <p>{mediaPaths.length} files uploaded</p> : null}
           </div>
-          <Button size="small" color="secondary" variant="contained" onClick={() => this.uploadMedia()}>Upload</Button>
+          {/* Setting permissionOpen to true opens the permission dialog, where clicking "agree" actually calls the media upload function */}
+          <Button size="small" color="secondary" variant="contained" onClick={() => this.setState({ permissionOpen: true })}>Upload</Button>
 
           <div className="formItem">
             <h4>How many humans were in your group?</h4>
@@ -612,6 +633,7 @@ class Form extends Component {
             Submit
           </Button>
         </ValidatorForm>
+        {/* "Thanks for submitting" dialog */}
         <Dialog
           open={thanksMessage}
           onClose={this.handleClose}
@@ -621,6 +643,25 @@ class Form extends Component {
               {thanksMessage}
             </DialogContentText>
           </DialogContent>
+        </Dialog>
+        {/* Permission dialog */}
+        <Dialog
+          open={permissionOpen}
+          onClose={() => this.setState({ permissionOpen: false })}
+        >
+          <DialogContent>
+            <DialogContentText>
+              Is it ok if we store the images and audio that you've uploaded? If you say no, we will not be able to show your pictures to other users.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.handlePermissionResponse(false)} color="primary">
+              No, don't use my media
+            </Button>
+            <Button onClick={() => this.handlePermissionResponse(true)} color="primary">
+              Yes, use my media
+            </Button>
+          </DialogActions>
         </Dialog>
       </div>
       </LoadingOverlay>

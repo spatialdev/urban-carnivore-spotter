@@ -4,13 +4,10 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 .Main {
-    background-color: lightgray;
-    /*padding-bottom: 120px;*/
-    height: 100vh;
+    min-height: 100vh;
     z-index: 99;
 }
 
@@ -22,12 +19,6 @@ Header
     left: 0;
     top: 0;
     height: 100%;
-}
-
-.topHeader {
-    display: table-cell;
-    vertical-align: middle;
-    width: 10%;
 }
 
 .drawerItem h3 {
@@ -53,9 +44,8 @@ Header
 .header {
     color: #FFFFFF;
     font-size: 16px;
-    margin: 0;
+    padding: 16px;
     vertical-align: middle;
-    text-align: left;
     display: table-cell;
     cursor: pointer;
 }
@@ -216,12 +206,22 @@ input {
 List + Card
  */
 
+.backgroundCardContainer {
+    padding-top: 100px;
+    padding-bottom: 20px;
+    background-color: #ececec;
+    min-height: 100vh;
+}
+
 .cardContainer {
-    margin-bottom: 80px;
+    position: relative;
+    top: -100px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
+    margin-left: 0;
 }
 
 .card {
@@ -235,6 +235,17 @@ List + Card
     width: 150px;
 }
 
+.filterContainer {
+    background-color: white;
+    position: fixed;
+    left: 5%;
+    top: 15%;
+    width: 250px;
+    z-index: 1;
+    height: 60%;
+    box-shadow: 2px 2px 2px;
+}
+
 @media (min-width: 600px) {
     .card {
         width: 550px;
@@ -246,10 +257,11 @@ List + Card
     .cardContainer {
         margin-top: 80px;
         margin-bottom: 0;
+        margin-left: 40%;
     }
 
     .card {
-        width: 650px;
+        width: 500px;
         height: 200px;
     }
 
@@ -259,6 +271,25 @@ List + Card
     }
 }
 
+@media (min-width: 1024px) {
+    .card {
+        width: 600px;
+    }
+
+    .cardContainer {
+        margin-left: 30%;
+    }
+}
+
+@media (min-width: 1440px) {
+    .card {
+        width: 800px;
+    }
+
+    .cardContainer {
+        margin-left: 20%
+    }
+}
 /*
 Report Viewer
  */
@@ -318,7 +349,8 @@ Footer Styles
     left: 0;
     padding: 25px 0;
     background-color: white;
-    position: fixed;
+    /* position: fixed; */
+    position: sticky;
     z-index: 101;
 
 }

@@ -9,7 +9,7 @@ import './index.css';
 import App from './App';
 
 ReactDOM.render((
-    <BrowserRouter>
+    <BrowserRouter basename="urban-carnivore-spotter">
       <Provider store={store}>
         <FirebaseContext.Provider value={new Firebase()}>
           <App/>

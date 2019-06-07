@@ -37,7 +37,7 @@ class ReportViewer extends Component {
     const date = new Date(report.timestamp);
     let media = [];
 
-    if (report.mediaPaths.length > 0) {
+    if (report.mediaPaths !== undefined && report.mediaPaths.length > 0) {
       report.mediaPaths.map(med => {
         media.push({ original: med, thumbnail: med });
       })
@@ -47,7 +47,7 @@ class ReportViewer extends Component {
     return (
       <div className="reportViewer">
         <Toolbar className="reportViewerToolbar">
-          <Button className="backToExplore" onClick={() => history.push('/')}> <KeyboardArrowLeft/>Explore</Button>
+          <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
           <h4>{report.species.toUpperCase()}</h4>
         </Toolbar>
         <Card className="reportCard">

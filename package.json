@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.6.0",
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "@turf/turf": "^5.1.6",
@@ -14,6 +15,7 @@
     "mapbox-gl": "^0.53.1",
     "material-ui-icons": "^1.0.0-beta.36",
     "mdi-react": "^5.3.0",
+    "prop-types": "^15.7.2",
     "react": "^16.8.2",
     "react-date-picker": "^7.5.1",
     "react-datepicker": "^2.3.0",
@@ -33,7 +35,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build -r git@github.com:spatialdev/urban-carnivore-spotter.git",
+    "gh-pages-help": "gh-pages --help"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,6 +50,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "redux-devtools": "^3.5.0"
-  }
+    "redux-devtools": "^3.5.0",
+    "gh-pages": "^2.0.1"
+  },
+  "homepage": "http://spatialdev.github.io/urban-carnivore-spotter"
 }

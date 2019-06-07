@@ -1,4 +1,4 @@
-import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER } from './constants';
+import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER, UPDATE_ALL_NEIGHBORHOODS } from './constants';
 import {store} from './index';
 
 export const setMobile = (value) => {
@@ -34,4 +34,11 @@ export const toggleFilterConfidence = () => {
     store.dispatch({
         type: TOGGLE_FILTER_CONFIDENCE
     });
+}
+
+export const updateAllNeighborhoods = (allNeighborhoods) => {
+    store.dispatch({
+        type: UPDATE_ALL_NEIGHBORHOODS,
+        value: allNeighborhoods
+    })
 }
