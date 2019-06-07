@@ -408,7 +408,7 @@ Footer Styles
     top: 83vh;
     left:95%;
     z-index: 1;
-    position: relative;
+    position: fixed;
 }
 
 .dot {

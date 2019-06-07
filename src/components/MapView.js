@@ -137,19 +137,17 @@ class MapView extends Component {
                                 }})}/>
                         </Fab>
                     </div>
-
+                    <br/>
                     <div>
                         <Fab  aria-label="Toggle" className="mapListToggle" size="small">
                             <List onClick={() => history.push('/list')}/>
                         </Fab>
                     </div>
-
                     <div>
                         <Fab  aria-label="Legend" className="legendContainer" size="small">
                             <Help onClick={() => this.setState({legend: true})}/>
                         </Fab>
                     </div>
-
                     <div >
                         <Dialog
                             open={legend}
@@ -163,7 +161,6 @@ class MapView extends Component {
                             </DialogContent>
                         </Dialog>
                     </div>
-
                 </Map2>
             </div>
         );
