@@ -21,7 +21,8 @@ const reducer = (state, action) => {
             return {...state, filter: getInitialFilter(allNeighborhoods)};
         case UPDATE_FILTER_DATE:
             return {...state, filter: {...state.filter,
-                date: action.newDate}
+                startDate: action.startDate,
+                endDate: action.endDate}
             }
         case TOGGLE_FILTER_CONFIDENCE:
             return {...state, filter: {...state.filter,

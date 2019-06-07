@@ -23,10 +23,11 @@ export const resetFilter = () => {
     });
 }
 
-export const updateFilterDate = (newDate) => {
+export const updateFilterDate = (startDate, endDate) => {
     store.dispatch({
         type: UPDATE_FILTER_DATE,
-        newDate
+        startDate,
+        endDate
     });
 }
 
