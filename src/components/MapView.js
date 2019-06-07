@@ -12,9 +12,10 @@ import Fab from '@material-ui/core/Fab';
 import List from "@material-ui/icons/List";
 import Help from "@material-ui/icons/HelpOutline";
 import {withRouter} from "react-router-dom";
-import DialogContent from "./Form";
+import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContentText from "@material-ui/core/DialogContentText";
+import { speciesColorMap } from '../services/ColorService';
 
 
 const Map2 = ReactMapboxGl({
@@ -89,6 +90,17 @@ class MapView extends Component {
             history.push('/');})
     };
 
+    showLegend = () => {
+        return speciesColorMap.entrySeq().map( ([key, value]) =>
+            <div key={key}  >
+                <span style={{background:value}} className="dot">
+                </span>
+                <label  key={key} className="label"> {key} </label>
+            </div>
+
+        );
+    };
+
 
     render() {
         const {classes, isMobile, filter,history} = this.props;
@@ -121,7 +133,7 @@ class MapView extends Component {
                                 />
                             </Layer>))}
                     <div>
-                        <Fab  aria-label="Add" className="navContainer" size="small">
+                        <Fab  aria-label="Navigation" className="navContainer" size="small">
                             <NavigationIcon  onClick={() => this.setState({viewport: {
                                     center: [-122.335167, 47.608013],
                                     zoom: [10],
@@ -130,28 +142,27 @@ class MapView extends Component {
                     </div>
 
                     <div>
-                        <Fab  aria-label="Add" className="mapListToggle" size="small">
+                        <Fab  aria-label="Toggle" className="mapListToggle" size="small">
                             <List onClick={() => history.push('/list')}/>
                         </Fab>
                     </div>
 
                     <div>
-                        <Fab  aria-label="Add" className="legendContainer" size="small">
+                        <Fab  aria-label="Legend" className="legendContainer" size="small">
                             <Help onClick={() => this.setState({legend: true})}/>
                         </Fab>
                     </div>
 
-                    <div>
+                    <div >
                         <Dialog
                             open={legend}
                             onClose={this.handleClose}
+                            className="two-col-special"
                         >
-                            <DialogContent>
-                                <DialogContentText>
-                                    <div>
-                                        <h4>Population</h4>
-                                    </div>
-                                </DialogContentText>
+                            <DialogContent  >
+                                <div >
+                                    {this.showLegend()}
+                                </div>
                             </DialogContent>
                         </Dialog>
                     </div>
