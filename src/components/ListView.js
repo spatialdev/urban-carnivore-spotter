@@ -22,6 +22,8 @@ class ListView extends Component {
       .catch(error => error);
   }
 
+  timeToNanos = (timestamp) => timestamp._nanoseconds + (timestamp._seconds * 1000000000);
+
   render() {
     const { reports } = this.state;
     const { filter, isMobile } = this.props;
@@ -37,7 +39,9 @@ class ListView extends Component {
         }
         <div className="cardContainer">
           {reports.filter(report => dataMatchesFilter(report, filter))
-            .sort(report => report.time_submitted)
+            .sort((one, two) => {
+                return this.timeToNanos(two.data.time_submitted) - this.timeToNanos(one.data.time_submitted);
+            })
             .map((report) => <ListCard report={report} key={report.id}/>)}
         </div>
       </div>
