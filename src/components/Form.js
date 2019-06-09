@@ -46,8 +46,8 @@ class Form extends Component {
   state = {
     species: '',
     timestamp: new Date(),
-    mapLat: 47.608013,
-    mapLng: -122.335167,
+    mapLat: 47.668733,
+    mapLng: -122.354291,
     confidence: '',
     animalFeatures: '',
     numberOfAdultSpecies: '',
