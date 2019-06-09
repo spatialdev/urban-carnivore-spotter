@@ -3,13 +3,19 @@ const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
 const turf = require('@turf/turf');
+const nodemailer = require('nodemailer');
 
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
 
 const NEIGHBORHOOD = 'neighborhood';
 const UNIQUES = 'uniques';
+const REPORTS = 'reports';
+const REPORT_URL_STUB = 'https://console.firebase.google.com/u/1/project/seattlecarnivores-edca2/database/firestore/data~2Freports~2F';
 
+// initialize username/password
+const username = functions.config().email.username;
+const password = functions.config().email.password;
 /**
  * Internal helper method that converts JS Date objects to firebase timestamps.
  * Thanks to https://stackoverflow.com/questions/53482750/convert-date-to-timestamp-for-storing-into-firebase-firestore-in-javascript
@@ -26,17 +32,14 @@ exports.addReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-    const report = req.body;
-    const reportWithTimestamp = {...report,
-      time_submitted: toTimestamp(new Date())
-    };
+    const reportWithTimestamp = Object.assign(req.body, {time_submitted: toTimestamp(new Date())});
     // Add neighborhood to the list of unique neighborhoods, if it's not already present
     const updateNeighborhoodsPromise = database.collection(UNIQUES).doc(NEIGHBORHOOD)
       .update({
-        values: admin.firestore.FieldValue.arrayUnion(report[NEIGHBORHOOD])
+        values: admin.firestore.FieldValue.arrayUnion(reportWithTimestamp[NEIGHBORHOOD])
       });
     // Add the full report to the database.
-    const addReportPromise = database.collection('reports').add(reportWithTimestamp);
+    const addReportPromise = database.collection(REPORTS).add(reportWithTimestamp);
     return Promise.all([updateNeighborhoodsPromise, addReportPromise])
       .then(ref => {
         return res.status(200).send('Success!');
@@ -54,7 +57,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-    return database.collection('reports').doc(req.query.id)
+    return database.collection(REPORTS).doc(req.query.id)
       .get()
       .then(doc => {
         if (doc.exists) {
@@ -104,7 +107,7 @@ exports.getReports = functions.https.onRequest((req, res) => {
         message: `Not Allowed`
       });
     }
-    let reports = database.collection('reports');
+    let reports = database.collection(REPORTS);
     return buildQuery(req.query, reports)
       .get()
       .then(snapshot => {
@@ -168,3 +171,39 @@ exports.getNeighborhoods = functions.https.onRequest((req, res) => {
     });
   });
 });
+
+// Email helpers
+const sendEmail = (from, to, subject, text) => {
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: username,
+            pass: password
+        }
+    });
+
+    const mailOptions = { from, to, subject, text };
+
+    return transporter.sendMail(mailOptions);
+};
+
+sendNewSubmissionEmail = (reportSnapshot) => {
+    const from = `"Test reporters" <${username}@example.com>`;
+    const to = `"Micah" <mjnacht@gmail.com>`;
+    const subject = "New report submitted";
+    const text = `A new report was submitted with the following characteristics:
+        ID: ${reportSnapshot.id}
+        ${JSON.stringify(reportSnapshot.data())}
+
+        This report can be accessed at ${REPORT_URL_STUB}${reportSnapshot.id}`;
+    return sendEmail(from, to, subject, text);
+};
+
+/**
+ * Whenever a new document is added to the reports collection, send a notification email.
+ */
+exports.reportAdded = functions.firestore.document(`${REPORTS}/{reportId}`)
+    .onCreate((snapshot, context) => {
+      sendNewSubmissionEmail(snapshot);
+    });
