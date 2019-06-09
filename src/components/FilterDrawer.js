@@ -60,7 +60,7 @@ const styles = {
     collapsible: {
         textAlign: 'left'
     }
-}
+};
 
 const briefNeighborhoodsCount = 5;
 
@@ -83,12 +83,12 @@ class FilterDrawer extends React.Component {
 
     updateFilterSubsection = subsectionName => (key, newValue) => {
         updateFilter(subsectionName, key, newValue);
-    }
+    };
 
     toggleShow = groupName => () => {
         this.setState(state => ({...state,
                 [groupName]: !state[groupName]}));
-    }
+    };
 
     handleDateChange = newDate => {
         if (newDate) {
@@ -97,11 +97,11 @@ class FilterDrawer extends React.Component {
         else {
             updateFilterDate(newDate);
         }
-    }
+    };
 
     toggleConfidence = () => {
         toggleFilterConfidence();
-    }
+    };
 
     getCollapse = (classes, headerTitle, onClick, expand, child) => {
         return <>
@@ -119,7 +119,7 @@ class FilterDrawer extends React.Component {
                 {child}
             </Collapse>
         </>
-    }
+    };
 
     render = () => {
         const {classes, cancel, children, filter: {date, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
@@ -205,6 +205,6 @@ const mapStateToProps = (state) => {
             confidenceFilterActive: state.filter.confidenceFilterActive,
         }
     }
-}
+};
 
 export default connect(mapStateToProps)(withStyles(styles)(FilterDrawer));

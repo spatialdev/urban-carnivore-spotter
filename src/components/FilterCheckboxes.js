@@ -19,7 +19,7 @@ const styles = {
     allContent: {
         width: '100%'
     }
-}
+};
 
 class FilterCheckboxes extends Component {
 
@@ -40,7 +40,7 @@ class FilterCheckboxes extends Component {
                         onChange={onChange}
                         disabled={disabled}
                         className={classes.checkbox}/>} label={label}/>
-    }
+    };
 
     render() {
         const {allLabel, briefNumber, filter, updateValues, classes, keyColorFunction} = this.props;
@@ -54,7 +54,7 @@ class FilterCheckboxes extends Component {
                                 className={classes.checkbox}/>}
                     label={allLabel} />
                 {Object.entries(filter)
-                    .filter(([key, value]) => key != 'all').slice(0, briefNumber).map(([itemKey, checked]) =>
+                    .filter(([key, value]) => key !== 'all').slice(0, briefNumber).map(([itemKey, checked]) =>
                     this.getButton(itemKey, checked, filter['all'], () => updateValues(itemKey, !checked), classes, keyColorFunction)
                 )}
             </FormGroup>
@@ -64,7 +64,7 @@ class FilterCheckboxes extends Component {
                 <>
                 <Collapse in={viewAll}>
                     <FormGroup>
-                        {Object.entries(filter).filter(([key, value]) => key != 'all').slice(briefNumber)
+                        {Object.entries(filter).filter(([key, value]) => key !== 'all').slice(briefNumber)
                             .map(([itemKey, checked]) =>
                                 this.getButton(itemKey, checked, filter['all'], () => updateValues(itemKey, !checked), classes))}
                     </FormGroup>

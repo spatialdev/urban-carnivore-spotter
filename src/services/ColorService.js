@@ -5,4 +5,4 @@ const speciesColorMap = Map({'black bear':'#801e78','bobcat': '#498029','coyote'
 export const getColorForSpecies = (species) => {
     const color = speciesColorMap.get(species.toLowerCase());
     return color ? color : '#805b14';
-}
+};
