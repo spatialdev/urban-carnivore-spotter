@@ -104,30 +104,21 @@ const styles = {
     textAlign: 'center'
   },
   carouselDesktop: {
-    width: 300,
-    height: 275,
-    paddingLeft: 430,
-    position: 'absolute',
-    zIndex: 1
+    width: 400,
+    height: 500,
   },
-
   carouselMobile: {
-    width: 280,
-    height: 275,
-    paddingLeft: 35,
-    position: 'absolute',
-    zIndex: 1
+    width: 320,
+    height: 400,
   },
-  carouselButtonMobile: {
-  position: 'absolute',
-  paddingRight: 20,
-    zIndex: 1
+  mobileImage: {
+    width: 300,
+    height: 389,
   },
-  carouselButtonDesktop: {
-
-    zIndex: 1
+  desktopImage: {
+    width: 382,
+    height: 495
   },
-
   radioButtonContainerMobile: {
     display: 'flex',
     alignItems: 'baseline',
@@ -347,10 +338,9 @@ class Form extends Component {
           <Button size="small" color="secondary" variant="contained" onClick={() => this.uploadMedia()}>Upload</Button>
           <div className="formItem">
             <h4>Which animal did you see?</h4>
-            <div >
-              {this.state.showCarousel ?
-                  <div>
-                    <Carousel
+            <Dialog open={this.state.showCarousel} onClose={this.closeCarousel}>
+              <DialogContent>
+                <Carousel
                         className={isMobile ? classes.carouselMobile : classes.carouselDesktop}
                         useKeyboardArrows={true}
                         selectedItem={this.state.carouselImageIndex}
@@ -358,34 +348,16 @@ class Form extends Component {
                         showThumbs={false}
                         showIndicators={false}
                     >
-                      <div>
-                        <img src={BlackBear} alt="Black Bear"  />
-                      </div>
-                      <div>
-                        <img src={Bobcat} alt="Bobcat" />
-                      </div>
-                      <div>
-                        <img src={Cougar} alt="Cougar"  />
-                      </div>
-                      <div>
-                        <img src={Coyote} alt="Coyote" />
-                      </div>
-                      <div>
-                        <img src={Opossum} alt="Opossum"  />
-                      </div>
-                      <div>
-                        <img src={Raccoon} alt="Raccoon"  />
-                      </div>
-                      <div>
-                        <img src={RiverOtter} alt="RiverOtter" />
-                      </div>
+                        <img src={BlackBear} alt="Black Bear" className={isMobile? classes.mobileImage : classes.desktopImage}/>
+                        <img src={Bobcat} alt="Bobcat" className={isMobile? classes.mobileImage : classes.desktopImage}/>
+                        <img src={Cougar} alt="Cougar" className={isMobile? classes.mobileImage : classes.desktopImage} />
+                        <img src={Coyote} alt="Coyote" className={isMobile? classes.mobileImage : classes.desktopImage}/>
+                        <img src={Opossum} alt="Opossum" className={isMobile? classes.mobileImage : classes.desktopImage} />
+                        <img src={Raccoon} alt="Raccoon" className={isMobile? classes.mobileImage : classes.desktopImage} />
+                        <img src={RiverOtter} alt="RiverOtter" className={isMobile? classes.mobileImage : classes.desktopImage} />
                     </Carousel>
-                    <Button  className="carouselCloseButton"
-                             onClick={() => this.closeCarousel()}>Close</Button>
-                  </div>
-                 : null
-              }
-            </div>
+              </DialogContent>
+            </Dialog>
               {speciesLst.map((type, idx) =>
                     <span  className={isMobile ? classes.radioButtonContainerMobile : "radioButtonContainer"} key={idx}>
                      <div  >
