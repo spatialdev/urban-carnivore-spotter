@@ -112,9 +112,9 @@ const styles = {
   },
 
   carouselMobile: {
-    width: 275,
+    width: 280,
     height: 275,
-    paddingLeft: 250,
+    paddingLeft: 35,
     position: 'absolute',
     zIndex: 1
   },
@@ -126,6 +126,16 @@ const styles = {
   carouselButtonDesktop: {
 
     zIndex: 1
+  },
+
+  radioButtonContainerMobile: {
+    display: 'flex',
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'relative',
+    paddingLeft: 35,
+    paddingRight: 35,
   }
 };
 
@@ -377,8 +387,8 @@ class Form extends Component {
               }
             </div>
               {speciesLst.map((type, idx) =>
-                    <span className="radioButtonContainer" key={idx}>
-                     <div >
+                    <span  className={isMobile ? classes.radioButtonContainerMobile : "radioButtonContainer"} key={idx}>
+                     <div  >
                     <label >
                       <input
                           type="radio"
@@ -391,7 +401,7 @@ class Form extends Component {
                   </div>
                     <div>
                         <Fab  aria-label="Info" className="infoButton" size="small">
-                            <Info enableBackground={1} onClick={() => this.openCarousel(idx)}/>
+                            <Info onClick={() => this.openCarousel(idx)}/>
                         </Fab>
                     </div>
                   </span>)}
