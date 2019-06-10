@@ -7,12 +7,12 @@ import { getDisplayName } from '../services/ColorService';
 
 const styles = {
     allContent: {
+        paddingTop: 50,
         height: '100%',
         overflow: 'scroll',
-        position: 'static',
+        position: 'relative',
         flexDirection: 'column',
         backgroundColor: 'white'
-
     },
     header: {
         flexDirection: 'row',
