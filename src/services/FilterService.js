@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 const HIGH_CONFIDENCE = '100% confident';
 const MEDIUM_CONFIDENCE = 'More than 75% confident';
 
@@ -33,14 +35,15 @@ const DATE_BOUNDS = [
 ];
 
 /**
- * Given two Date() objects, return true if they are on the same day, eg:
- *  12/21/2000 at noon and 12/21/2000 at 3pm return true, but
- *  12/21/2000 at noon and 12/22/2000 at noon return false
+ * Given two Date() objects, return true if target is on the same day as startDate or endDate,
+ * OR (target is before endDate AND target is after startDate)
+ * @param target
+ * @param startDate
+ * @param endDate
  */
-const daysAreEqual = (one, two) => {
-    return one.getUTCFullYear() === two.getUTCFullYear() 
-        && one.getUTCMonth() === two.getUTCMonth()
-        && one.getUTCDate() === two.getUTCDate();
+const insideDateBounds = (target, startDate, endDate) => {
+    return (startDate === null || target.isSameOrAfter(startDate, 'day')) &&
+        (endDate === null || target.isSameOrBefore(endDate, 'day'));
 }
 
 const insideAnyActiveTimeBounds = (date, filter) => {
@@ -75,7 +78,8 @@ export const getInitialFilter = (allNeighborhoods) => {
     const initialFilter = {
         carnivoreFilter: {...defaultCarnivoreFilter},
         neighborhoodFilter: {...defaultNeighborhoodFilter},
-        date: null,
+        startDate: null,
+        endDate: null,
         timeFilter: {...defaultTimeFilter},
         confidenceFilterActive: false,
     }
@@ -93,7 +97,7 @@ export const dataMatchesFilter = (report, filter) => {
     // ok with neighborhood
     (filter.neighborhoodFilter.all === true || (data.hasOwnProperty('neighborhood') && filter.neighborhoodFilter[data.neighborhood] === true)) &&
     // ok with date
-    (filter.date === null || daysAreEqual(filter.date, parsedDate)) &&
+    insideDateBounds(moment(parsedDate), filter.startDate, filter.endDate) &&
     // ok with time
     (filter.timeFilter.all || insideAnyActiveTimeBounds(parsedDate, filter)) &&
     // ok with confidence
