@@ -46,8 +46,8 @@ class Form extends Component {
   state = {
     species: '',
     timestamp: new Date(),
-    mapLat: 47.608013,
-    mapLng: -122.335167,
+    mapLat: 47.668733,
+    mapLng: -122.354291,
     confidence: '',
     animalFeatures: '',
     numberOfAdultSpecies: '',
@@ -83,11 +83,29 @@ class Form extends Component {
     this.fileUploader = React.createRef();
   }
 
+  updateNeighborhood = (lat, lng) => {
+    neighborhoodService.getNeighborhoodFor(lat, lng)
+        .then(neighborhood => this.setState((state) => {
+          // If the map coordinates have changed, we don't want to update the neighborhood with outdated info!
+          if (state.mapLat === lat && state.mapLng === lng) {
+            return {neighborhood};
+          }
+          return {};
+        }));
+  };
+
   componentDidMount = () => {
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
-    neighborhoodService.getNeighborhoodFor(this.state.mapLat, this.state.mapLng)
-      .then(neighborhood => this.setState({neighborhood}));
+    this.updateNeighborhood(this.state.mapLat, this.state.mapLng);
+
+    // Request the user's geolocation and default to there
+    // See https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API for more information
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.getMapCoordinates({lat: position.coords.latitude, lng: position.coords.longitude});
+      }, (err) => console.log(err));
+    }
   }
 
   handleChange = event => {
@@ -96,8 +114,7 @@ class Form extends Component {
 
   getMapCoordinates = dataFromMap => {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
-    neighborhoodService.getNeighborhoodFor(dataFromMap.lat, dataFromMap.lng)
-      .then(neighborhood => this.setState({neighborhood}));
+    this.updateNeighborhood(dataFromMap.lat, dataFromMap.lng);
   };
 
   handleSubmit = () => {
