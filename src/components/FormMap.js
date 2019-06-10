@@ -13,7 +13,6 @@ class FormMap extends Component {
       e.originalEvent.preventDefault();
   };
 
-
   onDragEnd = e => {
     const { passMapCoordinates } = this.props;
     const lng = e.lngLat.lng;
