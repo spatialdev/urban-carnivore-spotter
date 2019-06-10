@@ -61,7 +61,7 @@ class Footer extends Component {
 
   render() {
     const { open } = this.state;
-    const { classes } = this.props;
+    const { classes, history } = this.props;
 
     return (
       <div className="footerIconDiv">
@@ -88,8 +88,8 @@ class Footer extends Component {
             <Form handleDrawerState={this.handleDrawer} fromDrawer/>
           </div>
         </SwipeableDrawer>
-        <Button className="footerIcons" style={{ float: 'right', marginRight: '50px' }}>
-          <SettingsIcon style={{ color: 'gray' }}/>
+        <Button className="footerIcons" style={{ float: 'right', marginRight: '50px' }} onClick={() => history.push('/resources')}>
+          <SettingsIcon style={{ color: 'gray' }} />
           <p>Resources</p>
         </Button>
       </div>
