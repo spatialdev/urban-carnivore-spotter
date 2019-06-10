@@ -411,5 +411,13 @@ Footer Styles
     z-index: 101;
 }
 
+li a {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none
+}
+
 
 

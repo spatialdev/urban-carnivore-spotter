@@ -6,3 +6,10 @@ export const getColorForSpecies = (species) => {
     const color = speciesColorMap.get(species.toLowerCase());
     return color ? color : '#805b14';
 };
+
+const speciesDisplayName = Map({'blackbear':'Black Bear','bobcat': 'Bobcat','coyote': 'Coyote','cougar': 'Cougar/Mountain Lion','raccoon': 'Raccoon','opossum': 'Opossum','riverotter': 'River Otter'});
+
+export const getDisplayName = (species) => {
+    return speciesDisplayName.get(species);
+};
+
