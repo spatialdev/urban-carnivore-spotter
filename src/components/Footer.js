@@ -76,7 +76,6 @@ class Footer extends Component {
           anchor="bottom"
           open={open}
           onClose={this.toggleDrawer(!open)}
-          onOpen={this.toggleDrawer(!open)}
           className="formWizard"
         >
           <div tabIndex={0}>
