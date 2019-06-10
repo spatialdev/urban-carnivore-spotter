@@ -4,9 +4,17 @@ import AddIcon from '@material-ui/icons/ArrowDownward';
 import RemoveIcon from '@material-ui/icons/ArrowUpward';
 import {Link} from "react-router-dom";
 import { getDisplayName } from '../services/ColorService';
+import {connect} from "react-redux";
 
 const styles = {
     allContent: {
+        height: '100%',
+        overflow: 'scroll',
+        position: 'relative',
+        flexDirection: 'column',
+        backgroundColor: 'white'
+    },
+    allContentDesktop: {
         paddingTop: 50,
         height: '100%',
         overflow: 'scroll',
@@ -83,9 +91,9 @@ class Resources extends Component {
 
     render = () => {
         const {showTips, showProjectDescription, showContactUs} = this.state;
-        const {classes} = this.props;
+        const {classes, isMobile} = this.props;
         return(
-            <div className={classes.allContent}>
+            <div className={isMobile? classes.allContent : classes.allContentDesktop}>
                 {/* Species Identification Tips */}
                 {this.getCollapse(classes, "Species Identification Tips", this.toggleShow('showTips'), showTips,
                     <div>
@@ -120,5 +128,8 @@ class Resources extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return { isMobile: state.isMobile };
+};
 
-export default (withStyles(styles)(Resources));
+export default (withStyles(styles)(connect(mapStateToProps)(Resources)));

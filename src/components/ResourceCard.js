@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from "react-redux";
-import {Button, Card, CardContent, withStyles} from "@material-ui/core";
+import {Button, withStyles} from "@material-ui/core";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import "../assets/SpeciesCards/coyote.png";
 import {KeyboardArrowLeft} from "@material-ui/icons";
 
 const styles = {
