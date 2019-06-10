@@ -1,24 +1,38 @@
 import React, { Component } from 'react';
-import {Link, withRouter} from 'react-router-dom';
-
-import { Map } from 'immutable';
-import axios from "axios";
-import {Button, Card, CardContent, z} from "@material-ui/core";
+import {withRouter} from 'react-router-dom';
+import {connect} from "react-redux";
+import {Button, Card, CardContent, withStyles} from "@material-ui/core";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import blackbear from "../assets/SpeciesCards/blackbear.png";
 import "../assets/SpeciesCards/coyote.png";
-import bobcat from "../assets/SpeciesCards/bobcat.png";
-import cougar from "../assets/SpeciesCards/cougar.png";
-import opossum from "../assets/SpeciesCards/opossum.png";
-import riverotter from "../assets/SpeciesCards/riverotter.png";
-import raccoon from "../assets/SpeciesCards/raccoon.png";
-import CardMedia from "./ListCard";
+import {KeyboardArrowLeft} from "@material-ui/icons";
 
+const styles = {
+    mobileImage: {
+        width: 400,
+        height: 500,
+        paddingLeft: 0,
+        paddingRight: 20
+    },
+    desktopImage: {
+        width: 400,
+        height: 500
+    },
+    mobileButton: {
+        zIndex: 99,
+        alignItems: 'left',
+        textAlign: 'left'
+    },
+    mobileImageContainer: {
+        paddingLeft: 10,
+        paddingRight: 20
+    },
 
-const imagePath = '../assets/SpeciesCards/';
-const speciesList = ['blackbear', 'bobcat', 'cougar', 'coyote', 'opossum',
-    'raccoon', 'riverotter'];
+    desktopImageContainer: {
+        paddingLeft: 10,
+        paddingRight: 20
+    }
 
+};
 class ResourceCard extends Component {
     state = {
         species: null
@@ -31,17 +45,24 @@ class ResourceCard extends Component {
 ;
     render() {
         const {species} = this.state;
-        const { history } = this.props;
+        const { history, isMobile, classes } = this.props;
         if (!species) {
             return <CircularProgress/>;
         }
         return (
             <div>
-                <img src={ require('../assets/SpeciesCards/' + species+'.png') }/>
-                <Button onClick={() => history.goBack()}>back</Button>
+                <div className={classes.mobileButton}>
+                    <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
+                </div>
+                <div className={isMobile? classes.mobileImageContainer : classes.desktopImageContainer}>
+                    <img  className={isMobile? classes.mobileImage : classes.desktopImage} src={ require('../assets/SpeciesCards/' + species+'.png') }/>
+                </div>
             </div>
         );
     }
 }
+const mapStateToProps = (state) => {
+    return { isMobile: state.isMobile };
+};
 
-export default (withRouter(ResourceCard));
+export default (withRouter(withStyles(styles)(connect(mapStateToProps)(ResourceCard))));

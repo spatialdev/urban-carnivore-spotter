@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import {Collapse, withStyles, Fab} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/ArrowDownward';
 import RemoveIcon from '@material-ui/icons/ArrowUpward';
-import ResourceCard from "./ResourceCard";
-import BlackBear from '../assets/SpeciesCards/blackbear.png'
 import {Link} from "react-router-dom";
-import MenuItem from "./Form";
-
 import { getDisplayName } from '../services/ColorService';
 
 const styles = {
@@ -41,12 +37,12 @@ const styles = {
         justifyContent: 'space-between'
     },
     headerTitle: {
-        alignText: 'left'
+        alignText: 'left',
     },
     collapsible: {
         margin: 16,
         textAlign: 'left'
-    }
+    },
 };
 const speciesList = ['blackbear', 'bobcat', 'cougar', 'coyote', 'opossum',
     'raccoon', 'riverotter'];
@@ -85,10 +81,6 @@ class Resources extends Component {
             [groupName]: !state[groupName]}));
     };
 
-    openImage = () => {
-        return <img src={BlackBear} />
-    };
-
     render = () => {
         const {showTips, showProjectDescription, showContactUs} = this.state;
         const {classes} = this.props;
@@ -96,7 +88,7 @@ class Resources extends Component {
             <div className={classes.allContent}>
                 {/* Species Identification Tips */}
                 {this.getCollapse(classes, "Species Identification Tips", this.toggleShow('showTips'), showTips,
-                    <div >
+                    <div>
                         {speciesList.map((type, idx) =>
                             <li key={idx}>
                                 <Link to={`/resources/${type}`}>{getDisplayName(type)}</Link>
@@ -127,5 +119,6 @@ class Resources extends Component {
         );
     }
 }
+
 
 export default (withStyles(styles)(Resources));
