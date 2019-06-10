@@ -19,27 +19,21 @@ import LoadingOverlay from 'react-loading-overlay';
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
 import NeighborhoodService from '../services/NeighborhoodService';
-import {CardContent, Collapse, Fab, withStyles} from "@material-ui/core";
-import RadioButtonUnchecked from "@material-ui/core/es/internal/svg-icons/RadioButtonUnchecked";
-import RadioGroup from "@material-ui/core/RadioGroup";
+import {Collapse, Fab, withStyles} from "@material-ui/core";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
-import BlackBear from "../assets/SpeciesCards/BlackBear.png";
-import Coyote from "../assets/SpeciesCards/Coyote.png";
-import Bobcat from "../assets/SpeciesCards/Bobcat.png";
-import Cougar from "../assets/SpeciesCards/Cougar.png";
-import Opossum from "../assets/SpeciesCards/Opossum.png";
-import RiverOtter from "../assets/SpeciesCards/RiverOtter.png";
-import Raccoon from "../assets/SpeciesCards/Raccoon.png";
-import Card from "@material-ui/core/Card";
+import BlackBear from "../assets/SpeciesCards/blackbear.png";
+import Coyote from "../assets/SpeciesCards/coyote.png";
+import Bobcat from "../assets/SpeciesCards/bobcat.png";
+import Cougar from "../assets/SpeciesCards/cougar.png";
+import Opossum from "../assets/SpeciesCards/opossum.png";
+import RiverOtter from "../assets/SpeciesCards/riverotter.png";
+import Raccoon from "../assets/SpeciesCards/raccoon.png";
 import Info from '@material-ui/icons/InfoOutlined';
-import { Map } from 'immutable';
 import {connect} from "react-redux";
 
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
-
-
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
   'Raccoon', 'River Otter', 'Other/Unknown'];
