@@ -92,15 +92,13 @@ class MapView extends Component {
         const {popupInfo} = this.state;
         if(popupInfo)
         {
-            return (
-                <Popup tipSize={5}
-                       anchor="bottom"
-                       coordinates={[popupInfo.data.mapLng, popupInfo.data.mapLat]}
-                       className="cardContainer"
-                       onMouseLeave={() => this.setState({popupInfo: false})}>
-                    <PointTooltip className="mapboxgl-popup-content" report={popupInfo} key={popupInfo.id}/>
-                </Popup>
-            );
+            return <Popup
+                    coordinates={[popupInfo.data.mapLng, popupInfo.data.mapLat]}
+                    onClick={() => this.setState({popupInfo: false})}
+                    anchor={"bottom"}
+            >
+                <PointTooltip report={popupInfo} />
+            </Popup>
         }
     }
 

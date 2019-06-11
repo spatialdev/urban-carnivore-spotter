@@ -375,8 +375,36 @@ Footer Styles
 
 }
 
-.caption {
-    font-weight: bold;
+.carouselContainer {
+    width: 275px;
+    height: 275px;
+    padding-left: 35%;
+    padding-right: 35%;
+    position: absolute;
+    z-index: 10;
+    border: 2px;
+}
+
+.radioButtonContainer {
+    display: flex;
+    align-items: baseline;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 35%;
+    padding-right: 35%;
+    position: relative;
+}
+
+.infoButton {
+    width: 10px;
+    height: 10px;
+    color: #8acc25;
+}
+
+.carouselCloseButton {
+    position: absolute;
+    padding-left: 0 !important;
+    z-index: 101;
 }
 
 .legendContainer {
@@ -418,4 +446,5 @@ padding: 0;
 .label {
     text-transform: capitalize;
 }
+
 
