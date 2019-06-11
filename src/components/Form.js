@@ -111,7 +111,7 @@ class Form extends Component {
         this.getMapCoordinates({lat: position.coords.latitude, lng: position.coords.longitude});
       }, (err) => console.log(err));
     }
-  }
+  };
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });

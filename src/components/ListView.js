@@ -6,10 +6,27 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ListCard from '../components/ListCard';
 import { dataMatchesFilter } from '../services/FilterService';
 import {withRouter} from "react-router-dom";
-import List from "@material-ui/icons/List";
+import Map from "@material-ui/icons/Map";
 import FilterDrawer from './FilterDrawer';
+import {withStyles} from "@material-ui/core";
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
+
+const styles = {
+    toggleButtonMobile: {
+        bottom: '20%',
+        left: '88%',
+        zIndex: 99,
+        position: 'fixed',
+    },
+
+    toggleButtonDesktop: {
+        left:'95%',
+        zIndex: 99,
+        position: 'fixed',
+        bottom: '20%'
+    }
+};
 
 class ListView extends Component {
   state = {
@@ -28,7 +45,7 @@ class ListView extends Component {
 
   render() {
     const { reports } = this.state;
-    const { filter, isMobile, history } = this.props;
+    const { filter, isMobile, history, classes } = this.props;
     if (!reports) {
       return <CircularProgress/>;
     }
@@ -45,7 +62,9 @@ class ListView extends Component {
                 return this.timeToNanos(two.data.time_submitted) - this.timeToNanos(one.data.time_submitted);
             })
             .map((report) => <ListCard report={report} key={report.id}/>)}
-            <List onClick={() => history.push('/')} className="listMapToggle"/>
+            <div>
+                <Map onClick={() => history.push('/')} className={isMobile? classes.toggleButtonMobile : classes.toggleButtonDesktop}/>
+            </div>
         </div>
       </div>
     )
@@ -59,4 +78,4 @@ const mapStateToProps = (state) => {
       filter: state.filter
   };
 };
-export default withRouter(connect(mapStateToProps)(ListView));
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(ListView)));

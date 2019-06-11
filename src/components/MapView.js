@@ -32,7 +32,29 @@ const styles = {
         zIndex: 1,
         height: '60%',
         boxShadow: '2px 2px 2px'
+    },
+    buttonContainerMobile: {
+        left: '88%',
+        position: 'fixed',
+        bottom: '20%'
+    },
+    buttonContainerDesktop: {
+        left: '95%',
+        position: 'fixed',
+        bottom: '20%'
+    },
+
+    legendMobile: {
+        top: '12%',
+        left: '87%',
+        position: 'fixed'
+    },
+    legendDesktop: {
+        top: '12%',
+        left: '95%',
+        position: 'fixed'
     }
+
 };
 class MapView extends Component {
     state = {
@@ -99,6 +121,23 @@ class MapView extends Component {
         );
     };
 
+    updateLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.setState({viewport: {
+                        center: [position.coords.longitude, position.coords.latitude],
+                        zoom: [10],
+                    }});
+            }, (err) => console.log(err));
+        }
+        else {
+            this.setState({viewport: {
+                    center: [-122.354291, 47.668733],
+                    zoom: [10],
+                }})
+        }
+    };
+
     render() {
         const {classes, isMobile, filter,history} = this.props;
         const {reports,legend} = this.state;
@@ -129,25 +168,25 @@ class MapView extends Component {
                                         onClick={() => this.setState({popupInfo: report})}
                                 />
                             </Layer>))}
-                    <div>
-                        <Fab  aria-label="Navigation" className="navContainer" size="small">
-                            <NavigationIcon  onClick={() => this.setState({viewport: {
-                                    center: [-122.335167, 47.608013],
-                                    zoom: [10],
-                                }})}/>
-                        </Fab>
-                    </div>
-                    <br/>
-                    <div>
-                        <Fab  aria-label="Toggle" className="mapListToggle" size="small">
-                            <List onClick={() => history.push('/list')}/>
-                        </Fab>
-                    </div>
-                    <div>
-                        <Fab  aria-label="Legend" className="legendContainer" size="small">
+                    <div  className={isMobile? classes.legendMobile : classes.legendDesktop}>
+                        <Fab  aria-label="Legend"  size="small">
                             <Help onClick={() => this.setState({legend: true})}/>
                         </Fab>
                     </div>
+                    <div className={isMobile? classes.buttonContainerMobile : classes.buttonContainerDesktop}>
+                        <div>
+                            <Fab  aria-label="Navigation" size="small">
+                                <NavigationIcon  onClick={() => this.updateLocation()}/>
+                            </Fab>
+                        </div>
+                        <br/>
+                        <div>
+                            <Fab  aria-label="Toggle"  size="small">
+                                <List onClick={() => history.push('/list')}/>
+                            </Fab>
+                        </div>
+                    </div>
+
                     <div >
                         <Dialog
                             open={legend}
