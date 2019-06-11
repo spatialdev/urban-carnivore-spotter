@@ -7,6 +7,14 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { dataMatchesFilter } from '../services/FilterService';
 import { getColorForSpecies } from '../services/ColorService';
+import NavigationIcon from '@material-ui/icons/Navigation';
+import Fab from '@material-ui/core/Fab';
+import List from "@material-ui/icons/List";
+import Help from "@material-ui/icons/HelpOutline";
+import {withRouter} from "react-router-dom";
+import DialogContent from "@material-ui/core/DialogContent";
+import Dialog from "@material-ui/core/Dialog";
+import { speciesColorMap } from '../services/ColorService';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -24,8 +32,30 @@ const styles = {
         zIndex: 1,
         height: '60%',
         boxShadow: '2px 2px 2px'
+    },
+    buttonContainerMobile: {
+        left: '88%',
+        position: 'fixed',
+        bottom: '20%'
+    },
+    buttonContainerDesktop: {
+        left: '95%',
+        position: 'fixed',
+        bottom: '20%'
+    },
+
+    legendMobile: {
+        top: '12%',
+        left: '87%',
+        position: 'fixed'
+    },
+    legendDesktop: {
+        top: '12%',
+        left: '95%',
+        position: 'fixed'
     }
-}
+
+};
 class MapView extends Component {
     state = {
         viewport: {
@@ -34,6 +64,7 @@ class MapView extends Component {
         },
         popupInfo: null,
         reports: null,
+        legend: false
     };
 
     componentDidMount() {
@@ -71,9 +102,43 @@ class MapView extends Component {
         }
     }
 
+    handleClose = () => {
+        const { history} = this.props;
+        this.setState({legend: false}, () => {
+            history.push('/');})
+    };
+
+    showLegend = () => {
+        return speciesColorMap.entrySeq().map( ([key, value]) =>
+            <div key={key}  >
+                <span style={{background:value}} className="dot">
+                </span>
+                <label  key={key} className="label"> {key} </label>
+            </div>
+
+        );
+    };
+
+    updateLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.setState({viewport: {
+                        center: [position.coords.longitude, position.coords.latitude],
+                        zoom: [10],
+                    }});
+            }, (err) => console.log(err));
+        }
+        else {
+            this.setState({viewport: {
+                    center: [-122.354291, 47.668733],
+                    zoom: [10],
+                }})
+        }
+    };
+
     render() {
-        const {classes, isMobile, filter} = this.props;
-        const {reports} = this.state;
+        const {classes, isMobile, filter,history} = this.props;
+        const {reports,legend} = this.state;
         if (!reports) {
             return <Map2 style="mapbox://styles/mapbox/streets-v9"
                          className="map"
@@ -82,7 +147,7 @@ class MapView extends Component {
             />
         }
         return (
-            <div className="mapContainer ">
+            <div className="mapContainer">
                 { !isMobile && <div className={classes.filterContainer}>
                     <FilterDrawer/>
                 </div>}
@@ -101,6 +166,38 @@ class MapView extends Component {
                                         onClick={() => this.setState({popupInfo: report})}
                                 />
                             </Layer>))}
+                    <div  className={isMobile? classes.legendMobile : classes.legendDesktop}>
+                        <Fab  aria-label="Legend"  size="small">
+                            <Help onClick={() => this.setState({legend: true})}/>
+                        </Fab>
+                    </div>
+                    <div className={isMobile? classes.buttonContainerMobile : classes.buttonContainerDesktop}>
+                        <div>
+                            <Fab  aria-label="Navigation" size="small">
+                                <NavigationIcon  onClick={() => this.updateLocation()}/>
+                            </Fab>
+                        </div>
+                        <br/>
+                        <div>
+                            <Fab  aria-label="Toggle"  size="small">
+                                <List onClick={() => history.push('/list')}/>
+                            </Fab>
+                        </div>
+                    </div>
+
+                    <div >
+                        <Dialog
+                            open={legend}
+                            onClose={this.handleClose}
+                            className="two-col-special"
+                        >
+                            <DialogContent  >
+                                <div >
+                                    {this.showLegend()}
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </Map2>
             </div>
         );
@@ -112,5 +209,5 @@ const mapStateToProps = (state) => {
         isMobile: state.isMobile,
         filter: state.filter
     };
-}
-export default connect(mapStateToProps)(withStyles(styles)(MapView));
+};
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(MapView)));
