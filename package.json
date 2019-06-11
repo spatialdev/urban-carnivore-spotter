@@ -26,7 +26,7 @@
     "react-firebase-file-uploader": "^2.4.2",
     "react-image-gallery": "^0.8.16",
     "react-loading-overlay": "^1.0.1",
-    "react-mapbox-gl": "^4.2.0",
+    "react-mapbox-gl": "~4.2.0",
     "react-material-ui-form-validator": "^2.0.7",
     "react-redux": "^7.0.3",
     "react-responsive-carousel": "^3.1.49",
