@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import axios from 'axios';
+
+import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import DialogContent from '@material-ui/core/DialogContent';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+import Dialog from '@material-ui/core/Dialog';
+
 import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import 'react-datepicker/dist/react-datepicker.css';
+import LoadingOverlay from 'react-loading-overlay';
+
+import MediaUpload from './MediaUpload';
+import FormMap from './FormMap';
+import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
@@ -15,12 +29,14 @@ import RiverOtter from "../assets/SpeciesCards/riverotter.png";
 import Raccoon from "../assets/SpeciesCards/raccoon.png";
 import Info from '@material-ui/icons/InfoOutlined';
 import {connect} from "react-redux";
+
 import FormInfoDialog from './FormInfoDialog';
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
   'Raccoon', 'River Otter', 'Other/Unknown'];
+const species = ['blackbear','bobcat','cougar','coyote','opossum','raccoon','riverotter'];
 const confidenceLevels = ['Not at all confident', 'About 25% confident', 'About 50% confident', 'About 75% confident',
   'More than 75% confident', '100% confident'];
 const reactions = ['Stayed quiet', 'Shouted/made noise', 'Other'];
@@ -193,10 +209,6 @@ class Form extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  setSpecies = type => {
-    this.setState({species: type})
-  };
-
   getMapCoordinates = dataFromMap => {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
     this.updateNeighborhood(dataFromMap.lat, dataFromMap.lng);
@@ -289,7 +301,7 @@ class Form extends Component {
 
 
   openCarousel = (index) => {
-    const newIndex = index ===7 ? 0: index;
+    const newIndex = (index === speciesLst.length-1 ? 0: index);
       this.setState({
         showCarousel: true,
         carouselImageIndex: newIndex
@@ -341,7 +353,7 @@ class Form extends Component {
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
       conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, submitting,
-      neighborhood, dialogMode
+      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation
     } = this.state;
     const {classes, isMobile} = this.props;
     return (
@@ -393,13 +405,10 @@ class Form extends Component {
                         showThumbs={false}
                         showIndicators={false}
                     >
-                        <img src={BlackBear} alt="Black Bear" className={isMobile? classes.mobileImage : classes.desktopImage}/>
-                        <img src={Bobcat} alt="Bobcat" className={isMobile? classes.mobileImage : classes.desktopImage}/>
-                        <img src={Cougar} alt="Cougar" className={isMobile? classes.mobileImage : classes.desktopImage} />
-                        <img src={Coyote} alt="Coyote" className={isMobile? classes.mobileImage : classes.desktopImage}/>
-                        <img src={Opossum} alt="Opossum" className={isMobile? classes.mobileImage : classes.desktopImage} />
-                        <img src={Raccoon} alt="Raccoon" className={isMobile? classes.mobileImage : classes.desktopImage} />
-                        <img src={RiverOtter} alt="RiverOtter" className={isMobile? classes.mobileImage : classes.desktopImage} />
+                  {species.map((type, idx) =>
+                    <img key={idx} src={ require('../assets/SpeciesCards/' + type+'.png') }
+                         alt="Black Bear" className={isMobile? classes.mobileImage : classes.desktopImage}/>)
+                  }
                     </Carousel>
               </DialogContent>
             </Dialog>
@@ -411,7 +420,7 @@ class Form extends Component {
                           type="radio"
                           name="react-tips"
                           value={type}
-                          onChange={() => this.setSpecies({type})}
+                          onChange={() => this.setState({species: type})}
                       />
                       {type}
                     </label>
@@ -423,7 +432,6 @@ class Form extends Component {
                     </div>
                   </span>)}
           </div>
-
 
           <div className="formItem">
             <h4>How confident are you that you have identified the animal correctly?</h4>
