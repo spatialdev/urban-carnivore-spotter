@@ -12,3 +12,4 @@ const speciesDisplayName = Map({'blackbear':'Black Bear','bobcat': 'Bobcat','coy
 export const getDisplayName = (species) => {
     return speciesDisplayName.get(species);
 };
+

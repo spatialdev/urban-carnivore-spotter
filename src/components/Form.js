@@ -4,6 +4,10 @@ import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import DialogContent from '@material-ui/core/DialogContent';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+import Dialog from '@material-ui/core/Dialog';
 
 import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
@@ -13,19 +17,32 @@ import LoadingOverlay from 'react-loading-overlay';
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
 import NeighborhoodService from '../services/NeighborhoodService';
+import {Collapse, Fab, withStyles} from "@material-ui/core";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
+import BlackBear from "../assets/SpeciesCards/blackbear.png";
+import Coyote from "../assets/SpeciesCards/coyote.png";
+import Bobcat from "../assets/SpeciesCards/bobcat.png";
+import Cougar from "../assets/SpeciesCards/cougar.png";
+import Opossum from "../assets/SpeciesCards/opossum.png";
+import RiverOtter from "../assets/SpeciesCards/riverotter.png";
+import Raccoon from "../assets/SpeciesCards/raccoon.png";
+import Info from '@material-ui/icons/InfoOutlined';
+import {connect} from "react-redux";
+
 import FormInfoDialog from './FormInfoDialog';
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
-
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
   'Raccoon', 'River Otter', 'Other/Unknown'];
+const species = ['blackbear','bobcat','cougar','coyote','opossum','raccoon','riverotter'];
 const confidenceLevels = ['Not at all confident', 'About 25% confident', 'About 50% confident', 'About 75% confident',
   'More than 75% confident', '100% confident'];
 const reactions = ['Stayed quiet', 'Shouted/made noise', 'Other'];
 const dogSizes = ['Small (up to 20lbs)', 'Medium(20-60lbs)', 'Large(60+lbs)', 'Mixed group'];
 const leashOptions = ['Leashed', 'Unleashed', 'Both'];
-const animalBehaviors = ['Was eating', 'Urinating', 'Defecating'];
+const animalBehaviors = ['Was eating', 'Urinated', 'Defecated'];
 const vocalizations = ['Barking', 'Howling', 'Growling', 'Other'];
 const carnivoreResponses = ['Animal did not seem to notice observer', 'Animal ran away',
   'Animal stood ground-seemed interested in observer', 'Animal stood ground - seemed uninterested in observer',
@@ -46,6 +63,74 @@ const DIALOG_MODES = {
   LARGE_FILES: 'largeFiles',
   PERMISSION: 'permission',
   CLOSED: 'closed'
+};
+
+const styles = {
+  allContent: {
+    height: '100%',
+    overflow: 'scroll',
+    position: 'static',
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: 'white'
+
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: 'white',
+    zIndex: 1
+  },
+  expandButton: {
+    boxShadow: 'none',
+    position: 'relative',
+    top: -8,
+    backgroundColor: '#93C838',
+    color: 'white',
+    alignItems: 'baseline',
+
+  },
+  expandHeader: {
+    margin: 16,
+    justifyContent: 'space-between'
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    alignText: 'center'
+  },
+  collapsible: {
+    margin: 0,
+    textAlign: 'center'
+  },
+  carouselDesktop: {
+    width: 400,
+    height: 500,
+  },
+  carouselMobile: {
+    width: 320,
+    height: 400,
+  },
+  mobileImage: {
+    width: 300,
+    height: 389,
+  },
+  desktopImage: {
+    width: 382,
+    height: 495
+  },
+  radioButtonContainerMobile: {
+    display: 'flex',
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    position: 'relative',
+    paddingLeft: 35,
+    paddingRight: 35,
+  }
 };
 
 class Form extends Component {
@@ -81,6 +166,12 @@ class Form extends Component {
     mediaPaths: [],
     dialogMode: DIALOG_MODES.CLOSED,
     submitting: false,
+    permissionOpen: false,
+    showObserverDetails: false,
+    showAnimalBehavior: false,
+    showContactInformation: false,
+    showCarousel: false,
+    carouselImageIndex:0
   };
 
   constructor(props) {
@@ -102,6 +193,7 @@ class Form extends Component {
   componentDidMount = () => {
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
+
     this.updateNeighborhood(this.state.mapLat, this.state.mapLng);
 
     // Request the user's geolocation and default to there
@@ -111,7 +203,7 @@ class Form extends Component {
         this.getMapCoordinates({lat: position.coords.latitude, lng: position.coords.longitude});
       }, (err) => console.log(err));
     }
-  }
+  };
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -171,7 +263,7 @@ class Form extends Component {
     if (agree) {
       this.uploadMedia();
     }
-  }
+  };
 
   handleClose = () => {
     const { history, handleDrawerState, fromDrawer } = this.props;
@@ -181,7 +273,47 @@ class Form extends Component {
         handleDrawerState(false);
       }
     });
-  }
+  };
+
+  getCollapse = (classes, headerTitle, onClick, expand, child) => {
+    return <>
+      <div className={classes.expandHeader}>
+        <span className={classes.headerTitle}>{headerTitle}</span>
+        <Fab
+            className={classes.expandButton}
+            onClick={onClick}
+            size="small"
+            disableRipple={true}
+        >
+          {expand ? <RemoveIcon /> : <AddIcon/>}
+        </Fab>
+      </div>
+      <Collapse in={expand} className={classes.collapsible}>
+        {child}
+      </Collapse>
+    </>
+  };
+
+  toggleShow = groupName => () => {
+    this.setState(state => ({...state,
+      [groupName]: !state[groupName]}));
+  };
+
+
+  openCarousel = (index) => {
+    const newIndex = (index === speciesLst.length-1 ? 0: index);
+      this.setState({
+        showCarousel: true,
+        carouselImageIndex: newIndex
+      });
+  };
+
+  closeCarousel = () => {
+    this.setState({
+      showCarousel: false,
+      carouselImageIndex: 0
+    });
+  };
 
   getDialogFromMode = (mode) => {
 
@@ -217,12 +349,13 @@ class Form extends Component {
 
   render() {
     const {
-      mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
+      mapLat, mapLng, timestamp, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
       conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, submitting,
-      neighborhood, dialogMode
+      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation
     } = this.state;
+    const {classes, isMobile} = this.props;
     return (
       <LoadingOverlay active={submitting} spinner text='Submitting...'>
         <h2>Report a carnivore sighting</h2>
@@ -251,44 +384,53 @@ class Form extends Component {
             {neighborhood ? <p>{neighborhood}</p> : null}
           </div>
 
+          {/*Image*/}
           <div className="formItem">
-            <h4>Which animal did you see?</h4>
-            <SelectValidator
-              value={species}
-              variant="outlined"
-              label="Species"
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['this field is required']}
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'species',
-                id: 'species',
-              }}
-            >
-              {speciesLst.map((type, idx) => <MenuItem key={idx} value={type}>{type}</MenuItem>)}
-            </SelectValidator>
+            <h4>Upload pictures, videos or sound files</h4>
+            <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
+            {mediaPaths.length > 0 ? <p>{mediaPaths.length} files uploaded</p> : null}
           </div>
+          {/* Setting dialogMode to DIALOG_MODES.PERMISSION opens the permission dialog, where clicking "agree" actually calls the media upload function */}
+          <Button size="small" color="secondary" variant="contained" onClick={() => this.setState({ dialogMode: DIALOG_MODES.PERMISSION})}>Upload</Button>
 
           <div className="formItem">
-            <h4>What were some key features about the animal(s)? </h4>
-            <TextValidator
-              label="Describe (limit 80 char)"
-              multiline
-              style={{ minWidth: '300px', backgroundColor: 'transparent' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              rows="4"
-              value={animalFeatures}
-              inputProps={{
-                name: 'animalFeatures',
-                id: 'animalFeatures',
-                maxLength: 80,
-              }}
-              onChange={this.handleChange}
-              margin="normal"
-              variant="outlined"
-            />
+            <h4>Which animal did you see?</h4>
+            <Dialog open={this.state.showCarousel} onClose={this.closeCarousel}>
+              <DialogContent>
+                <Carousel
+                        className={isMobile ? classes.carouselMobile : classes.carouselDesktop}
+                        useKeyboardArrows={true}
+                        selectedItem={this.state.carouselImageIndex}
+                        swipeable={true}
+                        showThumbs={false}
+                        showIndicators={false}
+                    >
+                  {species.map((type, idx) =>
+                    <img key={idx} src={ require('../assets/SpeciesCards/' + type+'.png') }
+                         alt="Black Bear" className={isMobile? classes.mobileImage : classes.desktopImage}/>)
+                  }
+                    </Carousel>
+              </DialogContent>
+            </Dialog>
+              {speciesLst.map((type, idx) =>
+                    <span  className={isMobile ? classes.radioButtonContainerMobile : "radioButtonContainer"} key={idx}>
+                     <div  >
+                    <label >
+                      <input
+                          type="radio"
+                          name="react-tips"
+                          value={type}
+                          onChange={() => this.setState({species: type})}
+                      />
+                      {type}
+                    </label>
+                  </div>
+                    <div>
+                        <Fab  aria-label="Info" className="infoButton" size="small">
+                            <Info onClick={() => this.openCarousel(idx)}/>
+                        </Fab>
+                    </div>
+                  </span>)}
           </div>
 
           <div className="formItem">
@@ -345,340 +487,333 @@ class Form extends Component {
               {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
             </SelectValidator>
           </div>
+          <br/>
+
+          {/*Observer details*/}
+          <div className={classes.allContent}>
+            {/* Species Identification Tips */}
+            {this.getCollapse(classes, "Observer Details (Optional)", this.toggleShow('showObserverDetails'), showObserverDetails,
+                <div className={classes.headerTitle}>
+                  <div className="formItem">
+                    <h4>How many were in your group?</h4>
+                    <SelectValidator
+                        value={numberOfAdults}
+                        style={{ minWidth: '300px', marginBottom: '15px' }}
+                        variant="outlined"
+                        label="Number of Adults"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'numberOfAdults',
+                          id: 'numberOfAdults',
+                        }}
+                    >
+                      {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
+                    </SelectValidator>
+                    <p className="childrenAgeText">Children up to 9 years old</p>
+                    <SelectValidator
+                        value={numberOfChildren}
+                        style={{ minWidth: '300px', marginTop: '5px' }}
+                        variant="outlined"
+                        label="Number of Children"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'numberOfChildren',
+                          id: 'numberOfChildren',
+                        }}
+                    >
+                      {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
+                    </SelectValidator>
+                  </div>
+
+                  <div className="formItem">
+                    <h4>How did you react?</h4>
+                    <SelectValidator
+                        value={reaction}
+                        style={{ minWidth: '300px' }}
+                        variant="outlined"
+                        label="Reaction"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'reaction',
+                          id: 'reaction',
+                        }}
+                    >
+                      {reactions.map((reaction, idx) => <MenuItem key={idx} value={reaction}>{reaction}</MenuItem>)}
+                    </SelectValidator>
+                    {reaction === 'Other' ?
+                        <TextValidator
+                            label="Describe (limit 80 char)"
+                            multiline
+                            rows="4"
+                            value={reactionDescription}
+                            inputProps={{
+                              name: 'reactionDescription',
+                              id: 'reactionDescription',
+                              maxLength: 80,
+                            }}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant="outlined"
+                        /> : null}
+                  </div>
+
+                  <div className="formItem">
+                    <h4>Were there dog(s) present with you / your group?</h4>
+                    <SelectValidator
+                        value={numberOfDogs}
+                        select
+                        style={{ minWidth: '300px' }}
+                        variant="outlined"
+                        label="Number of Dogs"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'numberOfDogs',
+                          id: 'numberOfDogs',
+                        }}
+                    >
+                      {counts.map(idx => <MenuItem key={idx} value={idx}>{idx.toString()}</MenuItem>)}
+                    </SelectValidator>
+                    {numberOfDogs > 0 ?
+                        <div>
+                          <SelectValidator
+                              value={dogSize}
+                              style={{ minWidth: '300px' }}
+                              variant="outlined"
+                              label="Size of dog(s)"
+                              onChange={this.handleChange}
+                              inputProps={{
+                                name: 'dogSize',
+                                id: 'dogSize',
+                              }}
+                          >
+                            {dogSizes.map((size, idx) => <MenuItem key={idx} value={size}>{size}</MenuItem>)}
+                          </SelectValidator>
+                          <SelectValidator
+                              value={onLeash}
+                              style={{ minWidth: '300px' }}
+                              variant="outlined"
+                              label="On Leash"
+                              onChange={this.handleChange}
+                              inputProps={{
+                                name: 'onLeash',
+                                id: 'onLeash',
+                              }}
+                          >
+                            {leashOptions.map((option, idx) => <MenuItem key={idx} value={option}>{option}</MenuItem>)}
+                          </SelectValidator>
+                        </div> : null
+                    }
+                  </div>
+                </div>
+            )}
+            <hr/>
+          </div>
+          <br/>
+          {/*Animal behavior*/}
+          <div className={classes.allContent}>
+            {/* Species Identification Tips */}
+            {this.getCollapse(classes, "Animal Behavior (Optional)", this.toggleShow('showAnimalBehavior'), showAnimalBehavior,
+                <div className={classes.headerTitle}>
+                  <div className="formItem">
+                    <h4>What was it doing?</h4>
+                    <SelectValidator
+                        value={animalBehavior}
+                        style={{ minWidth: '300px' }}
+                        variant="outlined"
+                        label="Animal Behavior"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'animalBehavior',
+                          id: 'animalBehavior',
+                        }}
+                    >
+                      {animalBehaviors.map((behavior, idx) => <MenuItem key={idx} value={behavior}>{behavior}</MenuItem>)}
+                    </SelectValidator>
+
+                    {animalBehavior === 'Was eating' ?
+                        <TextValidator
+                            label="What it was eating (if observed):"
+                            multiline
+                            style={{ minWidth: '300px' }}
+                            rows="4"
+                            value={animalEating}
+                            inputProps={{
+                              name: 'animalEating',
+                              id: 'animalEating',
+                              maxLength: 80
+                            }}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant="outlined"
+
+                        /> : null
+                    }
+                  </div>
+
+                  <div className="formItem">
+                    <h4>Did it vocalize?</h4>
+                    <SelectValidator
+                        value={vocalization}
+                        style={{ minWidth: '300px' }}
+                        variant="outlined"
+                        label="Vocalization"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'vocalization',
+                          id: 'vocalization',
+                        }}
+                    >
+                      {vocalizations.map((type, idx) => <MenuItem key={idx} value={type}>{type}</MenuItem>)}
+                    </SelectValidator>
+
+                    {vocalization === 'Other' ?
+                        <TextValidator
+                            label="Describe (limit 80 char)"
+                            multiline
+                            required
+                            rows="4"
+                            value={vocalizationDesc}
+                            inputProps={{
+                              name: 'vocalizationDesc',
+                              id: 'vocalizationDesc',
+                              maxLength: 80
+                            }}
+                            onChange={this.handleChange}
+                            margin="normal"
+                            variant="outlined"
+
+                        /> : null
+                    }
+                  </div>
+
+                  <div className="formItem" id="carnivoreResponse">
+                    <h4>How did it react?</h4>
+                    <SelectValidator
+                        value={carnivoreResponse}
+                        style={{ minWidth: '300px' }}
+                        variant="outlined"
+                        label="Carnivore Response"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'carnivoreResponse',
+                          id: 'carnivoreResponse',
+                        }}
+                    >
+                      {carnivoreResponses.map((type, idx) =>
+                          <MenuItem
+                              style={{ whiteSpace: 'normal', marginBottom: '10px' }}
+                              key={idx}
+                              value={type}>{type}</MenuItem>)}
+                    </SelectValidator>
+                  </div>
+                  <div className="formItem" id="carnivoreConflict">
+                    <h4>Was there an interaction with the observer, pets/livestock or other items?</h4>
+                    <SelectValidator
+                        style={{ minWidth: '300px' }}
+                        value={carnivoreConflict}
+                        variant="outlined"
+                        label="Carnivore Conflict"
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'carnivoreConflict',
+                          id: 'carnivoreConflict',
+                        }}
+                    >
+                      {conflictOptions.map((type, idx) =>
+                          <MenuItem
+                              style={{ whiteSpace: 'normal', marginBottom: '10px' }}
+                              key={idx}
+                              value={type}>{type}</MenuItem>)}
+                    </SelectValidator>
+
+                    {
+                      conflictOptions.indexOf(carnivoreConflict) === 0 || conflictOptions.indexOf(carnivoreConflict) === 2 ?
+                          <TextValidator
+                              label="Describe (limit 80 char)"
+                              multiline
+                              style={{ minWidth: '300px' }}
+                              rows="4"
+                              value={conflictDesc}
+                              inputProps={{
+                                name: 'conflictDesc',
+                                id: 'conflictDesc',
+                                maxLength: 80
+                              }}
+                              onChange={this.handleChange}
+                              margin="normal"
+                              variant="outlined"
+                          /> : null
+
+                    }
+                  </div>
+
+                </div>
+            )}
+            <hr/>
+          </div>
+          <br/>
+
+          {/*Contact*/}
+          <div className={classes.allContent}>
+            {/* Species Identification Tips */}
+            {this.getCollapse(classes, "Contact Information (Optional)", this.toggleShow('showContactInformation'), showContactInformation,
+                <div className={classes.headerTitle}>
+                  <div className="formItem">
+                    <p> This information will not be shared and will be available to project coordinators only.</p>
+                    <div>
+                      <TextValidator
+                          value={contactName}
+                          style={{ minWidth: '300px', marginBottom: '15px' }}
+                          variant="outlined"
+                          label="Name"
+                          onChange={this.handleChange}
+                          inputProps={{
+                            name: 'contactName',
+                            id: 'contactName',
+                          }}
+                      >
+                      </TextValidator>
+                    </div>
+                    <div>
+                      <TextValidator
+                          value={contactEmail}
+                          variant="outlined"
+                          label="Email"
+                          style={{ minWidth: '300px', marginBottom: '15px' }}
+                          onChange={this.handleChange}
+                          validators={['isEmail']}
+                          errorMessages={['Email is not valid']}
+                          inputProps={{
+                            name: 'contactEmail',
+                            id: 'contactEmail',
+                          }}
+                      >
+                      </TextValidator>
+                    </div>
+                    <TextValidator
+                        value={contactPhone}
+                        variant="outlined"
+                        label="Phone Number"
+                        style={{ minWidth: '300px' }}
+                        onChange={this.handleChange}
+                        inputProps={{
+                          name: 'contactPhone',
+                          id: 'contactPhone',
+                        }}
+                    >
+                    </TextValidator>
+                  </div>
+                </div>
+            )}
+            <hr/>
+          </div>
+          <br/>
 
           <div className="formItem">
-            <h4>Describe the animal(s) behavior</h4>
-            <SelectValidator
-              value={animalBehavior}
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Animal Behavior"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'animalBehavior',
-                id: 'animalBehavior',
-              }}
-            >
-              {animalBehaviors.map((behavior, idx) => <MenuItem key={idx} value={behavior}>{behavior}</MenuItem>)}
-            </SelectValidator>
-
-            {animalBehavior === 'Was eating' ?
-              <TextValidator
-                label="Describe (limit 80 char)"
-                multiline
-                style={{ minWidth: '300px' }}
-                validators={['required']}
-                errorMessages={['This field is required']}
-                rows="4"
-                value={animalEating}
-                inputProps={{
-                  name: 'animalEating',
-                  id: 'animalEating',
-                  maxLength: 80
-                }}
-                onChange={this.handleChange}
-                margin="normal"
-                variant="outlined"
-
-              /> : null
-            }
-          </div>
-
-          <div className="formItem">
-            <h4>Was/were the animal(s) making any noises?</h4>
-            <SelectValidator
-              value={vocalization}
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Vocalization"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'vocalization',
-                id: 'vocalization',
-              }}
-            >
-              {vocalizations.map((type, idx) => <MenuItem key={idx} value={type}>{type}</MenuItem>)}
-            </SelectValidator>
-
-            {vocalization === 'Other' ?
-              <TextValidator
-                label="Describe (limit 80 char)"
-                multiline
-                required
-                rows="4"
-                value={vocalizationDesc}
-                inputProps={{
-                  name: 'vocalizationDesc',
-                  id: 'vocalizationDesc',
-                  maxLength: 80
-                }}
-                onChange={this.handleChange}
-                margin="normal"
-                variant="outlined"
-
-              /> : null
-            }
-          </div>
-
-          <div className="formItem" id="carnivoreResponse">
-            <h4>How did the carnivore respond to you and/or your pets/livestock?</h4>
-            <SelectValidator
-              value={carnivoreResponse}
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Carnivore Response"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'carnivoreResponse',
-                id: 'carnivoreResponse',
-              }}
-            >
-              {carnivoreResponses.map((type, idx) =>
-                <MenuItem
-                  style={{ whiteSpace: 'normal', marginBottom: '10px' }}
-                  key={idx}
-                  value={type}>{type}</MenuItem>)}
-            </SelectValidator>
-          </div>
-
-          <div className="formItem" id="carnivoreConflict">
-            <h4>Was there an interaction or conflict between you, your pets/livestock or other items and the
-              carnivore?</h4>
-            <SelectValidator
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              value={carnivoreConflict}
-              variant="outlined"
-              label="Carnivore Conflict"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'carnivoreConflict',
-                id: 'carnivoreConflict',
-              }}
-            >
-              {conflictOptions.map((type, idx) =>
-                <MenuItem
-                  style={{ whiteSpace: 'normal', marginBottom: '10px' }}
-                  key={idx}
-                  value={type}>{type}</MenuItem>)}
-            </SelectValidator>
-
-            {
-              conflictOptions.indexOf(carnivoreConflict) === 0 || conflictOptions.indexOf(carnivoreConflict) === 2 ?
-                <TextValidator
-                  label="Describe (limit 80 char)"
-                  multiline
-                  style={{ minWidth: '300px' }}
-                  validators={['required']}
-                  errorMessages={['This field is required']}
-                  rows="4"
-                  value={conflictDesc}
-                  inputProps={{
-                    name: 'conflictDesc',
-                    id: 'conflictDesc',
-                    maxLength: 80
-                  }}
-                  onChange={this.handleChange}
-                  margin="normal"
-                  variant="outlined"
-                /> : null
-
-            }
-          </div>
-
-
-          <div className="formItem">
-            <h4>Upload pictures, videos or sound files</h4>
-            <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
-            {mediaPaths.length > 0 ? <p>{mediaPaths.length} files uploaded</p> : null}
-          </div>
-          {/* Setting dialogMode to DIALOG_MODES.PERMISSION opens the permission dialog, where clicking "agree" actually calls the media upload function */}
-          <Button size="small" color="secondary" variant="contained" onClick={() => this.setState({ dialogMode: DIALOG_MODES.PERMISSION})}>Upload</Button>
-
-          <div className="formItem">
-            <h4>How many humans were in your group?</h4>
-            <SelectValidator
-              value={numberOfAdults}
-              style={{ minWidth: '300px', marginBottom: '15px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Number of Adults"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'numberOfAdults',
-                id: 'numberOfAdults',
-              }}
-            >
-              {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
-            </SelectValidator>
-            <p className="childrenAgeText">Children up to 9 years old</p>
-            <SelectValidator
-              value={numberOfChildren}
-              style={{ minWidth: '300px', marginTop: '5px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Number of Children"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'numberOfChildren',
-                id: 'numberOfChildren',
-              }}
-            >
-              {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
-            </SelectValidator>
-          </div>
-
-          <div className="formItem">
-            <h4>How did you react to the species?</h4>
-            <SelectValidator
-              value={reaction}
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Reaction"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'reaction',
-                id: 'reaction',
-              }}
-            >
-              {reactions.map((reaction, idx) => <MenuItem key={idx} value={reaction}>{reaction}</MenuItem>)}
-            </SelectValidator>
-            {reaction === 'Other' ?
-              <TextValidator
-                label="Describe (limit 80 char)"
-                multiline
-                rows="4"
-                value={reactionDescription}
-                inputProps={{
-                  name: 'reactionDescription',
-                  id: 'reactionDescription',
-                  maxLength: 80,
-                }}
-                onChange={this.handleChange}
-                margin="normal"
-                variant="outlined"
-              /> : null}
-          </div>
-
-          <div className="formItem">
-            <h4>Any dog(s) present in your group?</h4>
-            <SelectValidator
-              value={numberOfDogs}
-              select
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Number of Dogs"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'numberOfDogs',
-                id: 'numberOfDogs',
-              }}
-            >
-              {counts.map(idx => <MenuItem key={idx} value={idx}>{idx.toString()}</MenuItem>)}
-            </SelectValidator>
-            {numberOfDogs > 0 ?
-              <div>
-                <SelectValidator
-                  value={dogSize}
-                  style={{ minWidth: '300px' }}
-                  validators={['required']}
-                  errorMessages={['This field is required']}
-                  variant="outlined"
-                  label="Size of dog(s)"
-                  onChange={this.handleChange}
-                  inputProps={{
-                    name: 'dogSize',
-                    id: 'dogSize',
-                  }}
-                >
-                  {dogSizes.map((size, idx) => <MenuItem key={idx} value={size}>{size}</MenuItem>)}
-                </SelectValidator>
-                <SelectValidator
-                  value={onLeash}
-                  style={{ minWidth: '300px' }}
-                  validators={['required']}
-                  errorMessages={['This field is required']}
-                  variant="outlined"
-                  label="On Leash"
-                  onChange={this.handleChange}
-                  inputProps={{
-                    name: 'onLeash',
-                    id: 'onLeash',
-                  }}
-                >
-                  {leashOptions.map((option, idx) => <MenuItem key={idx} value={option}>{option}</MenuItem>)}
-                </SelectValidator>
-              </div> : null
-            }
-
-          </div>
-
-          <div className="formItem">
-            <h4>Contact Information</h4>
-            <p> This information will not be shared</p>
-            <div>
-              <TextValidator
-                value={contactName}
-                style={{ minWidth: '300px', marginBottom: '15px' }}
-                variant="outlined"
-                label="Name"
-                onChange={this.handleChange}
-                inputProps={{
-                  name: 'contactName',
-                  id: 'contactName',
-                }}
-              >
-              </TextValidator>
-            </div>
-            <div>
-              <TextValidator
-                value={contactEmail}
-                variant="outlined"
-                label="Email"
-                style={{ minWidth: '300px', marginBottom: '15px' }}
-                onChange={this.handleChange}
-                validators={['isEmail']}
-                errorMessages={['Email is not valid']}
-                inputProps={{
-                  name: 'contactEmail',
-                  id: 'contactEmail',
-                }}
-              >
-              </TextValidator>
-            </div>
-            <TextValidator
-              value={contactPhone}
-              variant="outlined"
-              label="Phone Number"
-              style={{ minWidth: '300px' }}
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'contactPhone',
-                id: 'contactPhone',
-              }}
-            >
-            </TextValidator>
-          </div>
-
-          <div className="formItem">
-            <h4>General Comments</h4>
+            <h4>Comments (Optional)</h4>
             <TextValidator
               value={generalComments}
               style={{ minWidth: '300px' }}
-
               variant="outlined"
               label="General Comments"
               onChange={this.handleChange}
@@ -699,4 +834,8 @@ class Form extends Component {
   }
 }
 
-export default withRouter(Form);
+const mapStateToProps = (state) => {
+  return { isMobile: state.isMobile };
+};
+
+export default withRouter(withStyles(styles)(connect(mapStateToProps)(Form)));

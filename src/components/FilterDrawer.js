@@ -65,7 +65,7 @@ const styles = {
     collapsible: {
         textAlign: 'left'
     }
-}
+};
 
 const briefNeighborhoodsCount = 5;
 
@@ -89,16 +89,16 @@ class FilterDrawer extends React.Component {
 
     updateFilterSubsection = subsectionName => (key, newValue) => {
         updateFilter(subsectionName, key, newValue);
-    }
+    };
 
     toggleShow = groupName => () => {
         this.setState(state => ({...state,
                 [groupName]: !state[groupName]}));
-    }
+    };
 
     toggleConfidence = () => {
         toggleFilterConfidence();
-    }
+    };
 
     getCollapse = (classes, headerTitle, onClick, expand, child) => {
         return <>
@@ -116,7 +116,7 @@ class FilterDrawer extends React.Component {
                 {child}
             </Collapse>
         </>
-    }
+    };
 
     isOutsideRange = (date) => {
         const { filter: { startDate, endDate }} = this.props;
@@ -215,6 +215,6 @@ const mapStateToProps = (state) => {
             confidenceFilterActive: state.filter.confidenceFilterActive,
         }
     }
-}
+};
 
 export default connect(mapStateToProps)(withStyles(styles)(FilterDrawer));
