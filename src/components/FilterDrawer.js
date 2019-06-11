@@ -1,5 +1,4 @@
 import React from 'react';
-import DatePicker from 'react-date-picker';
 import { withStyles } from '@material-ui/core/styles';
 import { Button, Collapse, Fab, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -9,6 +8,12 @@ import CheckBoxIntermediateIcon from 'mdi-react/CheckboxIntermediateIcon'
 import { connect } from 'react-redux';
 import { updateFilter, updateFilterDate, toggleFilterConfidence, resetFilter } from '../store/actions'
 import { getColorForSpecies } from '../services/ColorService';
+
+// Date picker
+import 'react-dates/initialize';
+import { DateRangePicker } from 'react-dates';
+import { START_DATE, END_DATE } from "react-dates/esm/constants";
+import 'react-dates/lib/css/_datepicker.css';
 
 const styles = {
     allContent: {
@@ -77,7 +82,8 @@ class FilterDrawer extends React.Component {
             showCarnivores: false,
             showNeighborhoods: false,
             showTime: false,
-            showConfidence: false
+            showConfidence: false,
+            dateRangeFocused: null,
         }
     }
 
@@ -88,15 +94,6 @@ class FilterDrawer extends React.Component {
     toggleShow = groupName => () => {
         this.setState(state => ({...state,
                 [groupName]: !state[groupName]}));
-    }
-
-    handleDateChange = newDate => {
-        if (newDate) {
-            updateFilterDate(new Date(newDate));
-        }
-        else {
-            updateFilterDate(newDate);
-        }
     }
 
     toggleConfidence = () => {
@@ -121,9 +118,16 @@ class FilterDrawer extends React.Component {
         </>
     }
 
+    isOutsideRange = (date) => {
+        const { filter: { startDate, endDate }} = this.props;
+        const { dateRangeFocused } = this.state;
+        return (dateRangeFocused === START_DATE && !(endDate === null || date.isSameOrBefore(endDate, 'day'))) ||
+            (dateRangeFocused === END_DATE && !(startDate === null || date.isSameOrAfter(startDate, 'day')));
+    }
+
     render = () => {
-        const {classes, cancel, children, filter: {date, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
-        const {showCarnivores, showNeighborhoods, showTime, showConfidence} = this.state;
+        const {classes, cancel, children, filter: {startDate, endDate, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
+        const {showCarnivores, showNeighborhoods, showTime, showConfidence, dateRangeFocused} = this.state;
         return (
             <div className={classes.allContent}>
                 {children}
@@ -158,10 +162,20 @@ class FilterDrawer extends React.Component {
                     {this.getCollapse(classes, "Time of Sighting", this.toggleShow('showTime'), showTime,
                         <>
                             Date:
-                            <DatePicker
-                                value={date}
-                                onChange={this.handleDateChange}/> <br/>
-                            Time of Day:
+                            <DateRangePicker
+                                startDate={startDate}
+                                startDateId={"some_id"}
+                                endDate={endDate}
+                                endDateId={"some_other_id"}
+                                onDatesChange={({ startDate: rawStart, endDate: rawEnd}) => updateFilterDate(rawStart, rawEnd)}
+                                focusedInput={dateRangeFocused}
+                                onFocusChange={focusedInput => this.setState( { dateRangeFocused: focusedInput})}
+                                showClearDates={true}
+                                numberOfMonths={1}
+                                isOutsideRange={this.isOutsideRange}
+                                small={true}
+                                daySize={30}
+                            />
                             <FilterCheckboxes
                                 filter={timeFilter}
                                 allLabel="Any time of day"
@@ -186,11 +200,6 @@ class FilterDrawer extends React.Component {
                         </FormControl>
                     )}
                 </div>
-                <Button variant="contained"
-                    className={classes.resultsButton}
-                    onClick={() => console.log({date, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter})}>
-                        See Results
-                </Button>
             </div>);
     }
 }
@@ -201,7 +210,8 @@ const mapStateToProps = (state) => {
             carnivoreFilter: state.filter.carnivoreFilter,
             neighborhoodFilter: state.filter.neighborhoodFilter,
             timeFilter: state.filter.timeFilter,
-            date: state.filter.date,
+            startDate: state.filter.startDate,
+            endDate: state.filter.endDate,
             confidenceFilterActive: state.filter.confidenceFilterActive,
         }
     }

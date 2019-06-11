@@ -393,8 +393,16 @@ Footer Styles
 
 .navContainer {
     top: 25vh;
-    left:95%;
+    left: 95%;
     position: fixed;
+}
+
+li a {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none
 }
 
 .listMapToggle {

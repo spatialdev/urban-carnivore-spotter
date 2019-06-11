@@ -4,10 +4,6 @@ import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 
 import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
@@ -17,6 +13,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
 import NeighborhoodService from '../services/NeighborhoodService';
+import FormInfoDialog from './FormInfoDialog';
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 
@@ -40,14 +37,23 @@ const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 // constants
 const THANKS_FOR_SUBMITTING = 'Thank you for your submission! Please note that the system will display your observation on the map after a period of one week.';
 const ERROR_ON_SUBMISSION = 'Something went wrong during your submission. Please try again later.';
+const FILES_TOO_LARGE = 'Please choose a set of files to upload that are smaller than 5MB in total.';
+const MAX_FILE_SIZE = 5242880; // 5MiB
 const neighborhoodService = new NeighborhoodService();
+const DIALOG_MODES = {
+  THANKS: 'thanks',
+  ERROR: 'error',
+  LARGE_FILES: 'largeFiles',
+  PERMISSION: 'permission',
+  CLOSED: 'closed'
+};
 
 class Form extends Component {
   state = {
     species: '',
     timestamp: new Date(),
-    mapLat: 47.608013,
-    mapLng: -122.335167,
+    mapLat: 47.668733,
+    mapLng: -122.354291,
     confidence: '',
     animalFeatures: '',
     numberOfAdultSpecies: '',
@@ -73,9 +79,8 @@ class Form extends Component {
     neighborhood: '',
     media: null,
     mediaPaths: [],
-    thanksMessage: null,
+    dialogMode: DIALOG_MODES.CLOSED,
     submitting: false,
-    permissionOpen: false,
   };
 
   constructor(props) {
@@ -83,11 +88,29 @@ class Form extends Component {
     this.fileUploader = React.createRef();
   }
 
+  updateNeighborhood = (lat, lng) => {
+    neighborhoodService.getNeighborhoodFor(lat, lng)
+        .then(neighborhood => this.setState((state) => {
+          // If the map coordinates have changed, we don't want to update the neighborhood with outdated info!
+          if (state.mapLat === lat && state.mapLng === lng) {
+            return {neighborhood};
+          }
+          return {};
+        }));
+  };
+
   componentDidMount = () => {
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
-    neighborhoodService.getNeighborhoodFor(this.state.mapLat, this.state.mapLng)
-      .then(neighborhood => this.setState({neighborhood}));
+    this.updateNeighborhood(this.state.mapLat, this.state.mapLng);
+
+    // Request the user's geolocation and default to there
+    // See https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API for more information
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.getMapCoordinates({lat: position.coords.latitude, lng: position.coords.longitude});
+      }, (err) => console.log(err));
+    }
   }
 
   handleChange = event => {
@@ -96,21 +119,20 @@ class Form extends Component {
 
   getMapCoordinates = dataFromMap => {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
-    neighborhoodService.getNeighborhoodFor(dataFromMap.lat, dataFromMap.lng)
-      .then(neighborhood => this.setState({neighborhood}));
+    this.updateNeighborhood(dataFromMap.lat, dataFromMap.lng);
   };
 
   handleSubmit = () => {
-    let {thanksMessage, submitting, permissionOpen, ...report} = this.state;
+    let {dialogMode, submitting, ...report} = this.state;
     delete report['media'];
     this.setState({submitting: true});
     return axios.post(addReportUrl, report)
       .then(response => {
         this.setState({submitting: false});
         if (response.status === 200) {
-          this.setState({thanksMessage: THANKS_FOR_SUBMITTING}); // Open the submission recieved dialog
+          this.setState({dialogMode: DIALOG_MODES.THANKS}); // Open the submission recieved dialog
         } else {
-          this.setState({thanksMessage: ERROR_ON_SUBMISSION});
+          this.setState({dialogMode: DIALOG_MODES.ERROR});
         }
       });
   };
@@ -133,12 +155,19 @@ class Form extends Component {
   uploadMedia = () => {
     const { media } = this.state;
     if (media) {
-      media.forEach(file => this.fileUploader.startUpload(file));
+      const totalSize = media.slice(0, -2).reduce((sum, file) => sum + file.size, 0);
+      if (totalSize >= MAX_FILE_SIZE) {
+        // Remove files and ask user to upload smaller files
+        this.setState({media: null, dialogMode: DIALOG_MODES.LARGE_FILES});
+      } else {
+        // Upload the files
+        media.forEach(file => this.fileUploader.startUpload(file));
+      }
     }
   };
 
   handlePermissionResponse = (agree) => {
-    this.setState({permissionOpen: false});
+    this.setState({dialogMode: DIALOG_MODES.CLOSED});
     if (agree) {
       this.uploadMedia();
     }
@@ -146,7 +175,7 @@ class Form extends Component {
 
   handleClose = () => {
     const { history, handleDrawerState, fromDrawer } = this.props;
-    this.setState({thanksMessage: null}, () => {
+    this.setState({dialogMode: DIALOG_MODES.CLOSED}, () => {
       history.push('/');
       if (fromDrawer) {
         handleDrawerState(false);
@@ -154,17 +183,48 @@ class Form extends Component {
     });
   }
 
+  getDialogFromMode = (mode) => {
+
+    switch(mode) {
+      case DIALOG_MODES.CLOSED:
+        return <FormInfoDialog open={false}/>;
+      case DIALOG_MODES.ERROR:
+        return <FormInfoDialog
+          open={true}
+          onClose={this.handleClose}
+          message={ERROR_ON_SUBMISSION}/>;
+      case DIALOG_MODES.LARGE_FILES:
+        return <FormInfoDialog
+          open={true}
+          onClose={() => this.setState({dialogMode: DIALOG_MODES.CLOSED})}
+          message={FILES_TOO_LARGE}/>;
+      case DIALOG_MODES.PERMISSION:
+        return <FormInfoDialog
+          open={true}
+          onClose={() => this.setState({dialogMode: DIALOG_MODES.CLOSED})}
+          message={"Is is ok if we store the images and audio that you've uploaded? If you say no, we will not be able to show your pictures to other users"}
+          noButton={{onClick: () => this.handlePermissionResponse(false), message: "No, don't use my media"}}
+          yesButton={{onClick: () => this.handlePermissionResponse(true), message: "Yes, use my media"}}/>;
+      case DIALOG_MODES.THANKS:
+        return <FormInfoDialog
+          open={true}
+          onClose={this.handleClose}
+          message={THANKS_FOR_SUBMITTING}/>
+      default:
+        return null;
+    }
+  };
+
   render() {
     const {
       mapLat, mapLng, timestamp, animalFeatures, species, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
-      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, thanksMessage, submitting,
-      permissionOpen, neighborhood
+      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, submitting,
+      neighborhood, dialogMode
     } = this.state;
     return (
       <LoadingOverlay active={submitting} spinner text='Submitting...'>
-      <div>
         <h2>Report a carnivore sighting</h2>
         <ValidatorForm onError={errors => console.log(errors)}
                        onSubmit={this.handleSubmit}
@@ -439,8 +499,8 @@ class Form extends Component {
             <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
             {mediaPaths.length > 0 ? <p>{mediaPaths.length} files uploaded</p> : null}
           </div>
-          {/* Setting permissionOpen to true opens the permission dialog, where clicking "agree" actually calls the media upload function */}
-          <Button size="small" color="secondary" variant="contained" onClick={() => this.setState({ permissionOpen: true })}>Upload</Button>
+          {/* Setting dialogMode to DIALOG_MODES.PERMISSION opens the permission dialog, where clicking "agree" actually calls the media upload function */}
+          <Button size="small" color="secondary" variant="contained" onClick={() => this.setState({ dialogMode: DIALOG_MODES.PERMISSION})}>Upload</Button>
 
           <div className="formItem">
             <h4>How many humans were in your group?</h4>
@@ -633,37 +693,7 @@ class Form extends Component {
             Submit
           </Button>
         </ValidatorForm>
-        {/* "Thanks for submitting" dialog */}
-        <Dialog
-          open={thanksMessage}
-          onClose={this.handleClose}
-        >
-          <DialogContent>
-            <DialogContentText>
-              {thanksMessage}
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-        {/* Permission dialog */}
-        <Dialog
-          open={permissionOpen}
-          onClose={() => this.setState({ permissionOpen: false })}
-        >
-          <DialogContent>
-            <DialogContentText>
-              Is it ok if we store the images and audio that you've uploaded? If you say no, we will not be able to show your pictures to other users.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => this.handlePermissionResponse(false)} color="primary">
-              No, don't use my media
-            </Button>
-            <Button onClick={() => this.handlePermissionResponse(true)} color="primary">
-              Yes, use my media
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+        {this.getDialogFromMode(dialogMode)}
       </LoadingOverlay>
     );
   }

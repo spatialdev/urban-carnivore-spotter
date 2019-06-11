@@ -5,7 +5,7 @@ import MapIcon from '@material-ui/icons/Map';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Drawer from '@material-ui/core/Drawer';
 import { withStyles } from '@material-ui/core/styles';
 
 import Form from './Form';
@@ -61,7 +61,7 @@ class Footer extends Component {
 
   render() {
     const { open } = this.state;
-    const { history,classes } = this.props;
+    const { classes, history } = this.props;
 
     return (
       <div className="footerIconDiv">
@@ -72,11 +72,10 @@ class Footer extends Component {
         <Fab color="primary" aria-label="Add" className="plusButton" size="large" onClick={this.toggleDrawer(!open)}>
           <AddIcon/>
         </Fab>
-        <SwipeableDrawer
+        <Drawer
           anchor="bottom"
           open={open}
           onClose={this.toggleDrawer(!open)}
-          onOpen={this.toggleDrawer(!open)}
           className="formWizard"
         >
           <div tabIndex={0}>
@@ -87,9 +86,9 @@ class Footer extends Component {
             </div>
             <Form handleDrawerState={this.handleDrawer} fromDrawer/>
           </div>
-        </SwipeableDrawer>
-        <Button className="footerIcons" style={{ float: 'right', marginRight: '50px' }}>
-          <SettingsIcon style={{ color: 'gray' }}/>
+      </Drawer>
+        <Button className="footerIcons" style={{ float: 'right', marginRight: '50px' }} onClick={() => history.push('/resources')}>
+          <SettingsIcon style={{ color: 'gray' }} />
           <p>Resources</p>
         </Button>
       </div>
