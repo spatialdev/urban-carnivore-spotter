@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Collapse, Fab, FormControl, FormControlLabel, FormGroup, Checkbox, IconButton} from '@material-ui/core';
+import { Button, Collapse, Card, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import FilterCheckboxes from './FilterCheckboxes';
@@ -39,17 +39,8 @@ const styles = {
     mainContent: {
         flex: 1
     },
-    resultsButton: {
-        position: 'sticky',
-        bottom: 4,
-        left: '5%',
-        width: '90%',
-        justifyContent: 'center',
-        color: 'white',
-        backgroundColor: '#93C838'
-    },
     expandHeader: {
-        margin: 16,
+        margin: '16px 16px 16px 24px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -59,6 +50,9 @@ const styles = {
     },
     collapsible: {
         textAlign: 'left'
+    },
+    separator: {
+        margin: 0
     }
 };
 
@@ -119,13 +113,13 @@ class FilterDrawer extends React.Component {
     }
 
     render = () => {
-        const {classes, cancel, children, filter: {startDate, endDate, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
+        const {classes, close, children, filter: {startDate, endDate, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
         const {showCarnivores, showNeighborhoods, showTime, showConfidence, dateRangeFocused} = this.state;
         return (
             <div className={classes.allContent}>
                 {children}
                 <div className={classes.header}>
-                    {cancel && <Button onClick={cancel}>Cancel</Button> }
+                    {close && <Button onClick={close}>Close</Button> }
                     <h3>Filter</h3>
                     <Button onClick={resetFilter}>Reset</Button>
                 </div>
@@ -139,7 +133,7 @@ class FilterDrawer extends React.Component {
                             briefNumber={Object.keys(carnivoreFilter).length - 1}
                             keyColorFunction={getColorForSpecies}/>
                     )}
-                    <hr/>
+                    <hr className={classes.separator}/>
 
                     {/* Neighborhoods */}
                     {this.getCollapse(classes, "Neighborhood", this.toggleShow('showNeighborhoods'), showNeighborhoods,
@@ -149,7 +143,7 @@ class FilterDrawer extends React.Component {
                             updateValues={this.updateFilterSubsection('neighborhoodFilter')}
                             briefNumber={briefNeighborhoodsCount}/>
                     )}
-                    <hr/>
+                    <hr className={classes.separator}/>
 
                     {/* Time and Day */}
                     {this.getCollapse(classes, "Time of Sighting", this.toggleShow('showTime'), showTime,
@@ -176,7 +170,7 @@ class FilterDrawer extends React.Component {
                                 briefNumber={Object.keys(timeFilter).length - 1}/>
                         </>
                     )}
-                    <hr/>
+                    <hr className={classes.separator}/>
 
                     {/* Confidence */}
                     {this.getCollapse(classes, "Confidence of Sighting", this.toggleShow('showConfidence'), showConfidence,

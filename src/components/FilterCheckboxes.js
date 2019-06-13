@@ -7,9 +7,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PlaceIcon from '@material-ui/icons/Place';
 
 const styles = {
-    checkbox: {
-        margin: '0px 0px 0px 8px',
-    },
     checkedCheckbox: {
         color: '#93C838'
     },
@@ -17,6 +14,7 @@ const styles = {
         margin: 'auto'
     },
     allContent: {
+        padding: '0px 0px 0px 24px',
         width: '100%'
     }
 };
@@ -37,8 +35,7 @@ class FilterCheckboxes extends Component {
                     control={<Checkbox
                         checkedIcon={<CheckBoxIntermediateIcon className={classes.checkedCheckbox}/>}
                         checked={checked}
-                        onChange={onChange}
-                        className={classes.checkbox}/>} label={label}/>
+                        onChange={onChange}/>} label={label}/>
     };
 
     orderEntries = filter => {
@@ -55,8 +52,7 @@ class FilterCheckboxes extends Component {
                 <FormControlLabel
                     control={<Checkbox checked={filter['all'].value}
                                 onChange={() => updateValues('all', !filter['all'].value)}
-                                checkedIcon={<CheckBoxIntermediateIcon className={classes.checkedCheckbox}/>}
-                                className={classes.checkbox}/>}
+                                checkedIcon={<CheckBoxIntermediateIcon className={classes.checkedCheckbox}/>}/>}
                     label={allLabel} />
                 {this.orderEntries(filter)
                     .filter(([key, value]) => key !== 'all').slice(0, briefNumber).map(([itemKey, itemState]) =>
