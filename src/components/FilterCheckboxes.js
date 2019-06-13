@@ -41,20 +41,26 @@ class FilterCheckboxes extends Component {
                         className={classes.checkbox}/>} label={label}/>
     };
 
+    orderEntries = filter => {
+        return Object.entries(filter)
+          // Sort the entries by their order
+          .sort(([aKey, aValue], [otherKey, otherValue]) => aValue.order - otherValue.order)
+    };
+
     render() {
         const {allLabel, briefNumber, filter, updateValues, classes, keyColorFunction} = this.props;
         const {viewAll} = this.state;
         return <FormControl component="fieldset" className={classes.allContent}>
             <FormGroup>
                 <FormControlLabel
-                    control={<Checkbox checked={filter['all']}
-                                onChange={() => updateValues('all', !filter['all'])}
+                    control={<Checkbox checked={filter['all'].value}
+                                onChange={() => updateValues('all', !filter['all'].value)}
                                 checkedIcon={<CheckBoxIntermediateIcon className={classes.checkedCheckbox}/>}
                                 className={classes.checkbox}/>}
                     label={allLabel} />
-                {Object.entries(filter)
-                    .filter(([key, value]) => key !== 'all').slice(0, briefNumber).map(([itemKey, checked]) =>
-                    this.getButton(itemKey, checked, () => updateValues(itemKey, !checked), classes, keyColorFunction)
+                {this.orderEntries(filter)
+                    .filter(([key, value]) => key !== 'all').slice(0, briefNumber).map(([itemKey, itemState]) =>
+                    this.getButton(itemKey, itemState.value, () => updateValues(itemKey, !itemState.value), classes, keyColorFunction)
                 )}
             </FormGroup>
             {/* Button to display the rest. Subtracting 1 to account for the all button, which has a field in filter
@@ -63,9 +69,9 @@ class FilterCheckboxes extends Component {
                 <>
                 <Collapse in={viewAll}>
                     <FormGroup>
-                        {Object.entries(filter).filter(([key, value]) => key !== 'all').slice(briefNumber)
-                            .map(([itemKey, checked]) =>
-                                this.getButton(itemKey, checked, () => updateValues(itemKey, !checked), classes))}
+                        {this.orderEntries(filter).filter(([key, value]) => key !== 'all').slice(briefNumber)
+                            .map(([itemKey, itemState]) =>
+                                this.getButton(itemKey, itemState.value, () => updateValues(itemKey, !itemState.value), classes))}
                     </FormGroup>
                 </Collapse>
                 <Button

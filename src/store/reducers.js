@@ -20,15 +20,15 @@ const updateFilterReducer = (oldFilter, key, value) => {
         // turning all on should also turn on all other values inside of this filter
         // similarly, turning all off should also turn off all other values inside of this filter
         return Object.keys(oldFilter)
-          .reduce((object, newKey) => ({...object, [newKey]: value}), {});
+          .reduce((object, newKey) => ({...object, [newKey]: {...oldFilter[newKey], value}}), {});
     }
     else {
         // update the value
-        const newFilter = {...oldFilter, [key]: value};
+        const newFilter = {...oldFilter, [key]: {...oldFilter[key], value}};
         // If all are now true, set 'all' to true. Otherwise set 'all' to false
-        newFilter.all = Object.entries(newFilter)
+        newFilter.all = {order: 0, value: Object.entries(newFilter)
           .filter(([key, val]) => key !== 'all')
-          .every(([key, val]) => val === true);
+          .every(([key, val]) => val.value === true)};
         return newFilter;
     }
 };
@@ -56,10 +56,10 @@ const reducer = (state, action) => {
         // When we update the list of all neighborhoods, the filter should contain
         // all neighborhoods: false, plus an all: true.
         case UPDATE_ALL_NEIGHBORHOODS:
-            const newFilter = action.value.reduce((obj, neighborhood) => {
-                obj[neighborhood] = false;
+            const newFilter = action.value.reduce((obj, neighborhood, index) => {
+                obj[neighborhood] = {order: index, value: true};
                 return obj;
-            }, {all: true});
+            }, {all: {order: 0, value: true}});
             return {...state,
                 filter: {...state.filter,
                     neighborhoodFilter: newFilter

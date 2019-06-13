@@ -48,7 +48,7 @@ const insideDateBounds = (target, startDate, endDate) => {
 
 const insideAnyActiveTimeBounds = (date, filter) => {
     const { timeFilter } = filter;
-    return DATE_BOUNDS.filter(bounds => timeFilter[bounds.name])
+    return DATE_BOUNDS.filter(bounds => timeFilter[bounds.name].value)
         .some(bounds => insideTimeBounds(date, bounds));
 }
 
@@ -64,16 +64,16 @@ const matchesOtherCarnivore = (filter, species) => {
 
 export const getInitialFilter = (allNeighborhoods) => {
     // Carnivore, neighborhood, and times defaults
-    const defaultCarnivoreFilter = {all: true};
-    allCarnivores.forEach(carnivore => defaultCarnivoreFilter[carnivore] = true);
+    const defaultCarnivoreFilter = {all: {order: 0, value: true}};
+    allCarnivores.forEach((carnivore, ind) => defaultCarnivoreFilter[carnivore] = {order: ind + 1, value: true});
     const defaultNeighborhoodFilter = allNeighborhoods
         .filter(hood => hood !== 'all')
-        .reduce((obj, neighborhood) => {
-            obj[neighborhood] = true;
+        .reduce((obj, neighborhood, index) => {
+            obj[neighborhood] = {order: index + 1, value: true};
             return obj;
-        }, {all: true});
-    const defaultTimeFilter = {all: true};
-    allTimes.forEach(time => defaultTimeFilter[time] = true);
+        }, {all: {order: 0, value: true}});
+    const defaultTimeFilter = {all: {order: 0, value: true}};
+    allTimes.forEach((time, ind) => defaultTimeFilter[time] = {order: ind+1, value: true});
 
     const initialFilter = {
         carnivoreFilter: {...defaultCarnivoreFilter},
@@ -93,13 +93,13 @@ export const dataMatchesFilter = (report, filter) => {
     const { data } = report;
     const parsedDate = new Date(data.timestamp);
     // ok with species    
-    return (filter.carnivoreFilter.all || filter.carnivoreFilter[data.species] || matchesOtherCarnivore(filter, data.species)) &&
+    return (filter.carnivoreFilter.all.value || filter.carnivoreFilter[data.species].value || matchesOtherCarnivore(filter, data.species)) &&
     // ok with neighborhood
-    (filter.neighborhoodFilter.all === true || (data.hasOwnProperty('neighborhood') && filter.neighborhoodFilter[data.neighborhood] === true)) &&
+    (filter.neighborhoodFilter.all.value === true || (data.hasOwnProperty('neighborhood') && filter.neighborhoodFilter[data.neighborhood].value === true)) &&
     // ok with date
     insideDateBounds(moment(parsedDate), filter.startDate, filter.endDate) &&
     // ok with time
-    (filter.timeFilter.all || insideAnyActiveTimeBounds(parsedDate, filter)) &&
+    (filter.timeFilter.all.value || insideAnyActiveTimeBounds(parsedDate, filter)) &&
     // ok with confidence
     (!filter.confidenceFilterActive || data.confidence === HIGH_CONFIDENCE || data.confidence === MEDIUM_CONFIDENCE);
 }
