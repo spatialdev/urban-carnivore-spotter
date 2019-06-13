@@ -27,7 +27,7 @@ const styles = {
         backgroundColor: 'white',
         position: 'fixed',
         left: '5%',
-        top: '15%',
+        bottom: '5%',
         width: 250,
         zIndex: 1,
         height: '60%',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Collapse, Fab, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
+import { Button, Collapse, Fab, FormControl, FormControlLabel, FormGroup, Checkbox, IconButton} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import FilterCheckboxes from './FilterCheckboxes';
@@ -8,6 +8,7 @@ import CheckBoxIntermediateIcon from 'mdi-react/CheckboxIntermediateIcon'
 import { connect } from 'react-redux';
 import { updateFilter, updateFilterDate, toggleFilterConfidence, resetFilter } from '../store/actions'
 import { getColorForSpecies } from '../services/ColorService';
+import ResizableIconButton from './ResizableIconButton';
 
 // Date picker
 import 'react-dates/initialize';
@@ -31,7 +32,8 @@ const styles = {
         position: 'sticky',
         top: 0,
         backgroundColor: 'white',
-        zIndex: 1
+        zIndex: 1,
+        padding: '4px 24px 4px 24px',
     },
     filterBox: {},
     mainContent: {
@@ -46,18 +48,11 @@ const styles = {
         color: 'white',
         backgroundColor: '#93C838'
     },
-    expandButton: {
-        boxShadow: 'none',
-        float: 'right',
-        position: 'relative',
-        top: -8,
-        backgroundColor: '#93C838',
-        color: 'white'
-    },
     expandHeader: {
         margin: 16,
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     headerTitle: {
         alignText: 'left'
@@ -104,13 +99,11 @@ class FilterDrawer extends React.Component {
         return <>
             <div className={classes.expandHeader}>
                 <span className={classes.headerTitle}>{headerTitle}</span>
-                <Fab
-                    className={classes.expandButton}
-                    onClick={onClick}
-                    size="small"
-                    disableRipple={true}>
-                        {expand ? <RemoveIcon /> : <AddIcon />}
-                </Fab>
+                <ResizableIconButton
+                  onClick={onClick}
+                  disableRipple={true}>
+                    {expand ? <RemoveIcon/> : <AddIcon/>}
+                </ResizableIconButton>
             </div>
             <Collapse in={expand} className={classes.collapsible}>
                 {child}
@@ -133,7 +126,7 @@ class FilterDrawer extends React.Component {
                 {children}
                 <div className={classes.header}>
                     {cancel && <Button onClick={cancel}>Cancel</Button> }
-                    <h3 style={{margin: 4}}>Filter</h3>
+                    <h3>Filter</h3>
                     <Button onClick={resetFilter}>Reset</Button>
                 </div>
                 <div className={classes.mainContent}>
