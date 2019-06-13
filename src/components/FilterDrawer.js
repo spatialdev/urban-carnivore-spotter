@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { updateFilter, updateFilterDate, toggleFilterConfidence, resetFilter } from '../store/actions'
 import { getColorForSpecies } from '../services/ColorService';
 import ResizableIconButton from './ResizableIconButton';
+import Sticky from 'react-sticky-fill';
 
 // Date picker
 import 'react-dates/initialize';
@@ -113,16 +114,17 @@ class FilterDrawer extends React.Component {
     }
 
     render = () => {
-        const {classes, close, children, filter: {startDate, endDate, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
+        const {classes, close, filter: {startDate, endDate, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
         const {showCarnivores, showNeighborhoods, showTime, showConfidence, dateRangeFocused} = this.state;
         return (
             <div className={classes.allContent}>
-                {children}
-                <div className={classes.header}>
-                    {close && <Button onClick={close}>Close</Button> }
-                    <h3>Filter</h3>
-                    <Button onClick={resetFilter}>Reset</Button>
-                </div>
+                <Sticky>
+                    <div className={classes.header}>
+                        {close && <Button onClick={close}>Close</Button> }
+                        <h3>Filter</h3>
+                        <Button onClick={resetFilter}>Reset</Button>
+                    </div>
+                </Sticky>
                 <div className={classes.mainContent}>
                     {/* Carnivores */}
                     {this.getCollapse(classes, "Type of Carnivore", this.toggleShow('showCarnivores'), showCarnivores,
