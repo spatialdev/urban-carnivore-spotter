@@ -65,15 +65,15 @@ const matchesOtherCarnivore = (filter, species) => {
 export const getInitialFilter = (allNeighborhoods) => {
     // Carnivore, neighborhood, and times defaults
     const defaultCarnivoreFilter = {all: true};
-    allCarnivores.forEach(carnivore => defaultCarnivoreFilter[carnivore] = false);
+    allCarnivores.forEach(carnivore => defaultCarnivoreFilter[carnivore] = true);
     const defaultNeighborhoodFilter = allNeighborhoods
         .filter(hood => hood !== 'all')
         .reduce((obj, neighborhood) => {
-            obj[neighborhood] = false;
+            obj[neighborhood] = true;
             return obj;
         }, {all: true});
     const defaultTimeFilter = {all: true};
-    allTimes.forEach(time => defaultTimeFilter[time] = false);
+    allTimes.forEach(time => defaultTimeFilter[time] = true);
 
     const initialFilter = {
         carnivoreFilter: {...defaultCarnivoreFilter},
