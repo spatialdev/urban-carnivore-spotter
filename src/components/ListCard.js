@@ -40,7 +40,7 @@ const ListCard = props => {
                  image={report.data.mediaPaths && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : Placeholder}
       />
       <CardContent className={classes.info}>
-        <Typography variant={'h3'}>{report.data.species.toUpperCase()}</Typography>
+        <Typography variant={'h5'}>{report.data.species.toUpperCase()}</Typography>
         <Typography variant={'subtitle1'}>{timeToString(report.data.timestamp)}</Typography>
         <Typography style={{ color: 'grey' }}>{report.data.neighborhood ? report.data.neighborhood : "Unknown"}</Typography>
         <li>
