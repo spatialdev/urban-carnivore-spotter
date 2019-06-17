@@ -51,7 +51,7 @@ class MobileHeader extends Component {
                 style={{ width: '250px' }}
               >
                 <div className={classes.filterContainer}>
-                  <FilterDrawer cancel={this.toggleDrawer('right', false)}/>
+                  <FilterDrawer close={this.toggleDrawer('right', false)}/>
                 </div>
               </div>
             </SwipeableDrawer>
