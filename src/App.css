@@ -232,7 +232,9 @@ List + Card
 
 .cardPicture {
     height: 150px;
-    width: 150px;
+    width: 100px;
+    min-height: 150px;
+    min-width: 100px;
 }
 
 .filterContainer {
@@ -249,6 +251,13 @@ List + Card
 @media (min-width: 600px) {
     .card {
         width: 550px;
+    }
+
+    .cardPicture {
+        height: 150px;
+        width: 150px;
+        min-height: 150px;
+        min-width: 150px;
     }
 }
 
