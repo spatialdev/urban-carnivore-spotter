@@ -39,19 +39,19 @@ const styles = {
         '& svg': {
             fontSize: 25,
         },
-        width: 30,
+        width: 35,
         height: 30
     },
     expandHeader: {
         margin: 16,
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     headerTitle: {
+        alignText: 'left',
         fontWeight: 'bold',
         fontSize: 18,
         lineHeight:'50px'
-
     },
     collapsible: {
         textAlign: 'left',
@@ -59,10 +59,9 @@ const styles = {
         fontSize: 17
     },
     body: {
-        textAlign: 'left',
         margin: 16,
+        textAlign: 'left'
     },
-
 };
 const speciesList = ['blackbear', 'bobcat', 'cougar', 'coyote', 'opossum',
     'raccoon', 'riverotter'];
@@ -92,7 +91,6 @@ class Resources extends Component {
             <Collapse in={expand} className={classes.collapsible}>
                 {child}
             </Collapse>
-
         </>
     };
 
@@ -135,7 +133,6 @@ class Resources extends Component {
                     </div>
                 )}
             </div>
-
         );
     }
 }
