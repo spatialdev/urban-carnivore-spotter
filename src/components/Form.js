@@ -16,6 +16,7 @@ import LoadingOverlay from 'react-loading-overlay';
 
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
+import MediaDisplay from './MediaDisplay';
 import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -171,7 +172,8 @@ class Form extends Component {
     showAnimalBehavior: false,
     showContactInformation: false,
     showCarousel: false,
-    carouselImageIndex:0
+    carouselImageIndex:0,
+    uploading: false
   };
 
   constructor(props) {
@@ -230,7 +232,7 @@ class Form extends Component {
   };
 
   handleUploadSuccess = files => {
-    this.setState({ mediaPaths: files });
+    this.setState({ mediaPaths: files, media: null, uploading: false });
   };
 
   handleTimestampChange = timestamp => {
@@ -247,11 +249,12 @@ class Form extends Component {
   uploadMedia = () => {
     const { media } = this.state;
     if (media) {
-      const totalSize = media.slice(0, -2).reduce((sum, file) => sum + file.size, 0);
+      const totalSize = media.reduce((sum, file) => sum + file.size, 0);
       if (totalSize >= MAX_FILE_SIZE) {
         // Remove files and ask user to upload smaller files
-        this.setState({media: null, dialogMode: DIALOG_MODES.LARGE_FILES});
+        this.setState({dialogMode: DIALOG_MODES.LARGE_FILES});
       } else {
+        this.setState({ uploading: true });
         // Upload the files
         media.forEach(file => this.fileUploader.startUpload(file));
       }
@@ -352,8 +355,8 @@ class Form extends Component {
       mapLat, mapLng, timestamp, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
-      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, submitting,
-      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation
+      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, media, submitting,
+      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, uploading
     } = this.state;
     const {classes, isMobile} = this.props;
     return (
@@ -388,10 +391,16 @@ class Form extends Component {
           <div className="formItem">
             <h4>Upload pictures, videos or sound files</h4>
             <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
-            {mediaPaths.length > 0 ? <p>{mediaPaths.length} files uploaded</p> : null}
+            <MediaDisplay filesOnDeck={media}
+                          uploading={uploading}
+                          uploadedFiles={mediaPaths}
+                          removeFiles={() => this.setState({media: null})}/>
+          {media && media.length > 0 ?
+            // Setting dialogMode to DIALOG_MODES.PERMISSION opens the permission dialog, where clicking "agree" actually calls the media upload function
+            <Button size="small" color="secondary" variant="contained" onClick={() => this.setState({ dialogMode: DIALOG_MODES.PERMISSION})}>Confirm Upload</Button>
+            : null}
           </div>
-          {/* Setting dialogMode to DIALOG_MODES.PERMISSION opens the permission dialog, where clicking "agree" actually calls the media upload function */}
-          <Button size="small" color="secondary" variant="contained" onClick={() => this.setState({ dialogMode: DIALOG_MODES.PERMISSION})}>Upload</Button>
+
 
           <div className="formItem">
             <h4>Which animal did you see?</h4>
