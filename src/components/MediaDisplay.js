@@ -60,7 +60,7 @@ const MediaDisplay = (props) => {
       <CircularProgress/>
       : null}
     {uploadedFiles && uploadedFiles.length > 0 ?
-      <span className={`${classes.iconTextSpan} ${classes.green}`}><CheckCircleOutlinedIcon/>{uploadedFiles.length} file(s) uploaded</span>
+      <span className={`${classes.iconTextSpan} ${classes.green}`}><CheckCircleOutlinedIcon fontSize='small' className={classes.icon}/>{uploadedFiles.length} file(s) uploaded</span>
       : null}
   </div>
 };
