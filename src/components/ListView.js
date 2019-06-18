@@ -6,7 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import ListCard from '../components/ListCard';
 import { dataMatchesFilter } from '../services/FilterService';
 import {withRouter} from "react-router-dom";
-import Map from "@material-ui/icons/Map";
+import Map from "@material-ui/icons/Place";
 import FilterDrawer from './FilterDrawer';
 import {withStyles} from "@material-ui/core";
 import List from "./MapView";
@@ -33,6 +33,7 @@ const styles = {
         width: 20,
         height: 20,
         backgroundColor: '#FECA00',
+        color: '#FFFFFF'
 
     },
     mapViewButtonContainerMobile: {
@@ -43,7 +44,8 @@ const styles = {
         backgroundColor: '#FECA00',
         "&:hover": {
             backgroundColor: "#FECA00"
-        }
+        },
+        color: '#FFFFFF'
     },
     mapViewButtonContainerDesktop: {
         bottom: '20%',
