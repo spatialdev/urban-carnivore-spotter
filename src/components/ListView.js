@@ -9,22 +9,52 @@ import {withRouter} from "react-router-dom";
 import Map from "@material-ui/icons/Map";
 import FilterDrawer from './FilterDrawer';
 import {withStyles} from "@material-ui/core";
+import List from "./MapView";
+import Fab from "@material-ui/core/Fab";
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
 
 const styles = {
-    toggleButtonMobile: {
-        bottom: '20%',
-        left: '88%',
-        zIndex: 99,
-        position: 'fixed',
-    },
+    mapViewButtonMobile: {
+        '& svg': {
+            fontSize: 20,
+            backgroundColor: '#FECA00',
+        },
+        width: 20,
+        height: 20,
+        backgroundColor: '#FECA00',
 
-    toggleButtonDesktop: {
-        left:'95%',
+    },
+    mapViewButtonDesktop: {
+        '& svg': {
+            fontSize: 20,
+            backgroundColor: '#FECA00'
+        },
+        width: 20,
+        height: 20,
+        backgroundColor: '#FECA00',
+
+    },
+    mapViewButtonContainerMobile: {
+        bottom: '20%',
+        left: '80%',
         zIndex: 99,
         position: 'fixed',
-        bottom: '20%'
+        backgroundColor: '#FECA00',
+        "&:hover": {
+            backgroundColor: "#FECA00"
+        }
+    },
+    mapViewButtonContainerDesktop: {
+        bottom: '20%',
+        left: '93%',
+        zIndex: 99,
+        position: 'fixed',
+        backgroundColor: '#FECA00',
+        "&:hover": {
+            backgroundColor: "#FECA00"
+        }
+
     }
 };
 
@@ -62,8 +92,10 @@ class ListView extends Component {
                 return this.timeToNanos(two.data.time_submitted) - this.timeToNanos(one.data.time_submitted);
             })
             .map((report) => <ListCard report={report} key={report.id}/>)}
-            <div>
-                <Map onClick={() => history.push('/')} className={isMobile? classes.toggleButtonMobile : classes.toggleButtonDesktop}/>
+            <div >
+                <Fab  className={isMobile? classes.mapViewButtonContainerMobile : classes.mapViewButtonContainerDesktop} aria-label="Toggle"  size="small">
+                    <Map onClick={() => history.push('/')} className={isMobile? classes.mapViewButtonMobile : classes.mapViewButtonDesktop}/>
+                </Fab>
             </div>
         </div>
       </div>
