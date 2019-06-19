@@ -16,16 +16,14 @@ import LoadingOverlay from 'react-loading-overlay';
 
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
+import StaticFormMap from './StaticFormMap'
 import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
-import BlackBear from "../assets/SpeciesCards/blackbear.png";
 import Coyote from "../assets/SpeciesCards/coyote.png";
 import Bobcat from "../assets/SpeciesCards/bobcat.png";
-import Cougar from "../assets/SpeciesCards/cougar.png";
 import Opossum from "../assets/SpeciesCards/opossum.png";
-import RiverOtter from "../assets/SpeciesCards/riverotter.png";
 import Raccoon from "../assets/SpeciesCards/raccoon.png";
 import Info from '@material-ui/icons/InfoOutlined';
 import {connect} from "react-redux";
@@ -130,6 +128,21 @@ const styles = {
     position: 'relative',
     paddingLeft: 35,
     paddingRight: 35,
+  },
+  addButtonContainer: {
+    zIndex: 99,
+    position: 'absolute',
+    left: '34%',
+    top: '15%'
+  },
+  doneButtonContainer: {
+    zIndex: 99,
+    position: 'absolute',
+    left: '40%'
+  },
+  staticMap: {
+    position: 'absolute',
+    zIndex: 99
   }
 };
 
@@ -171,7 +184,11 @@ class Form extends Component {
     showAnimalBehavior: false,
     showContactInformation: false,
     showCarousel: false,
-    carouselImageIndex:0
+    carouselImageIndex:0,
+    editMode: false,
+    addMode: false,
+    initialMap: true,
+    finalMap: false
   };
 
   constructor(props) {
@@ -341,10 +358,57 @@ class Form extends Component {
         return <FormInfoDialog
           open={true}
           onClose={this.handleClose}
-          message={THANKS_FOR_SUBMITTING}/>
+          message={THANKS_FOR_SUBMITTING}/>;
       default:
         return null;
     }
+  };
+
+  showInteractiveMap = (classes,neighborhood,mapLng,mapLat ) => {
+    return (
+        <div className="formItem">
+          <p> Drag the point on the map to mark your sighting</p>
+          <FormMap passMapCoordinates={this.getMapCoordinates}
+                   centerLng={mapLng} centerLat={mapLat} className="interactiveMap"/>
+          {neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}
+          <div className={classes.doneButtonContainer}>
+            <Button size="small" color="primary" variant="contained" onClick={() => this.setState({addMode: false, editMode: true, initialMap: false, finalMap: true})}
+            > DONE </Button>
+          </div>
+        </div>
+    )
+  };
+  renderMap = (classes, isMobile, neighborhood, mapLng, mapLat) => {
+    return isMobile ?
+        <div className="formItem">
+          <h4>Identify the location of your sighting</h4>
+          <p> Drag the point on the map to mark your sighting</p>
+          <div className={this.state.initialMap ? '' : 'initial'}>
+            <StaticFormMap passMapCoordinates={this.getMapCoordinates}
+                           centerLng={mapLng} centerLat={mapLat} />
+            <div className={classes.addButtonContainer}>
+              <Button size="small" color="primary" variant="contained"
+                      onClick={() => this.setState({addMode: true})}>ADD LOCATION</Button>
+            </div>
+          </div>
+
+          <div className={this.state.finalMap ? '' : 'hidden'}>
+            <StaticFormMap classes={classes} passMapCoordinates={this.getMapCoordinates}
+                           centerLng={mapLng} centerLat={mapLat}/>
+            <div className={classes.addButtonContainer}>
+              <Button size="small" color="primary" variant="contained"
+                      onClick={() => this.setState({addMode: true})}>EDIT LOCATION</Button>
+            </div>
+            {neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}
+          </div>
+        </div> :
+        <div className="formItem">
+          <h4>Identify the location of your sighting</h4>
+          <p> Drag the point on the map to mark your sighting</p>
+          <FormMap passMapCoordinates={this.getMapCoordinates}
+                   centerLng={mapLng} centerLat={mapLat}/>
+          {neighborhood ? <p>{neighborhood}</p> : null}
+        </div>
   };
 
   render() {
@@ -353,7 +417,7 @@ class Form extends Component {
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
       conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, submitting,
-      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation
+      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, addMode
     } = this.state;
     const {classes, isMobile} = this.props;
     return (
@@ -374,14 +438,17 @@ class Form extends Component {
               timeCaption="time"
             />
           </div>
-
+          {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
           <div className="formItem">
-            <h4>Identify the location of your sighting</h4>
-            <p> Drag the point on the map to mark your sighting</p>
-
-            <FormMap passMapCoordinates={this.getMapCoordinates}
-                     centerLng={mapLng} centerLat={mapLat}/>
-            {neighborhood ? <p>{neighborhood}</p> : null}
+            <Dialog
+                open={addMode}
+            >
+              <DialogContent className="interactiveMapContainer" >
+                <div >
+                  {this.showInteractiveMap(classes,neighborhood,mapLng,mapLat)}
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
 
           {/*Image*/}

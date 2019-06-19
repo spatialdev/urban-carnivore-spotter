@@ -54,7 +54,6 @@ const styles = {
         left: '95%',
         position: 'fixed'
     }
-
 };
 class MapView extends Component {
     state = {

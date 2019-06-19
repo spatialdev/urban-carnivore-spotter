@@ -456,4 +456,25 @@ padding: 0;
     text-transform: capitalize;
 }
 
+.interactiveMap {
+    height: 200px;
+    width: 250px;
+}
+
+.interactiveMapContainer {
+    height: 500px;
+    weight: 500px;
+    align-items: center;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+    position: relative
+}
+
+.initial {
+    display: none;
+    position: relative
+}
 
