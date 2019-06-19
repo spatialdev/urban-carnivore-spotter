@@ -92,8 +92,12 @@ export const getInitialFilter = (allNeighborhoods) => {
 export const dataMatchesFilter = (report, filter) => {
     const { data } = report;
     const parsedDate = new Date(data.timestamp);
-    // ok with species    
-    return (filter.carnivoreFilter.all.value || filter.carnivoreFilter[data.species].value || matchesOtherCarnivore(filter, data.species)) &&
+    // If the report doesn't have any of the necessary fields, don't display it.
+    if (!data.species || !data.neighborhood || !parsedDate || !data.confidence) {
+        return false;
+    }
+    // ok with species
+    return (filter.carnivoreFilter.all.value || (filter.carnivoreFilter[data.species] && filter.carnivoreFilter[data.species].value) || matchesOtherCarnivore(filter, data.species)) &&
     // ok with neighborhood
     (filter.neighborhoodFilter.all.value === true || (data.hasOwnProperty('neighborhood') && filter.neighborhoodFilter[data.neighborhood].value === true)) &&
     // ok with date

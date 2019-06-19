@@ -7,24 +7,24 @@ import { getDisplayName } from '../services/ColorService';
 import {connect} from "react-redux";
 
 const styles = {
-    allContent: {
-        height: '100%',
+    allContentMobile: {
+        minHeight: '100vh',
         overflow: 'scroll',
         position: 'relative',
         flexDirection: 'column',
-        backgroundColor: 'white'
+        backgroundColor: '#F6F4F3'
     },
     allContentDesktop: {
         paddingTop: 50,
-        height: '100%',
+        minHeight: '100vh',
         overflow: 'scroll',
         position: 'relative',
         flexDirection: 'column',
         backgroundColor: 'white'
     },
     header: {
+        display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
         position: 'sticky',
         top: 0,
@@ -32,12 +32,15 @@ const styles = {
         zIndex: 1
     },
     expandButton: {
+        margin:10,
         boxShadow: 'none',
         float: 'right',
         position: 'relative',
-        top: -8,
-        backgroundColor: '#93C838',
-        color: 'white'
+        '& svg': {
+            fontSize: 25,
+        },
+        width: 35,
+        height: 30
     },
     expandHeader: {
         margin: 16,
@@ -46,8 +49,16 @@ const styles = {
     },
     headerTitle: {
         alignText: 'left',
+        fontWeight: 'bold',
+        fontSize: 18,
+        lineHeight:'50px'
     },
     collapsible: {
+        textAlign: 'left',
+        lineHeight: '2',
+        fontSize: 17
+    },
+    body: {
         margin: 16,
         textAlign: 'left'
     },
@@ -71,9 +82,8 @@ class Resources extends Component {
         return <>
             <div className={classes.expandHeader}>
                 <span className={classes.headerTitle}>{headerTitle}</span>
-                <Fab
+                <Fab className={classes.expandButton}
                     onClick={onClick}
-                    size="small"
                     disableRipple={true}>
                     {expand ? <RemoveIcon /> : <AddIcon />}
                 </Fab>
@@ -93,10 +103,10 @@ class Resources extends Component {
         const {showTips, showProjectDescription, showContactUs} = this.state;
         const {classes, isMobile} = this.props;
         return(
-            <div className={isMobile? classes.allContent : classes.allContentDesktop}>
+            <div className={isMobile? classes.allContentMobile : classes.allContentDesktop}>
                 {/* Species Identification Tips */}
                 {this.getCollapse(classes, "Species Identification Tips", this.toggleShow('showTips'), showTips,
-                    <div>
+                    <div className={classes.body}>
                         {speciesList.map((type, idx) =>
                             <li key={idx}>
                                 <Link to={`/resources/${type}`}>{getDisplayName(type)}</Link>
@@ -108,7 +118,7 @@ class Resources extends Component {
 
                 {/* Seattle Urban Carnivore Project */}
                 {this.getCollapse(classes, "Seattle Urban Carnivore Project", this.toggleShow('showProjectDescription'), showProjectDescription,
-                    <div className={classes.headerTitle}>
+                    <div className={classes.body}>
                         <p>Seattle Spotter is part of the SeattleUrban Carnivore Project, a collaboration between the Seattle University and WoodlandPark Zoo</p>
                         <a href="https://www.zoo.org/otters">learn more</a>
                     </div>
@@ -118,7 +128,7 @@ class Resources extends Component {
 
                 {/* Contact Us */}
                 {this.getCollapse(classes, "Contact Us", this.toggleShow('showContactUs'), showContactUs,
-                    <div className={classes.headerTitle} >
+                    <div className={classes.body} >
                         <a href="mailto:seattlecarnivores@zoo.org">seattlecarnivores@zoo.org</a>
                     </div>
                 )}
