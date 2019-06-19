@@ -1,4 +1,3 @@
-import Card from "@material-ui/core/Card";
 import SpeciesCardInfo from "./SpeciesCardInfo";
 import React from "react";
 import { withStyles } from '@material-ui/core';
@@ -18,7 +17,7 @@ const styles = {
     padding: '32px 0px 32px 0px'
   },
   allContent: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#ececec',
     maxWidth: 1100,
     display: 'flex',
   },
@@ -29,7 +28,7 @@ const styles = {
 
 const SpeciesCardDesktop = (props) => {
   const {classes, speciesName, latinName, weight, height, diet, identTips, largerThanLab, imagePath} = props;
-  return <Card className={classes.allContent}>
+  return <div className={classes.allContent}>
     <div className={classes.headerAndImageContainer}>
       <div className={classes.headerContainer}>
         <h3 className={classes.speciesHeader}>{speciesName}</h3>
@@ -46,7 +45,7 @@ const SpeciesCardDesktop = (props) => {
       identTips={identTips}
       largerThanLab={largerThanLab}
     />
-  </Card>
+  </div>
 };
 
 export default withStyles(styles)(SpeciesCardDesktop);
