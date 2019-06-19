@@ -17,13 +17,11 @@ class FormMap extends Component {
     const { passMapCoordinates } = this.props;
     const lng = e.lngLat.lng;
     const lat = e.lngLat.lat;
-
     passMapCoordinates({ lng, lat });
   };
 
   render() {
     const { centerLng, centerLat } = this.props;
-
     return (
       <div>
         <Map style="mapbox://styles/mapbox/streets-v9"
@@ -43,8 +41,6 @@ class FormMap extends Component {
                      onDragEnd={e => this.onDragEnd(e)}/>
           </Layer>
         </Map>
-
-
       </div>
     );
   }
