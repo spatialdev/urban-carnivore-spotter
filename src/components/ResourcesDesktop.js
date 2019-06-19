@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core';
 import { Tabs, Tab } from '@material-ui/core';
 import SpeciesCardDesktop from "./SpeciesCardDesktop";
-import { getAllSpecies, getDataForSpecies, getSpeciesByIndex, getImageBySpecies } from '../services/SpeciesService';
+import { getAllSpecies, getDataForSpecies, getSpeciesByIndex, getImageBySpecies, getDisplayName } from '../services/SpeciesService';
 
 const styles = {
   allContent: {
@@ -54,7 +54,7 @@ class ResourcesDesktop extends Component {
               value={tabValue}
               onChange={(e, tabValue) => this.setState({tabValue})}
             >
-              {getAllSpecies().map((species, ind) => <Tab className={classes.tab} label={species} key={ind}/>)}
+              {getAllSpecies().map((species, ind) => <Tab className={classes.tab} label={getDisplayName(species)} key={ind}/>)}
             </Tabs>
           </div>
           {<SpeciesCardDesktop speciesName={currData.name}
