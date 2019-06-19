@@ -14,7 +14,7 @@ const styles = {
   widthWrapper: {
     display: 'flex',
     justifyContent: 'center',
-    height: 'calc(100vh - 37px)',
+    minHeight: 'calc(100vh - 37px)'
   },
   speciesContent: {
     marginTop: 72,
