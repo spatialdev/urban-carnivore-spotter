@@ -1,0 +1,11 @@
+{
+	"name": "Black Bear",
+	"latin": "Ursus americanus",
+	"weight": "198-595 lbs / 90-270 kg",
+	"height": "24-36 in / 60-90 cm",
+	"larger": true,
+	"diet": "Omnivorous (fish, invertebrates, berries, etc.)",
+	"ident": "Color may vary from blonde to black; rump higher than shoulders; shoulder hump not prominent (as in grizzly bears).",
+	"image": "assets/tips-images/black_bear.png",
+	"shortname": "blackbear"
+}

@@ -24,14 +24,14 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Info from '@material-ui/icons/InfoOutlined';
 import {connect} from "react-redux";
-
+import { getAllSpecies, getDataForSpecies, getImageBySpecies } from "../services/SpeciesService";
 import FormInfoDialog from './FormInfoDialog';
+import SpeciesCard from "./SpeciesCardMobile";
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
   'Raccoon', 'River Otter', 'Other/Unknown'];
-const species = ['blackbear','bobcat','cougar','coyote','opossum','raccoon','riverotter'];
 const confidenceLevels = ['Not at all confident', 'About 25% confident', 'About 50% confident', 'About 75% confident',
   'More than 75% confident', '100% confident'];
 const reactions = ['Stayed quiet', 'Shouted/made noise', 'Other'];
@@ -467,10 +467,18 @@ class Form extends Component {
                         showThumbs={false}
                         showIndicators={false}
                     >
-                  {species.map((type, idx) =>
-                    <img key={idx} src={ require('../assets/SpeciesCards/' + type+'.png') }
-                         alt="Black Bear" className={isMobile? classes.mobileImage : classes.desktopImage}/>)
-                  }
+                  {getAllSpecies().map((type, idx) => {
+                    const data = getDataForSpecies(type);
+                    return <SpeciesCard key={idx}
+                                        speciesName={data.name}
+                                        latinName={data.latin}
+                                        weight={data.weight}
+                                        height={data.height}
+                                        diet={data.diet}
+                                        identTips={data.ident}
+                                        largerThanLab={data.larger}
+                                        imagePath={getImageBySpecies(data.shortname)}/>
+                  })}
                     </Carousel>
               </DialogContent>
             </Dialog>

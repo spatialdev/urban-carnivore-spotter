@@ -5,6 +5,7 @@ import RemoveIcon from '@material-ui/icons/ArrowUpward';
 import {Link} from "react-router-dom";
 import { getDisplayName } from '../services/ColorService';
 import {connect} from "react-redux";
+import ResourcesDesktop from './ResourcesDesktop';
 
 const styles = {
     allContentMobile: {
@@ -102,6 +103,9 @@ class Resources extends Component {
     render = () => {
         const {showTips, showProjectDescription, showContactUs} = this.state;
         const {classes, isMobile} = this.props;
+        if (!isMobile) {
+            return <ResourcesDesktop/>;
+        }
         return(
             <div className={isMobile? classes.allContentMobile : classes.allContentDesktop}>
                 {/* Species Identification Tips */}

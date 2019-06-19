@@ -1,0 +1,11 @@
+{
+	"name": "Raccoon",
+	"latin": "Procyon lotor",
+	"weight": "8.8-34.8 lbs / 4-15.8 kg",
+	"height": "9-12 in / 23-30 cm",
+	"larger": false,
+	"diet": "Omnivorous (fruits, berries, invertebrates, will scavenge waste disposed by humans)",
+	"ident": "Dark eye mask; pointy nose; ringed tail. Rump higher than shoulder when walking. Males are larger than females.",
+	"image": "assets/tips-images/racoon.png",
+	"shortname": "raccoon"
+}

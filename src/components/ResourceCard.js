@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import {Button, withStyles} from "@material-ui/core";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {KeyboardArrowLeft} from "@material-ui/icons";
+import SpeciesCardMobile from './SpeciesCardMobile';
+import {getImageBySpecies, getDataForSpecies} from "../services/SpeciesService";
 
 const styles = {
     mobileImage: {
@@ -45,16 +47,25 @@ class ResourceCard extends Component {
     render() {
         const {species} = this.state;
         const { history, isMobile, classes } = this.props;
+
         if (!species) {
             return <CircularProgress/>;
         }
+        const data = getDataForSpecies(species);
         return (
             <div>
                 <div className={classes.mobileButton}>
                     <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
                 </div>
                 <div className={isMobile? classes.mobileImageContainer : classes.desktopImageContainer}>
-                    <img  className={isMobile? classes.mobileImage : classes.desktopImage} src={ require('../assets/SpeciesCards/' + species+'.png') }/>
+                    <SpeciesCardMobile speciesName={data.name}
+                                 latinName={data.latin}
+                                 weight={data.weight}
+                                 height={data.height}
+                                 diet={data.diet}
+                                 identTips={data.ident}
+                                 largerThanLab={data.larger}
+                                 imagePath={getImageBySpecies(species)}/>
                 </div>
             </div>
         );
