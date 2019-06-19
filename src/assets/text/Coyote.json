@@ -1,0 +1,11 @@
+{
+	"name": "Coyote",
+	"latin": "Canis latrans",
+	"weight": "20-50 lbs / 9-22.5 kg",
+	"height": "21-24 in / 53-60 cm",
+	"larger": false,
+	"diet": "Omnivorous (berries, insects, salmon, small mammals, mushrooms, fawns, etc.)",
+	"ident": "Tail often tipped with black; ears tall and pointy.",
+	"image": "assets/tips-images/coyote.png",
+	"shortname": "coyote"
+}

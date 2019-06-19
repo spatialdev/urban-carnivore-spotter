@@ -1,0 +1,11 @@
+{
+	"name": "River Otter",
+	"latin": "Lontra canadensis",
+	"weight": "9.9-30 lbs / 4.5-13.6 kg",
+	"height": "7.8 in / 19.8 cm (avg)",
+	"larger": false,
+	"diet": "Carnivorous (mostly fish, but also amphibians, birds, crustaceans, etc.)",
+	"ident": "Low and sleek appearance; long whiskers and flattened tail. Males slightly larger than females.",
+	"image": "assets/tips-images/river_otter.png",
+	"shortname": "riverotter"
+}

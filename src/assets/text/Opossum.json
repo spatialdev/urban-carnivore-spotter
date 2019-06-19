@@ -1,0 +1,11 @@
+{
+	"name": "Opossum",
+	"latin": "Didelphis virginiana",
+	"weight": "1-14 lbs / 0.4-6.4 kg",
+	"height": "7.9 in / 20 cm (avg)",
+	"larger": false,
+	"diet": "Omnivorous (leaves, fruits, seeds, eggs, invertebrates, amphibians, etc.)",
+	"ident": "Tail is scaly and lacks fur; pointy nose; ears are black with whitish tips and lack fur.",
+	"image": "assets/tips-images/opossum.png",
+	"shortname": "opossum"
+}

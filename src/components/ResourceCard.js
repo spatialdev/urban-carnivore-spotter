@@ -4,7 +4,8 @@ import {connect} from "react-redux";
 import {Button, withStyles} from "@material-ui/core";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {KeyboardArrowLeft} from "@material-ui/icons";
-import SpeciesCard from './SpeciesCard';
+import SpeciesCardMobile from './SpeciesCardMobile';
+import {getImageBySpecies, getDataForSpecies} from "../services/SpeciesService";
 
 const styles = {
     mobileImage: {
@@ -46,6 +47,8 @@ class ResourceCard extends Component {
     render() {
         const {species} = this.state;
         const { history, isMobile, classes } = this.props;
+        const data = getDataForSpecies(species);
+
         if (!species) {
             return <CircularProgress/>;
         }
@@ -55,13 +58,14 @@ class ResourceCard extends Component {
                     <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
                 </div>
                 <div className={isMobile? classes.mobileImageContainer : classes.desktopImageContainer}>
-                    <SpeciesCard speciesName={species}
-                                 latinName={'latin name'}
-                                 weight={'120-140 lbs / 60-70 kg'}
-                                 height={'12-13 in / 100-200 cm'}
-                                 diet={'Mostly food (edible things)'}
-                                 identTips={'Looks like an animal, honestly'}
-                                 largerThanLab={true}/>
+                    <SpeciesCardMobile speciesName={data.name}
+                                 latinName={data.latin}
+                                 weight={data.weight}
+                                 height={data.height}
+                                 diet={data.diet}
+                                 identTips={data.ident}
+                                 largerThanLab={data.larger}
+                                 imagePath={getImageBySpecies(species)}/>
                 </div>
             </div>
         );

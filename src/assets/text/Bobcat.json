@@ -1,0 +1,11 @@
+{
+	"name": "Bobcat",
+	"latin": "Lynx rufus",
+	"weight": "15.4-23.3 lbs / 7-11 kg",
+	"height": "12-24 in / 30-60 cm",
+	"larger": false,
+	"diet": "May eat rabbits, other small mammals, birds and other small animals.",
+	"ident": "Black spots on coat; short tail with black bands and black on top of tip of tail (but white on bottom of tip).",
+	"image": "assets/tips-images/bobcat.png",
+	"shortname": "bobcat"
+}

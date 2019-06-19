@@ -1,0 +1,11 @@
+{
+	"name": "Cougar/Mountain Lion",
+	"latin": "Puma concolor",
+	"weight": "64-264 lbs / 29-120 kg",
+	"height": "23-30 in / 58-76 cm",
+	"larger": true,
+	"diet": "Carnivorous (deer, elk, beaver, various small mammals).",
+	"ident": "Tail as long as the rest of the body; tawny color and large size. Females approximately 25% smaller than males.",
+	"image": "assets/tips-images/cougar.png",
+	"shortname": "cougar"
+}
