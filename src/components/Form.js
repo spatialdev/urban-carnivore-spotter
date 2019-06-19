@@ -31,6 +31,7 @@ import Info from '@material-ui/icons/InfoOutlined';
 import {connect} from "react-redux";
 
 import FormInfoDialog from './FormInfoDialog';
+import SpeciesCard from "./SpeciesCard";
 
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
@@ -406,9 +407,8 @@ class Form extends Component {
                         showIndicators={false}
                     >
                   {species.map((type, idx) =>
-                    <img key={idx} src={ require('../assets/SpeciesCards/' + type+'.png') }
-                         alt="Black Bear" className={isMobile? classes.mobileImage : classes.desktopImage}/>)
-                  }
+                    <SpeciesCard key={idx}/>
+                  )}
                     </Carousel>
               </DialogContent>
             </Dialog>
