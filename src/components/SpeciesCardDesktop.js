@@ -1,5 +1,4 @@
 import Card from "@material-ui/core/Card";
-// import blackbear from "../assets/blackbear.png";
 import SpeciesCardInfo from "./SpeciesCardInfo";
 import React from "react";
 import { withStyles } from '@material-ui/core';
@@ -8,22 +7,6 @@ const styles = {
   image: {
     width: '100%',
     objectFit: 'contain',
-  },
-  characteristic: {
-    textAlign: 'left',
-    marginLeft: 24,
-  },
-  labrador: {
-    backgroundColor: 'white',
-    borderStyle: 'solid',
-    borderWidth: 2,
-    borderColor: 'grey',
-    margin: 11,
-    '& p': {
-      marginLeft: 11
-    },
-    display: 'flex',
-    justifyContent: 'space-between',
   },
   speciesHeader: {
     margin: '4px 0px 0px 24px',
@@ -38,10 +21,6 @@ const styles = {
     backgroundColor: '#F5F5F5',
     maxWidth: 1100,
     display: 'flex',
-  },
-  labImage: {
-    margin: 16,
-    width: '46px !important',
   },
   headerAndImageContainer: {
     width: '50%',

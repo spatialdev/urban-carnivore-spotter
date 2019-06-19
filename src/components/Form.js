@@ -20,16 +20,9 @@ import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
-import BlackBear from "../assets/SpeciesCards/blackbear.png";
-import Coyote from "../assets/SpeciesCards/coyote.png";
-import Bobcat from "../assets/SpeciesCards/bobcat.png";
-import Cougar from "../assets/SpeciesCards/cougar.png";
-import Opossum from "../assets/SpeciesCards/opossum.png";
-import RiverOtter from "../assets/SpeciesCards/riverotter.png";
-import Raccoon from "../assets/SpeciesCards/raccoon.png";
 import Info from '@material-ui/icons/InfoOutlined';
 import {connect} from "react-redux";
-import { getAllSpecies, getDataForSpecies, getImageBySpecies, getSpeciesByIndex } from "../services/SpeciesService";
+import { getAllSpecies, getDataForSpecies, getImageBySpecies } from "../services/SpeciesService";
 import FormInfoDialog from './FormInfoDialog';
 import SpeciesCard from "./SpeciesCardMobile";
 
@@ -37,7 +30,6 @@ const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
   'Raccoon', 'River Otter', 'Other/Unknown'];
-// const species = ['blackbear','bobcat','cougar','coyote','opossum','raccoon','riverotter'];
 const confidenceLevels = ['Not at all confident', 'About 25% confident', 'About 50% confident', 'About 75% confident',
   'More than 75% confident', '100% confident'];
 const reactions = ['Stayed quiet', 'Shouted/made noise', 'Other'];

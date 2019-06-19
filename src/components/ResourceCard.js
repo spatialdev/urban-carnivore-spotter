@@ -47,11 +47,11 @@ class ResourceCard extends Component {
     render() {
         const {species} = this.state;
         const { history, isMobile, classes } = this.props;
-        const data = getDataForSpecies(species);
 
         if (!species) {
             return <CircularProgress/>;
         }
+        const data = getDataForSpecies(species);
         return (
             <div>
                 <div className={classes.mobileButton}>

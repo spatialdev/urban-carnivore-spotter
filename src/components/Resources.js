@@ -94,7 +94,7 @@ class Resources extends Component {
         const {showTips, showProjectDescription, showContactUs} = this.state;
         const {classes, isMobile} = this.props;
         if (!isMobile) {
-            return <ResourcesDesktop allSpecies={speciesList}/>;
+            return <ResourcesDesktop/>;
         }
         return(
             <div className={isMobile? classes.allContent : classes.allContentDesktop}>
