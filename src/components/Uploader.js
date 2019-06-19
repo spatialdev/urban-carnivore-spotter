@@ -13,11 +13,7 @@ class Uploader extends Component {
     const { target: { files } } = e;
     const { getMedia } = this.props;
     const filesToStore = [];
-
-    for (let key in files) {
-      let file = files[key];
-      filesToStore.push(file);
-    }
+    Array.from(files).forEach(file => filesToStore.push(file));
 
     getMedia(filesToStore, this.fileUploader);
 
