@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 
 const styles = {
     allContentMobile: {
-        height: '100%',
+        minHeight: '100vh',
         overflow: 'scroll',
         position: 'relative',
         flexDirection: 'column',
@@ -16,7 +16,7 @@ const styles = {
     },
     allContentDesktop: {
         paddingTop: 50,
-        height: '100%',
+        minHeight: '100vh',
         overflow: 'scroll',
         position: 'relative',
         flexDirection: 'column',
@@ -132,6 +132,7 @@ class Resources extends Component {
                         <a href="mailto:seattlecarnivores@zoo.org">seattlecarnivores@zoo.org</a>
                     </div>
                 )}
+                <hr/>
             </div>
         );
     }
