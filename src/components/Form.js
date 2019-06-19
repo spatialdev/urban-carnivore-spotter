@@ -126,7 +126,7 @@ const styles = {
     paddingRight: 35,
   },
   addButtonContainer: {
-    zIndex: 99,
+    zIndex: 999,
     position: 'absolute',
     left: '34%',
     top: '15%'
@@ -183,8 +183,7 @@ class Form extends Component {
     carouselImageIndex:0,
     editMode: false,
     addMode: false,
-    initialMap: true,
-    finalMap: false
+    finalMap: true
   };
 
   constructor(props) {
@@ -368,7 +367,7 @@ class Form extends Component {
                    centerLng={mapLng} centerLat={mapLat} className="interactiveMap"/>
           {neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}
           <div className={classes.doneButtonContainer}>
-            <Button size="small" color="primary" variant="contained" onClick={() => this.setState({addMode: false, editMode: true, initialMap: false, finalMap: true})}
+            <Button size="small" color="primary" variant="contained" onClick={() => this.setState({ editMode: true, finalMap: true, addMode: false})}
             > DONE </Button>
           </div>
         </div>
@@ -379,24 +378,25 @@ class Form extends Component {
         <div className="formItem">
           <h4>Identify the location of your sighting</h4>
           <p> Drag the point on the map to mark your sighting</p>
-          <div className={this.state.initialMap ? '' : 'hiddenDiv'}>
+          <div className={this.state.finalMap ? '' : 'hiddenDiv'}>
             <StaticFormMap passMapCoordinates={this.getMapCoordinates}
                            centerLng={mapLng} centerLat={mapLat} />
-            <div className={classes.addButtonContainer}>
-              <Button size="small" color="primary" variant="contained"
-                      onClick={() => this.setState({addMode: true})}>ADD LOCATION</Button>
-            </div>
-          </div>
-
-          <div className={this.state.finalMap ? '' : 'hiddenDiv'}>
-            <StaticFormMap classes={classes} passMapCoordinates={this.getMapCoordinates}
-                           centerLng={mapLng} centerLat={mapLat}/>
             <div className={classes.addButtonContainer}>
               <Button size="small" color="primary" variant="contained"
                       onClick={() => this.setState({addMode: true})}>EDIT LOCATION</Button>
             </div>
             {neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}
           </div>
+
+          {/*<div className={this.state.finalMap ? '' : 'hiddenDiv'}>*/}
+            {/*<StaticFormMap classes={classes} passMapCoordinates={this.getMapCoordinates}*/}
+                           {/*centerLng={mapLng} centerLat={mapLat}/>*/}
+            {/*<div className={classes.addButtonContainer}>*/}
+              {/*<Button size="small" color="primary" variant="contained"*/}
+                      {/*onClick={() => this.setState({addMode: true})}>EDIT LOCATION</Button>*/}
+            {/*</div>*/}
+            {/*{neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}*/}
+          {/*</div>*/}
         </div> :
         <div className="formItem">
           <h4>Identify the location of your sighting</h4>
