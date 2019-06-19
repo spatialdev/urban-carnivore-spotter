@@ -21,10 +21,6 @@ import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
-import Coyote from "../assets/SpeciesCards/coyote.png";
-import Bobcat from "../assets/SpeciesCards/bobcat.png";
-import Opossum from "../assets/SpeciesCards/opossum.png";
-import Raccoon from "../assets/SpeciesCards/raccoon.png";
 import Info from '@material-ui/icons/InfoOutlined';
 import {connect} from "react-redux";
 
@@ -383,7 +379,7 @@ class Form extends Component {
         <div className="formItem">
           <h4>Identify the location of your sighting</h4>
           <p> Drag the point on the map to mark your sighting</p>
-          <div className={this.state.initialMap ? '' : 'initial'}>
+          <div className={this.state.initialMap ? '' : 'hiddenDiv'}>
             <StaticFormMap passMapCoordinates={this.getMapCoordinates}
                            centerLng={mapLng} centerLat={mapLat} />
             <div className={classes.addButtonContainer}>
@@ -392,7 +388,7 @@ class Form extends Component {
             </div>
           </div>
 
-          <div className={this.state.finalMap ? '' : 'hidden'}>
+          <div className={this.state.finalMap ? '' : 'hiddenDiv'}>
             <StaticFormMap classes={classes} passMapCoordinates={this.getMapCoordinates}
                            centerLng={mapLng} centerLat={mapLat}/>
             <div className={classes.addButtonContainer}>

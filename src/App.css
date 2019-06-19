@@ -468,12 +468,7 @@ padding: 0;
     text-align: center;
 }
 
-.hidden {
-    display: none;
-    position: relative
-}
-
-.initial {
+.hiddenDiv {
     display: none;
     position: relative
 }

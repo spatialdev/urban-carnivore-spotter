@@ -8,7 +8,6 @@ const StaticMap = ReactMapboxGl({
 });
 
 class StaticFormMap extends Component {
-
     render() {
         const { centerLng, centerLat} = this.props;
         return (
