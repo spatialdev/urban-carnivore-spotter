@@ -184,7 +184,7 @@ class Form extends Component {
     carouselImageIndex:0,
     editMode: false,
     addMode: false,
-    finalMap: true
+    finalMap: true,
     uploading: false
   };
 
