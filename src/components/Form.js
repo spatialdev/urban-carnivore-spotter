@@ -387,16 +387,6 @@ class Form extends Component {
             </div>
             {neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}
           </div>
-
-          {/*<div className={this.state.finalMap ? '' : 'hiddenDiv'}>*/}
-            {/*<StaticFormMap classes={classes} passMapCoordinates={this.getMapCoordinates}*/}
-                           {/*centerLng={mapLng} centerLat={mapLat}/>*/}
-            {/*<div className={classes.addButtonContainer}>*/}
-              {/*<Button size="small" color="primary" variant="contained"*/}
-                      {/*onClick={() => this.setState({addMode: true})}>EDIT LOCATION</Button>*/}
-            {/*</div>*/}
-            {/*{neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}*/}
-          {/*</div>*/}
         </div> :
         <div className="formItem">
           <h4>Identify the location of your sighting</h4>
