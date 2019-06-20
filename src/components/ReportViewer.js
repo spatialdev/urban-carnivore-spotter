@@ -53,13 +53,16 @@ class ReportViewer extends Component {
         <Card className="reportCard">
           {media ?
             <ImageGallery items={media}
-                          showBullets={true} showIndex={true}
+                          showBullets={true} showIndex={false}
                           showThumbnails={false} showVideo={true}/> : null}
-          <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px' }}>
+          <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px'}}>
             <p><strong>Date:</strong> {new Date(report.timestamp).toDateString()}</p>
             <p><strong>Time of Sighting:</strong> {date.getHours()}:{date.getMinutes()}</p>
-            <p><strong>Neighborhood:</strong> NEIGHBORHOOD HERE</p>
+            <p><strong>Neighborhood:</strong> {report.neighborhood}</p>
             <p><strong>Confidence:</strong> {report.confidence}</p>
+            <p style={{lineHeight:'.5'}}><strong>Number of Species:</strong></p>
+            <p style={{lineHeight:'.5'}}><strong>Adult: </strong> {report.numberOfAdultSpecies}</p>
+            <p style={{lineHeight:'.5'}}><strong>Young: </strong> {report.numberOfYoungSpecies}</p>
           </div>
         </Card>
       </div>
