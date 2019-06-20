@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/urban-carnivore-spotter/static/media/bobcat.63bacdb3.png"
   },
   {
-    "revision": "f77b4f15ee0c824d1c28",
+    "revision": "e8f500440ea13c94358b",
     "url": "/urban-carnivore-spotter/static/css/main.7c851b16.chunk.css"
   },
   {
@@ -32,8 +32,8 @@ self.__precacheManifest = [
     "url": "/urban-carnivore-spotter/static/media/black_bear.8ac57f5a.png"
   },
   {
-    "revision": "f77b4f15ee0c824d1c28",
-    "url": "/urban-carnivore-spotter/static/js/main.5fec02d1.chunk.js"
+    "revision": "e8f500440ea13c94358b",
+    "url": "/urban-carnivore-spotter/static/js/main.89647275.chunk.js"
   },
   {
     "revision": "46860eeec51f423f372fbac134cdaffd",
@@ -64,7 +64,7 @@ self.__precacheManifest = [
     "url": "/urban-carnivore-spotter/static/css/2.48e87b80.chunk.css"
   },
   {
-    "revision": "1652fb757423aa91d1d47816008c298d",
+    "revision": "4d0ddea8ba00d134d7bce8b46a76b9b8",
     "url": "/urban-carnivore-spotter/index.html"
   }
 ];
