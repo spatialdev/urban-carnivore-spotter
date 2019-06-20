@@ -425,6 +425,7 @@ class Form extends Component {
               timeIntervals={15}
               dateFormat="MMMM d, yyyy h:mm aa"
               timeCaption="time"
+              maxDate={new Date()}
             />
           </div>
           {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}

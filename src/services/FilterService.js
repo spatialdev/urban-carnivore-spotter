@@ -59,7 +59,7 @@ const insideTimeBounds = (date, bounds) => {
 
 const matchesOtherCarnivore = (filter, species) => {
     const { carnivoreFilter } = filter;
-    return species === 'Other' || (carnivoreFilter['Other'] && carnivoreFilter[species] === undefined)
+    return carnivoreFilter['Other'].value && carnivoreFilter[species] === undefined;
 }
 
 export const getInitialFilter = (allNeighborhoods) => {
