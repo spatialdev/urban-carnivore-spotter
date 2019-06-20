@@ -127,7 +127,6 @@ const styles = {
     paddingRight: 35,
   },
   addButtonContainer: {
-    zIndex: 999,
     position: 'absolute',
     left: '34%',
     top: '15%'
