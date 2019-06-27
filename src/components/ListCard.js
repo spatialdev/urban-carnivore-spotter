@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import {Link} from "react-router-dom";
 import Placeholder from '../assets/placeholder.svg';
+import { firebaseTimeToDateTimeString } from "../services/TimeService";
 
 const styles = theme => ({
   info: {
@@ -20,18 +21,6 @@ const styles = theme => ({
   }
 });
 
-/**
- * Get a string for a timestamp in the format that Cloud Firestore sends us.
- * Time should be an object with _nanoseconds and _seconds as fields.
- */
-const timeToString = time => {
-  if (time) {
-    const date = new Date(time);
-    return `${date.toDateString()} ${date.getHours()}:${date.getMinutes()}`;
-  }
-  return 'Unknown Time';
-};
-
 const ListCard = props => {
   const { classes, report } = props;
   return <Card className="card">
@@ -41,7 +30,7 @@ const ListCard = props => {
       />
       <CardContent className={classes.info}>
         <Typography variant={'h5'}>{report.data.species.toUpperCase()}</Typography>
-        <Typography variant={'subtitle1'}>{timeToString(report.data.timestamp)}</Typography>
+        <Typography variant={'subtitle1'}>{firebaseTimeToDateTimeString(report.data.timestamp)}</Typography>
         <Typography style={{ color: 'grey' }}>{report.data.neighborhood ? report.data.neighborhood : "Unknown"}</Typography>
         <li>
           <Link to={`/reports/${report.id}`}>See Report</Link>

@@ -3,11 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import {KeyboardArrowRight} from "@material-ui/icons";
 import Placeholder from '../assets/placeholder.svg';
-
-const timeToString = time => {
-    const date = new Date(time);
-    return `${date.toDateString()} ${date.getHours()}:${date.getMinutes()}`;
-};
+import { firebaseTimeToDateTimeString } from "../services/TimeService";
 
 const styles = {
     allContent: {
@@ -38,7 +34,7 @@ class PointTooltip extends Component {
             <div className={classes.info}>
                 <div><strong>{report.data.species}</strong></div>
                 <div><strong>Date & Time:</strong></div>
-                <div>{timeToString(report.data.timestamp)}</div>
+                <div>{firebaseTimeToDateTimeString(report.data.timestamp)}</div>
                 <div><strong>Location:</strong> {report.data.neighborhood}</div>
             </div>
             <div className={classes.reportLink} onClick={() => history.push(`/reports/${report.id}`)}>

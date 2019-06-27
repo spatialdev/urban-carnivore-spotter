@@ -7,6 +7,8 @@ import Card from "@material-ui/core/Card";
 import { CircularProgress, Toolbar } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
 
+import {jsDateToTimeString} from "../services/TimeService";
+
 import ImageGallery from 'react-image-gallery';
 
 const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
@@ -57,7 +59,7 @@ class ReportViewer extends Component {
                           showThumbnails={false} showVideo={true}/> : null}
           <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px'}}>
             <p><strong>Date:</strong> {new Date(report.timestamp).toDateString()}</p>
-            <p><strong>Time of Sighting:</strong> {date.getHours()}:{date.getMinutes()}</p>
+            <p><strong>Time of Sighting:</strong> {jsDateToTimeString(report.timestamp)}</p>
             <p><strong>Neighborhood:</strong> {report.neighborhood}</p>
             <p><strong>Confidence:</strong> {report.confidence}</p>
             <p style={{lineHeight:'.5'}}><strong>Number of Species:</strong></p>
