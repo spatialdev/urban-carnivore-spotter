@@ -18,7 +18,7 @@ export const firebaseTimeToDateTimeString = (time) => {
 export const jsDateToTimeString = (time) => {
   if (time) {
     const date = new Date(time);
-    const hours = date.getHours().toString().padStart(2, '0');
+    const hours = date.getHours().toString();
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
   }
