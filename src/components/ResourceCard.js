@@ -9,8 +9,10 @@ import {getImageBySpecies, getDataForSpecies} from "../services/SpeciesService";
 
 const styles = {
     mobileImage: {
-        width: 400,
-        height: 500,
+        minWidth: 200,
+        minHeight: 250,
+        maxWidth: 400,
+        maxHeight: 500,
         paddingLeft: 0,
         paddingRight: 20
     },
