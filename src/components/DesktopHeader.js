@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-
+import Sticky from 'react-sticky-fill';
 import AppBar from '@material-ui/core/AppBar';
 
 import '../App.css';
@@ -12,7 +12,7 @@ class DesktopHeader extends Component {
     const { history } = this.props;
 
     return (
-      <div style={{ position: 'sticky', top: 0, width: '100%', zIndex: 100 }}>
+      <Sticky style={{top: 0, width: '100%', zIndex: 100}}>
         <AppBar position="static" className="appBar">
           <div className="logo"/>
           <h1 className="headerTitle" onClick={() => history.push('/')} style={{ cursor: 'pointer' }}>
@@ -27,7 +27,7 @@ class DesktopHeader extends Component {
           </div>
 
         </AppBar>
-      </div>
+      </Sticky>
     );
   }
 }

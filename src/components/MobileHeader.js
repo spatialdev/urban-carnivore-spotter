@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer/SwipeableDrawer';
+import Sticky from 'react-sticky-fill';
 
 import FilterDrawer from './FilterDrawer';
 
@@ -30,7 +31,7 @@ class MobileHeader extends Component {
     const { history, location, classes} = this.props;
 
     return (
-      <div style={{ position: 'sticky', top: 0, width: '100%', zIndex: 100 }}>
+      <Sticky style={{top: 0, width: '100%', zIndex: 100}}>
         <AppBar position="static" color="default">
           <div className="headerDiv">
             <h1 style={{ display: 'table-cell', cursor: 'pointer', marginLeft: 20}}
@@ -57,7 +58,7 @@ class MobileHeader extends Component {
             </SwipeableDrawer>
           </div>
         </AppBar>
-      </div>
+      </Sticky>
     );
   }
 }
