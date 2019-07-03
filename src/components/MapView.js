@@ -118,8 +118,10 @@ class MapView extends Component {
             .catch(error => error);
     }
 
-    onMoveEnd = e => {
-        let center = e.getCenter();
+    onMoveEnd = (map) => {
+        const center = map.getCenter();
+        const zoom = map.getZoom();
+        this.setState({viewport: {center: [center.lng, center.lat], zoom: [zoom]}});
         const url = getReports+"?mapLat="+center.lat+"&mapLng="+center.lng;
         axios.get(url)
             .then(reports => {
@@ -180,14 +182,7 @@ class MapView extends Component {
 
     render() {
         const {classes, isMobile, filter,history} = this.props;
-        const {reports,legend} = this.state;
-        if (!reports) {
-            return <Map2 style="mapbox://styles/mapbox/streets-v9"
-                         className="map"
-                         {...this.state.viewport}
-                         onMoveEnd={e => this.onMoveEnd(e)}
-            />
-        }
+        const {reports,legend,viewport} = this.state;
         return (
             <div className="mapContainer">
                 { !isMobile && <div className={classes.filterContainer}>
@@ -195,11 +190,12 @@ class MapView extends Component {
                 </div>}
                 <Map2 style="mapbox://styles/mapbox/streets-v9"
                       className="map"
-                      {...this.state.viewport}
+                      center={viewport.center}
+                      zoom={viewport.zoom}
                       onMoveEnd={e => this.onMoveEnd(e)}
                 >
                     {this.renderPopup()}
-                    {reports.filter(report => dataMatchesFilter(report, filter))
+                    {reports ? reports.filter(report => dataMatchesFilter(report, filter))
                         .map(report => (
                             <Layer type="circle"
                                 key ={report.id}
@@ -207,7 +203,7 @@ class MapView extends Component {
                                 <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
                                         onClick={() => this.setState({popupInfo: report})}
                                 />
-                            </Layer>))}
+                            </Layer>)) : null}
                     <div>
                         <Fab className = {isMobile? classes.legendMobileContainer : classes.legendDesktopContainer} aria-label = "Legend"  size="small">
                             <Help  onClick = {() => this.setState({legend: true})}/>
