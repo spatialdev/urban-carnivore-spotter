@@ -106,8 +106,10 @@ const styles = {
     height: 500,
   },
   carouselMobile: {
-    width: 320,
-    height: 400,
+    minWidth: 160,
+    minHeight: 200,
+    maxWidth: 320,
+    maxHeight: 400
   },
   mobileImage: {
     width: 300,

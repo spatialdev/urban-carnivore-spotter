@@ -34,7 +34,8 @@ const styles = {
     margin: '32px 0px 32px 0px'
   },
   allContent: {
-    backgroundColor: '#F5F5F5'
+    backgroundColor: '#F5F5F5',
+    height: '100%'
   },
   labImage: {
     margin: 16,
