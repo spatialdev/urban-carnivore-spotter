@@ -70,7 +70,7 @@ class ResourcesDesktop extends Component {
         <div>
           <h3 className={classes.header}>Seattle Urban Carnivore Project</h3>
           <div className={classes.content}>
-            <p>Seattle Spotter is part of the Seattle Urban Carnivore Project, a collaboration between the Seattle University and Woodland Park Zoo.</p>
+            <p>Seattle Carnivore Spotter is part of the Seattle Urban Carnivore Project, a collaboration between the Seattle University and Woodland Park Zoo.</p>
             <a href="https://www.zoo.org/otters">learn more</a>
           </div>
         </div>
