@@ -3,15 +3,10 @@ import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
 
 const Map = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
-    dragPan: false
+  dragPan: false
 });
 
 class FormMap extends Component {
-
-  doNotPropagate = e => {
-      e.originalEvent.stopPropagation();
-      e.originalEvent.preventDefault();
-  };
 
   onDragEnd = e => {
     const { passMapCoordinates } = this.props;
@@ -27,7 +22,6 @@ class FormMap extends Component {
         <Map style="mapbox://styles/mapbox/streets-v9"
              center={{ lng: centerLng, lat: centerLat }}
              className="formMap"
-             onTouchMove={(map, e) => this.doNotPropagate(e)}
         >
           <Layer type="circle"
                  id="marker"
