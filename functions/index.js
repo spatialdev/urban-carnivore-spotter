@@ -190,7 +190,7 @@ const sendEmail = (from, to, subject, text) => {
 
 sendNewSubmissionEmail = (reportSnapshot) => {
     const from = `"Test reporters" <${username}@example.com>`;
-    const to = `"Micah" <mjnacht@gmail.com>`;
+    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
     const subject = "New report submitted";
     const text = `A new report was submitted with the following characteristics:
         ID: ${reportSnapshot.id}
