@@ -131,16 +131,20 @@ const styles = {
   addButtonContainer: {
     position: 'absolute',
     left: '34%',
-    top: '15%'
+    top: '15%',
+    zIndex: 100,
   },
   doneButtonContainer: {
-    zIndex: 99,
-    position: 'absolute',
-    left: '40%'
+    display: 'flex',
+    justifyContent: 'center',
   },
-  staticMap: {
-    position: 'absolute',
-    zIndex: 99
+  interactiveMapContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
+  interactiveMapInnerContainer: {
+    flex: 1,
   }
 };
 
@@ -365,10 +369,12 @@ class Form extends Component {
 
   showInteractiveMap = (classes,neighborhood,mapLng,mapLat ) => {
     return (
-        <div className="formItem">
+        <div className={classes.interactiveMapContainer}>
           <p> Drag the point on the map to mark your sighting</p>
-          <FormMap passMapCoordinates={this.getMapCoordinates}
-                   centerLng={mapLng} centerLat={mapLat} className="interactiveMap"/>
+          <div className={classes.interactiveMapInnerContainer}>
+            <FormMap passMapCoordinates={this.getMapCoordinates}
+                     centerLng={mapLng} centerLat={mapLat} className="interactiveMap"/>
+          </div>
           {neighborhood ? <p style={{alignText: 'center'}}>{neighborhood}</p> : null}
           <div className={classes.doneButtonContainer}>
             <Button size="small" color="primary" variant="contained" onClick={() => this.setState({ editMode: true, finalMap: true, addMode: false})}
@@ -395,8 +401,10 @@ class Form extends Component {
         <div className="formItem">
           <h4>Identify the location of your sighting</h4>
           <p> Drag the point on the map to mark your sighting</p>
-          <FormMap passMapCoordinates={this.getMapCoordinates}
-                   centerLng={mapLng} centerLat={mapLat}/>
+          <div className={'constantHeightMapContainer'}>
+            <FormMap passMapCoordinates={this.getMapCoordinates}
+                     centerLng={mapLng} centerLat={mapLat}/>
+          </div>
           {neighborhood ? <p>{neighborhood}</p> : null}
         </div>
   };
@@ -433,11 +441,10 @@ class Form extends Component {
           <div className="formItem">
             <Dialog
                 open={addMode}
+                onClose={() => this.setState({addMode: false})}
             >
               <DialogContent className="interactiveMapContainer" >
-                <div >
-                  {this.showInteractiveMap(classes,neighborhood,mapLng,mapLat)}
-                </div>
+                {this.showInteractiveMap(classes,neighborhood,mapLng,mapLat)}
               </DialogContent>
             </Dialog>
           </div>

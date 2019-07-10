@@ -172,7 +172,7 @@ Form Wizard Styles
 }
 
 .formMap {
-    height: 300px;
+    height: 100%;
 }
 
 .react-datepicker-wrapper > div > input {
@@ -462,7 +462,7 @@ padding: 0;
 }
 
 .interactiveMapContainer {
-    height: 500px;
+    height: calc(100vh - 150px);
     weight: 500px;
     align-items: center;
     text-align: center;
@@ -471,5 +471,9 @@ padding: 0;
 .hiddenDiv {
     display: none;
     position: relative
+}
+
+.constantHeightMapContainer {
+    height: 300px
 }
 

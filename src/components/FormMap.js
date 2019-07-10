@@ -18,7 +18,7 @@ class FormMap extends Component {
   render() {
     const { centerLng, centerLat } = this.props;
     return (
-      <div>
+      <div style={{height: '100%'}}>
         <Map style="mapbox://styles/mapbox/streets-v9"
              center={{ lng: centerLng, lat: centerLat }}
              className="formMap"
