@@ -200,8 +200,6 @@ class MapView extends Component {
                             <Layer type="circle"
                                 key ={report.id}
                                 paint={{'circle-color': getColorForSpecies(report.data.species.toLowerCase()),
-                                    'circle-stroke-width': 1,
-                                    'circle-stroke-opacity': .5,
                                     'circle-radius': 7}}>
                                 <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
                                         onClick={() => this.setState({popupInfo: report})}
