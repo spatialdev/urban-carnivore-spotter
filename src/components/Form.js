@@ -13,6 +13,7 @@ import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import 'react-datepicker/dist/react-datepicker.css';
 import LoadingOverlay from 'react-loading-overlay';
+import ScrollLock from 'react-scrolllock';
 
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
@@ -520,7 +521,9 @@ class Form extends Component {
                 id: 'confidence',
               }}
             >
-              {confidenceLevels.map((level, idx) => <MenuItem key={idx} value={level}>{level}</MenuItem>)}
+              <ScrollLock>
+                {confidenceLevels.map((level, idx) => <MenuItem key={idx} value={level}>{level}</MenuItem>)}
+              </ScrollLock>
             </SelectValidator>
           </div>
 
