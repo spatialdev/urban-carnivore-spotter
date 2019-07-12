@@ -13,6 +13,7 @@ import DatePicker from 'react-datepicker';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import 'react-datepicker/dist/react-datepicker.css';
 import LoadingOverlay from 'react-loading-overlay';
+import ScrollLock from 'react-scrolllock';
 
 import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
@@ -68,7 +69,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'white'
-
   },
   header: {
     display: 'flex',
@@ -369,6 +369,7 @@ class Form extends Component {
 
   showInteractiveMap = (classes,neighborhood,mapLng,mapLat ) => {
     return (
+      <ScrollLock>
         <div className={classes.interactiveMapContainer}>
           <p> Drag the point on the map to mark your sighting</p>
           <div className={classes.interactiveMapInnerContainer}>
@@ -381,6 +382,7 @@ class Form extends Component {
             > DONE </Button>
           </div>
         </div>
+      </ScrollLock>
     )
   };
   renderMap = (classes, isMobile, neighborhood, mapLng, mapLat) => {
