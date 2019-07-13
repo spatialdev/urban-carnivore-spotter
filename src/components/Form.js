@@ -436,6 +436,7 @@ class Form extends Component {
               dateFormat="MMMM d, yyyy h:mm aa"
               timeCaption="time"
               maxDate={new Date()}
+              onFocus={(e) => e.target.readOnly = true}
             />
           </div>
           {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
