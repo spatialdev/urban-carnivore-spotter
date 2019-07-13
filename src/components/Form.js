@@ -389,7 +389,6 @@ class Form extends Component {
     return isMobile ?
         <div className="formItem">
           <h4>Identify the location of your sighting</h4>
-          <p> Drag the point on the map to mark your sighting</p>
           <div className={this.state.finalMap ? '' : 'hiddenDiv'}>
             <StaticFormMap passMapCoordinates={this.getMapCoordinates}
                            centerLng={mapLng} centerLat={mapLat} />
