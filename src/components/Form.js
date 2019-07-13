@@ -521,9 +521,8 @@ class Form extends Component {
                 id: 'confidence',
               }}
             >
-              <ScrollLock>
-                {confidenceLevels.map((level, idx) => <MenuItem key={idx} value={level}>{level}</MenuItem>)}
-              </ScrollLock>
+              <ScrollLock />
+              {confidenceLevels.map((level, idx) => <MenuItem key={idx} value={level}>{level}</MenuItem>)}
             </SelectValidator>
           </div>
 
@@ -543,6 +542,7 @@ class Form extends Component {
                   id: 'numberOfAdultSpecies',
                 }}
               >
+                <ScrollLock />
                 {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
               </SelectValidator>
             </div>
@@ -559,6 +559,7 @@ class Form extends Component {
                 id: 'numberOfYoungSpecies',
               }}
             >
+              <ScrollLock />
               {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
             </SelectValidator>
           </div>
@@ -582,6 +583,7 @@ class Form extends Component {
                           id: 'numberOfAdults',
                         }}
                     >
+                      <ScrollLock />
                       {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
                     </SelectValidator>
                     <p className="childrenAgeText">Children up to 9 years old</p>
@@ -596,6 +598,7 @@ class Form extends Component {
                           id: 'numberOfChildren',
                         }}
                     >
+                      <ScrollLock />
                       {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
                     </SelectValidator>
                   </div>
@@ -613,6 +616,7 @@ class Form extends Component {
                           id: 'reaction',
                         }}
                     >
+                      <ScrollLock />
                       {reactions.map((reaction, idx) => <MenuItem key={idx} value={reaction}>{reaction}</MenuItem>)}
                     </SelectValidator>
                     {reaction === 'Other' ?
@@ -646,6 +650,7 @@ class Form extends Component {
                           id: 'numberOfDogs',
                         }}
                     >
+                      <ScrollLock />
                       {counts.map(idx => <MenuItem key={idx} value={idx}>{idx.toString()}</MenuItem>)}
                     </SelectValidator>
                     {numberOfDogs > 0 ?
@@ -661,6 +666,7 @@ class Form extends Component {
                                 id: 'dogSize',
                               }}
                           >
+                            <ScrollLock />
                             {dogSizes.map((size, idx) => <MenuItem key={idx} value={size}>{size}</MenuItem>)}
                           </SelectValidator>
                           <SelectValidator
@@ -674,6 +680,7 @@ class Form extends Component {
                                 id: 'onLeash',
                               }}
                           >
+                            <ScrollLock />
                             {leashOptions.map((option, idx) => <MenuItem key={idx} value={option}>{option}</MenuItem>)}
                           </SelectValidator>
                         </div> : null
@@ -702,6 +709,7 @@ class Form extends Component {
                           id: 'animalBehavior',
                         }}
                     >
+                      <ScrollLock />
                       {animalBehaviors.map((behavior, idx) => <MenuItem key={idx} value={behavior}>{behavior}</MenuItem>)}
                     </SelectValidator>
 
@@ -738,6 +746,7 @@ class Form extends Component {
                           id: 'vocalization',
                         }}
                     >
+                      <ScrollLock />
                       {vocalizations.map((type, idx) => <MenuItem key={idx} value={type}>{type}</MenuItem>)}
                     </SelectValidator>
 
@@ -774,6 +783,7 @@ class Form extends Component {
                           id: 'carnivoreResponse',
                         }}
                     >
+                      <ScrollLock />
                       {carnivoreResponses.map((type, idx) =>
                           <MenuItem
                               style={{ whiteSpace: 'normal', marginBottom: '10px' }}
@@ -794,6 +804,7 @@ class Form extends Component {
                           id: 'carnivoreConflict',
                         }}
                     >
+                      <ScrollLock />
                       {conflictOptions.map((type, idx) =>
                           <MenuItem
                               style={{ whiteSpace: 'normal', marginBottom: '10px' }}
