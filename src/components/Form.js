@@ -28,7 +28,7 @@ import {connect} from "react-redux";
 import { getAllSpecies, getDataForSpecies, getImageBySpecies } from "../services/SpeciesService";
 import FormInfoDialog from './FormInfoDialog';
 import SpeciesCard from "./SpeciesCardMobile";
-
+import FormSelect from "./FormSelect";
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
@@ -515,57 +515,33 @@ class Form extends Component {
 
           <div className="formItem">
             <h4>How confident are you that you have identified the animal correctly?</h4>
-            <SelectValidator
-              value={confidence}
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Confidence"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'confidence',
-                id: 'confidence',
-              }}
-            >
-              {confidenceLevels.map((level, idx) => <MenuItem key={idx} value={level}>{level}</MenuItem>)}
-            </SelectValidator>
+            <FormSelect selectedValue={confidence}
+                        values={confidenceLevels}
+                        handleChange={this.handleChange}
+                        required={true}
+                        label={"Confidence"}
+                        id={"confidence"}
+            />
           </div>
 
           <div className="formItem">
             <h4>How many of the species did you see?</h4>
-            <div>
-              <SelectValidator
-                value={numberOfAdultSpecies}
-                style={{ minWidth: '300px', marginBottom: '15px' }}
-                validators={['required']}
-                errorMessages={['This field is required']}
-                variant="outlined"
-                label="Number of Adult"
-                onChange={this.handleChange}
-                inputProps={{
-                  name: 'numberOfAdultSpecies',
-                  id: 'numberOfAdultSpecies',
-                }}
-              >
-                {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
-              </SelectValidator>
+            <div style={{marginBottom: '15px'}}>
+              <FormSelect selectedValue={numberOfAdultSpecies}
+                          values={counts.map((count) => count === 9 ? '9+' : count.toString())}
+                          handleChange={this.handleChange}
+                          required={true}
+                          label={"Number of Adult"}
+                          id={"numberOfAdultSpecies"}
+              />
             </div>
-            <SelectValidator
-              value={numberOfYoungSpecies}
-              style={{ minWidth: '300px' }}
-              validators={['required']}
-              errorMessages={['This field is required']}
-              variant="outlined"
-              label="Number of Young"
-              onChange={this.handleChange}
-              inputProps={{
-                name: 'numberOfYoungSpecies',
-                id: 'numberOfYoungSpecies',
-              }}
-            >
-              {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
-            </SelectValidator>
+            <FormSelect selectedValue={numberOfYoungSpecies}
+                        values={counts.map((count) => count === 9 ? '9+' : count.toString())}
+                        handleChange={this.handleChange}
+                        required={true}
+                        label={"Number of Young"}
+                        id={"numberOfYoungSpecies"}
+            />
           </div>
           <br/>
 
@@ -573,53 +549,37 @@ class Form extends Component {
           <div className={classes.allContent}>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Observer Details (Optional)", this.toggleShow('showObserverDetails'), showObserverDetails,
-                <div className={classes.headerTitle}>
+                <div>
                   <div className="formItem">
                     <h4>How many were in your group?</h4>
-                    <SelectValidator
-                        value={numberOfAdults}
-                        style={{ minWidth: '300px', marginBottom: '15px' }}
-                        variant="outlined"
-                        label="Number of Adults"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'numberOfAdults',
-                          id: 'numberOfAdults',
-                        }}
-                    >
-                      {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
-                    </SelectValidator>
-                    <p className="childrenAgeText">Children up to 9 years old</p>
-                    <SelectValidator
-                        value={numberOfChildren}
-                        style={{ minWidth: '300px', marginTop: '5px' }}
-                        variant="outlined"
-                        label="Number of Children"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'numberOfChildren',
-                          id: 'numberOfChildren',
-                        }}
-                    >
-                      {counts.map(idx => <MenuItem key={idx} value={idx}>{idx === 9 ? '9+' : idx.toString()}</MenuItem>)}
-                    </SelectValidator>
+                    <FormSelect selectedValue={numberOfAdults}
+                                style={{marginBottom: '15px'}}
+                                values={counts.map((count) => count === 9 ? '9+' : count.toString())}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Number of Adults"}
+                                id={"numberOfAdults"}
+                    />
+                    <h4>Children up to 9 years old</h4>
+                    <FormSelect selectedValue={numberOfChildren}
+                                style={{marginTop: '5px'}}
+                                values={counts.map((count) => count === 9 ? '9+' : count.toString())}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Number of Children"}
+                                id={"numberOfChildren"}
+                    />
                   </div>
 
                   <div className="formItem">
                     <h4>How did you react?</h4>
-                    <SelectValidator
-                        value={reaction}
-                        style={{ minWidth: '300px' }}
-                        variant="outlined"
-                        label="Reaction"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'reaction',
-                          id: 'reaction',
-                        }}
-                    >
-                      {reactions.map((reaction, idx) => <MenuItem key={idx} value={reaction}>{reaction}</MenuItem>)}
-                    </SelectValidator>
+                    <FormSelect selectedValue={reaction}
+                                values={reactions}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Reaction"}
+                                id={"reaction"}
+                    />
                     {reaction === 'Other' ?
                         <TextValidator
                             label="Describe (limit 80 char)"
@@ -639,48 +599,31 @@ class Form extends Component {
 
                   <div className="formItem">
                     <h4>Were there dog(s) present with you / your group?</h4>
-                    <SelectValidator
-                        value={numberOfDogs}
-                        select
-                        style={{ minWidth: '300px' }}
-                        variant="outlined"
-                        label="Number of Dogs"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'numberOfDogs',
-                          id: 'numberOfDogs',
-                        }}
-                    >
-                      {counts.map(idx => <MenuItem key={idx} value={idx}>{idx.toString()}</MenuItem>)}
-                    </SelectValidator>
+                    <FormSelect selectedValue={numberOfDogs}
+                                style={{marginBottom: '15px'}}
+                                values={counts}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Number of Dogs"}
+                                id={"numberOfDogs"}
+                    />
                     {numberOfDogs > 0 ?
                         <div>
-                          <SelectValidator
-                              value={dogSize}
-                              style={{ minWidth: '300px' }}
-                              variant="outlined"
-                              label="Size of dog(s)"
-                              onChange={this.handleChange}
-                              inputProps={{
-                                name: 'dogSize',
-                                id: 'dogSize',
-                              }}
-                          >
-                            {dogSizes.map((size, idx) => <MenuItem key={idx} value={size}>{size}</MenuItem>)}
-                          </SelectValidator>
-                          <SelectValidator
-                              value={onLeash}
-                              style={{ minWidth: '300px' }}
-                              variant="outlined"
-                              label="On Leash"
-                              onChange={this.handleChange}
-                              inputProps={{
-                                name: 'onLeash',
-                                id: 'onLeash',
-                              }}
-                          >
-                            {leashOptions.map((option, idx) => <MenuItem key={idx} value={option}>{option}</MenuItem>)}
-                          </SelectValidator>
+                          <FormSelect selectedValue={dogSize}
+                                      style={{marginBottom: '15px'}}
+                                      values={dogSizes}
+                                      handleChange={this.handleChange}
+                                      required={false}
+                                      label={"Size of dog(s)"}
+                                      id={"dogSize"}
+                          />
+                          <FormSelect selectedValue={onLeash}
+                                      values={leashOptions}
+                                      handleChange={this.handleChange}
+                                      required={false}
+                                      label={"On Leash"}
+                                      id={"onLeash"}
+                          />
                         </div> : null
                     }
                   </div>
@@ -693,23 +636,16 @@ class Form extends Component {
           <div className={classes.allContent}>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Animal Behavior (Optional)", this.toggleShow('showAnimalBehavior'), showAnimalBehavior,
-                <div className={classes.headerTitle}>
+                <div>
                   <div className="formItem">
                     <h4>What was it doing?</h4>
-                    <SelectValidator
-                        value={animalBehavior}
-                        style={{ minWidth: '300px' }}
-                        variant="outlined"
-                        label="Animal Behavior"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'animalBehavior',
-                          id: 'animalBehavior',
-                        }}
-                    >
-                      {animalBehaviors.map((behavior, idx) => <MenuItem key={idx} value={behavior}>{behavior}</MenuItem>)}
-                    </SelectValidator>
-
+                    <FormSelect selectedValue={animalBehavior}
+                                values={animalBehaviors}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Animal Behavior"}
+                                id={"animalBehavior"}
+                    />
                     {animalBehavior === 'Was eating' ?
                         <TextValidator
                             label="What it was eating (if observed):"
@@ -732,20 +668,13 @@ class Form extends Component {
 
                   <div className="formItem">
                     <h4>Did it vocalize?</h4>
-                    <SelectValidator
-                        value={vocalization}
-                        style={{ minWidth: '300px' }}
-                        variant="outlined"
-                        label="Vocalization"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'vocalization',
-                          id: 'vocalization',
-                        }}
-                    >
-                      {vocalizations.map((type, idx) => <MenuItem key={idx} value={type}>{type}</MenuItem>)}
-                    </SelectValidator>
-
+                    <FormSelect selectedValue={vocalization}
+                                values={vocalizations}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Vocalization"}
+                                id={"vocalization"}
+                    />
                     {vocalization === 'Other' ?
                         <TextValidator
                             label="Describe (limit 80 char)"
@@ -768,44 +697,23 @@ class Form extends Component {
 
                   <div className="formItem" id="carnivoreResponse">
                     <h4>How did it react?</h4>
-                    <SelectValidator
-                        value={carnivoreResponse}
-                        style={{ minWidth: '300px' }}
-                        variant="outlined"
-                        label="Carnivore Response"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'carnivoreResponse',
-                          id: 'carnivoreResponse',
-                        }}
-                    >
-                      {carnivoreResponses.map((type, idx) =>
-                          <MenuItem
-                              style={{ whiteSpace: 'normal', marginBottom: '10px' }}
-                              key={idx}
-                              value={type}>{type}</MenuItem>)}
-                    </SelectValidator>
+                    <FormSelect selectedValue={carnivoreResponse}
+                                values={carnivoreResponses}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Carnivore Response"}
+                                id={"carnivoreResponse"}
+                    />
                   </div>
                   <div className="formItem" id="carnivoreConflict">
                     <h4>Was there an interaction with the observer, pets/livestock or other items?</h4>
-                    <SelectValidator
-                        style={{ minWidth: '300px' }}
-                        value={carnivoreConflict}
-                        variant="outlined"
-                        label="Carnivore Conflict"
-                        onChange={this.handleChange}
-                        inputProps={{
-                          name: 'carnivoreConflict',
-                          id: 'carnivoreConflict',
-                        }}
-                    >
-                      {conflictOptions.map((type, idx) =>
-                          <MenuItem
-                              style={{ whiteSpace: 'normal', marginBottom: '10px' }}
-                              key={idx}
-                              value={type}>{type}</MenuItem>)}
-                    </SelectValidator>
-
+                    <FormSelect selectedValue={carnivoreConflict}
+                                values={conflictOptions}
+                                handleChange={this.handleChange}
+                                required={false}
+                                label={"Carnivore Conflict"}
+                                id={"carnivoreConflict"}
+                    />
                     {
                       conflictOptions.indexOf(carnivoreConflict) === 0 || conflictOptions.indexOf(carnivoreConflict) === 2 ?
                           <TextValidator
@@ -837,7 +745,7 @@ class Form extends Component {
           <div className={classes.allContent}>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Contact Information (Optional)", this.toggleShow('showContactInformation'), showContactInformation,
-                <div className={classes.headerTitle}>
+                <div>
                   <div className="formItem">
                     <p> This information will not be shared and will be available to project coordinators only.</p>
                     <div>
