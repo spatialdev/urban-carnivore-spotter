@@ -9,8 +9,10 @@ const FormSelect = (props) => {
   const validators = required ? ['required'] : [];
   const errorMessages = required ? ['This field is required'] : [];
   const children = isMobile ? <>
-      <option value={""}/>
-      {values.map((level, idx) => <option key={idx} value={level}>{level}</option>)}
+      <optgroup label={""}>
+        <option value={""}/>
+        {values.map((level, idx) => <option key={idx} value={level}>{level}</option>)}
+      </optgroup>
     </> :
     values.map((level, idx) => <MenuItem style={wrapText ? {whiteSpace: 'normal', marginBottom: '10px'} : {}}
                                          key={idx} value={level}>{level}</MenuItem>);
