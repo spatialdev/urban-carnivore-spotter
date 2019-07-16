@@ -148,6 +148,7 @@ const styles = {
   }
 };
 
+//https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975
 class CustomDatePickerInput extends Component {
   render = () => <input
     onClick={this.props.onClick}
@@ -436,6 +437,7 @@ class Form extends Component {
                        className="formWizardBody" autoComplete="off">
           <div className="formItem">
             <h4>When did you see the animal?</h4>
+            {/*See https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975 for more information*/}
             <DatePicker
               selected={timestamp}
               onChange={this.handleTimestampChange}
