@@ -394,7 +394,6 @@ class Form extends Component {
       </ScrollLock>
     )
   };
-
   renderMap = (classes, isMobile, neighborhood, mapLng, mapLat) => {
     return isMobile ?
         <div className="formItem">
