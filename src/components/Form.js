@@ -132,7 +132,7 @@ const styles = {
     position: 'absolute',
     left: '34%',
     top: '15%',
-    zIndex: 100,
+    zIndex: 0,
   },
   doneButtonContainer: {
     display: 'flex',
@@ -147,6 +147,16 @@ const styles = {
     flex: 1,
   }
 };
+
+//https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975
+class CustomDatePickerInput extends Component {
+  render = () => <input
+    onClick={this.props.onClick}
+    value={this.props.value}
+    type="text"
+    readOnly={true}
+  />;
+}
 
 class Form extends Component {
   state = {
@@ -354,7 +364,7 @@ class Form extends Component {
         return <FormInfoDialog
           open={true}
           onClose={() => this.setState({dialogMode: DIALOG_MODES.CLOSED})}
-          message={"Is is ok if we store the images and audio that you've uploaded? If you say no, we will not be able to show your pictures to other users"}
+          message={"Is it ok if we store the images and audio that you've uploaded? If you say no, we will not be able to show your pictures to other users"}
           noButton={{onClick: () => this.handlePermissionResponse(false), message: "No, don't use my media"}}
           yesButton={{onClick: () => this.handlePermissionResponse(true), message: "Yes, use my media"}}/>;
       case DIALOG_MODES.THANKS:
@@ -427,6 +437,7 @@ class Form extends Component {
                        className="formWizardBody" autoComplete="off">
           <div className="formItem">
             <h4>When did you see the animal?</h4>
+            {/*See https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975 for more information*/}
             <DatePicker
               selected={timestamp}
               onChange={this.handleTimestampChange}
@@ -436,6 +447,7 @@ class Form extends Component {
               dateFormat="MMMM d, yyyy h:mm aa"
               timeCaption="time"
               maxDate={new Date()}
+              customInput={<CustomDatePickerInput/>}
             />
           </div>
           {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
