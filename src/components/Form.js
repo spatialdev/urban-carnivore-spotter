@@ -50,8 +50,8 @@ const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 // constants
 const THANKS_FOR_SUBMITTING = 'Thank you for your submission! Please note that the system will display your observation on the map after a period of one week.';
 const ERROR_ON_SUBMISSION = 'Something went wrong during your submission. Please try again later.';
-const FILES_TOO_LARGE = 'Please choose a set of files to upload that are smaller than 5MB in total.';
-const MAX_FILE_SIZE = 5242880; // 5MiB
+const FILES_TOO_LARGE = 'Please choose a set of files to upload that are smaller than 10MB in total.';
+const MAX_FILE_SIZE = 10485760; // 10MiB
 const neighborhoodService = new NeighborhoodService();
 const DIALOG_MODES = {
   THANKS: 'thanks',
