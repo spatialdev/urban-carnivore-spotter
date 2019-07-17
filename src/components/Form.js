@@ -35,16 +35,16 @@ const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'O
   'Raccoon', 'River Otter', 'Other/Unknown'];
 const confidenceLevels = ['Not at all confident', 'About 25% confident', 'About 50% confident', 'About 75% confident',
   'More than 75% confident', '100% confident'];
-const reactions = ['Stayed quiet', 'Shouted/made noise', 'Other'];
+const reactions = ['Stayed quiet', 'Shouted/made noise','I walked away', 'Other'];
 const dogSizes = ['Small (up to 20lbs)', 'Medium(20-60lbs)', 'Large(60+lbs)', 'Mixed group'];
 const leashOptions = ['Leashed', 'Unleashed', 'Both'];
-const animalBehaviors = ['Was eating', 'Urinated', 'Defecated'];
+const animalBehaviors = ['Was eating', 'Urinated', 'Defecated', 'Sleeping', 'Moving', 'Foraging', 'Climbing', 'Running', 'Other'];
 const vocalizations = ['Barking', 'Howling', 'Growling', 'Other'];
 const carnivoreResponses = ['Animal did not seem to notice observer', 'Animal ran away',
-  'Animal stood ground-seemed interested in observer', 'Animal stood ground - seemed uninterested in observer',
-  'Animal moved towards observer, pets or livestock, and not simply to access an escape route'];
-const conflictOptions = ['Animal made physical contact with pet or livestock',
-  'Animal made physical contact with human(s)', 'Interacted with human-related item or place (e.g., trash can, birdfeeder, fence/yard, attic)'];
+  'Animal stood ground-seemed interested in observer', 'Animal ignored or was uninterested in observer',
+  'Animal moved towards observer, pets or livestock, and not simply to access an escape route', 'The animal walked or moved away'];
+const conflictOptions = ['There was no interaction','Animal made physical contact with pet or livestock',
+  'Animal made physical contact with human(s)', 'Interacted with human-related item or place (e.g., trash can, birdfeeder, fence/yard, attic)','I walked away'];
 const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 // constants
