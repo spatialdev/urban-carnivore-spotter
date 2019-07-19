@@ -56,7 +56,7 @@ const MediaDisplay = (props) => {
       </div>
       : null}
 
-    {filesOnDeck && filesOnDeck.length > 0 && uploading ?
+    {uploading ?
       <CircularProgress/>
       : null}
     {uploadedFiles && uploadedFiles.length > 0 ?
