@@ -342,34 +342,6 @@ Report Viewer
 Footer Styles
  */
 
-.plusButton {
-    position: relative;
-    top: -50px;
-}
-
-.footerIconDiv {
-    border-top: 1px grey solid;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-    padding: 25px 0;
-    background-color: white;
-    /* position: fixed; */
-    position: sticky;
-    z-index: 101;
-
-}
-
-.footerIcons span {
-    display: block;
-}
-
-.footerIcons p {
-    text-transform: capitalize;
-    margin: 0;
-    color: gray;
-}
-
 .map {
     height: 100vh;
 }

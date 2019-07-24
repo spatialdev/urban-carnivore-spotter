@@ -24,6 +24,36 @@ const styles = theme => ({
   extendedIcon: {
     marginRight: theme.spacing.unit,
   },
+  footerIconDiv: {
+    borderTop: "1px grey solid",
+    width: "100%",
+    bottom: 0,
+    left: 0,
+    padding: "25px 0",
+    backgroundColor: "white",
+    position: "sticky",
+    zIndex: "101",
+    display: "flex",
+    justifyContent: "space-around",
+  },
+  flexColumn: {
+    flexGrow: 1,
+    flexBasis: "30%",
+  },
+  plusButton: {
+    position: "relative",
+    top: -50,
+  },
+  footerIcons: {
+    '& span': {
+      display: 'block'
+    },
+    '& p': {
+      textTransform: 'capitalize',
+      margin: 0,
+      color: 'gray',
+    }
+  }
 });
 
 class Footer extends Component {
@@ -64,33 +94,39 @@ class Footer extends Component {
     const { classes, history } = this.props;
 
     return (
-      <div className="footerIconDiv">
-        <Button className="footerIcons" style={{ float: 'left', marginLeft: '50px' }} >
-          <MapIcon style={{ color: 'gray' }} onClick={() => history.push('/')}/>
-          <p>Explore</p>
-        </Button>
-        <Fab color="primary" aria-label="Add" className="plusButton" size="large" onClick={this.toggleDrawer(!open)}>
-          <AddIcon/>
-        </Fab>
-        <Drawer
+      <div className={classes.footerIconDiv}>
+        <div className={classes.flexColumn}>
+          <Button className={classes.footerIcons} style={{ float: 'left', marginLeft: '50px' }} >
+            <MapIcon style={{ color: 'gray' }} onClick={() => history.push('/')}/>
+            <p>Explore</p>
+          </Button>
+        </div>
+        <div className={classes.flexColumn}>
+          <Fab color="primary" aria-label="Add" className={classes.plusButton} size="large" onClick={this.toggleDrawer(!open)}>
+            <AddIcon/>
+          </Fab>
+          <Drawer
           anchor="bottom"
           open={open}
           onClose={this.toggleDrawer(!open)}
           className="formWizard"
-        >
-          <div tabIndex={0}>
-            <div>
-              <Fab color="primary" aria-label="Add" className={classes.fab}>
-                <ClearIcon onClick={this.toggleDrawer(!open)}/>
-              </Fab>
+          >
+            <div tabIndex={0}>
+              <div>
+                <Fab color="primary" aria-label="Add" className={classes.fab}>
+                  <ClearIcon onClick={this.toggleDrawer(!open)}/>
+                </Fab>
+              </div>
+              <Form handleDrawerState={this.handleDrawer} fromDrawer/>
             </div>
-            <Form handleDrawerState={this.handleDrawer} fromDrawer/>
-          </div>
-      </Drawer>
-        <Button className="footerIcons" style={{ float: 'right', marginRight: '50px' }} onClick={() => history.push('/resources')}>
-          <SettingsIcon style={{ color: 'gray' }} />
-          <p>Resources</p>
-        </Button>
+          </Drawer>
+        </div>
+        <div className={classes.flexColumn}>
+          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px' }} onClick={() => history.push('/resources')}>
+            <SettingsIcon style={{ color: 'gray' }} />
+            <p>Resources</p>
+          </Button>
+        </div>
       </div>
     );
   }
