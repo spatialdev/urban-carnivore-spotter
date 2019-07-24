@@ -96,7 +96,9 @@ class FilterDrawer extends React.Component {
                 <span className={classes.headerTitle}>{headerTitle}</span>
                 <ResizableIconButton
                   onClick={onClick}
-                  disableRipple={true}>
+                  disableRipple={true}
+                  backgroundColor={'#93C838'}
+                  color={'white'}>
                     {expand ? <RemoveIcon/> : <AddIcon/>}
                 </ResizableIconButton>
             </div>
