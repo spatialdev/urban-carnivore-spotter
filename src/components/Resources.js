@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import { getDisplayName } from '../services/ColorService';
 import {connect} from "react-redux";
 import ResourcesDesktop from './ResourcesDesktop';
+import {updateMobileResourceExpands} from "../store/actions";
 
 const styles = {
     allContentMobile: {
@@ -96,13 +97,13 @@ class Resources extends Component {
     };
 
     toggleShow = groupName => () => {
-        this.setState(state => ({...state,
-            [groupName]: !state[groupName]}));
+        const {showExpands} = this.props;
+        updateMobileResourceExpands({...showExpands,
+            [groupName]: !showExpands[groupName]});
     };
 
     render = () => {
-        const {showTips, showProjectDescription, showContactUs} = this.state;
-        const {classes, isMobile} = this.props;
+        const {classes, isMobile, showExpands: {showTips, showProjectDescription, showContactUs}} = this.props;
         if (!isMobile) {
             return <ResourcesDesktop/>;
         }
@@ -143,7 +144,10 @@ class Resources extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return { isMobile: state.isMobile };
+    return {
+        isMobile: state.isMobile,
+        showExpands: state.mobileResourceExpands
+    };
 };
 
 export default (withStyles(styles)(connect(mapStateToProps)(Resources)));
