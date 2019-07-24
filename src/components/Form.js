@@ -559,7 +559,7 @@ class Form extends Component {
                         id={"numberOfYoungSpecies"}
             />
           </div>
-          <br/>
+          <hr/>
 
           {/*Observer details*/}
           <div className={classes.allContent}>
@@ -648,6 +648,7 @@ class Form extends Component {
             <hr/>
           </div>
           <br/>
+
           {/*Animal behavior*/}
           <div className={classes.allContent}>
             {/* Species Identification Tips */}
