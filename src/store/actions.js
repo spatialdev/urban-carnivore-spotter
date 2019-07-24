@@ -1,4 +1,4 @@
-import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER, UPDATE_ALL_NEIGHBORHOODS } from './constants';
+import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER, UPDATE_ALL_NEIGHBORHOODS, UPDATE_MOBILE_RESOURCE_EXPANDS } from './constants';
 import {store} from './index';
 
 export const setMobile = (value) => {
@@ -43,3 +43,10 @@ export const updateAllNeighborhoods = (allNeighborhoods) => {
         value: allNeighborhoods
     })
 }
+
+export const updateMobileResourceExpands = (newExpands) => {
+    store.dispatch({
+        type: UPDATE_MOBILE_RESOURCE_EXPANDS,
+        expands: newExpands
+    });
+};

@@ -29,6 +29,7 @@ import { getAllSpecies, getDataForSpecies, getImageBySpecies } from "../services
 import FormInfoDialog from './FormInfoDialog';
 import SpeciesCard from "./SpeciesCardMobile";
 import FormSelect from "./FormSelect";
+import ResizableIconButton from "./ResizableIconButton";
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
@@ -166,8 +167,8 @@ class Form extends Component {
     mapLng: -122.354291,
     confidence: '',
     animalFeatures: '',
-    numberOfAdultSpecies: '',
-    numberOfYoungSpecies: '',
+    numberOfAdultSpecies: '1',
+    numberOfYoungSpecies: '0',
     numberOfAdults: '',
     numberOfChildren: '',
     reaction: '',
@@ -518,9 +519,12 @@ class Form extends Component {
                     </label>
                   </div>
                     <div>
-                        <Fab  aria-label="Info" className="infoButton" size="small">
-                            <Info onClick={() => this.openCarousel(idx)}/>
-                        </Fab>
+                      <ResizableIconButton
+                        onClick={() => this.openCarousel(idx)}
+                        backgroundColor={'white'}
+                        color={'#4385E9'}>
+                          <Info />
+                      </ResizableIconButton>
                     </div>
                   </span>)}
           </div>
@@ -555,7 +559,7 @@ class Form extends Component {
                         id={"numberOfYoungSpecies"}
             />
           </div>
-          <br/>
+          <hr/>
 
           {/*Observer details*/}
           <div className={classes.allContent}>
@@ -644,6 +648,7 @@ class Form extends Component {
             <hr/>
           </div>
           <br/>
+
           {/*Animal behavior*/}
           <div className={classes.allContent}>
             {/* Species Identification Tips */}

@@ -3,18 +3,24 @@ import {SelectValidator} from "react-material-ui-form-validator";
 import {connect} from "react-redux";
 import MenuItem from '@material-ui/core/MenuItem';
 
+const getValues = (values, isMobile, required) => {
+  if (isMobile || !required) {
+    return ["", ...values];
+  }
+  return values;
+};
 const FormSelect = (props) => {
   const {selectedValue, values, handleChange, required, label, id, isMobile, style, wrapText} = props;
 
   const validators = required ? ['required'] : [];
   const errorMessages = required ? ['This field is required'] : [];
+  const valuesToUse = getValues(values, isMobile, required);
   const children = isMobile ? <>
       <optgroup label={""}>
-        <option value={""}/>
-        {values.map((level, idx) => <option key={idx} value={level}>{level}</option>)}
+        {valuesToUse.map((level, idx) => <option key={idx} value={level}>{level}</option>)}
       </optgroup>
     </> :
-    values.map((level, idx) => <MenuItem style={wrapText ? {whiteSpace: 'normal', marginBottom: '10px'} : {}}
+    valuesToUse.map((level, idx) => <MenuItem style={wrapText ? {whiteSpace: 'normal', marginBottom: '10px'} : {}}
                                          key={idx} value={level}>{level}</MenuItem>);
 
   return <SelectValidator
