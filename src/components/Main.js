@@ -11,6 +11,7 @@ import Resources from "./Resources";
 import {Dialog, DialogContent} from "@material-ui/core";
 import {withCookies} from "react-cookie";
 
+const VISITED_BEFORE = "visitedBefore";
 
 const Main = (props) => (
   <main className="Main">
@@ -23,8 +24,8 @@ const Main = (props) => (
       <Route exact path="/resources/:species" component={ResourceCard}/>
       <Route component={NotFound}/>
     </Switch>
-    <Dialog open={!props.cookies.get("visitedBefore")}
-      onClose={() => props.cookies.set("visitedBefore", true)}>
+    <Dialog open={!props.cookies.get(VISITED_BEFORE)}
+      onClose={() => props.cookies.set(VISITED_BEFORE, true)}>
       <DialogContent>
         <p>The Seattle Urban Carnivore project is a partnership between Woodland Park Zoo and Seattle University and aims to explore how mammalian carnivores live and interact with people across urban and suburban areas in the Seattle region.</p>
         <p>The project focuses on the following species:</p>
