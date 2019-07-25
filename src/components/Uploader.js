@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
+import imageCompression from 'browser-image-compression';
 
 class Uploader extends Component {
   state = {
@@ -11,11 +12,22 @@ class Uploader extends Component {
 
   handleChangeImage = e => {
     const { target: { files } } = e;
-    const { getMedia } = this.props;
-    const filesToStore = [];
-    Array.from(files).forEach(file => filesToStore.push(file));
-
-    getMedia(filesToStore, this.fileUploader);
+    const { getMedia, acceptType, setSpinner } = this.props;
+    setSpinner(true);
+    if (acceptType === "images/*") {
+      Promise.all(Array.from(files).map(file => imageCompression(file, {maxSizeMB: .5})))
+        .then(files => {
+          getMedia(files, this.fileUploader);
+          setSpinner(false);
+        })
+        .catch(error => {
+          console.log(error);
+          setSpinner(false);
+        });
+    } else {
+      getMedia(Array.from(files), this.fileUploader);
+      setSpinner(false);
+    }
 
   };
 
@@ -24,11 +36,11 @@ class Uploader extends Component {
   };
 
   handleUploadSuccess = async filename => {
-    const { passPaths } = this.props;
+    const { passPaths, reference } = this.props;
     const { mediaPaths } = this.state;
     await firebase
       .storage()
-      .ref('images')
+      .ref(reference)
       .child(filename)
       .getDownloadURL()
       .then(url => mediaPaths.push(url));
@@ -39,7 +51,6 @@ class Uploader extends Component {
 
   render() {
     const { acceptType, reference } = this.props;
-
     return (
       <div>
         <FileUploader

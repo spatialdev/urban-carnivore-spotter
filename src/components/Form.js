@@ -201,7 +201,7 @@ class Form extends Component {
     editMode: false,
     addMode: false,
     finalMap: true,
-    uploading: false
+    spinnerActive: false
   };
 
   constructor(props) {
@@ -260,7 +260,7 @@ class Form extends Component {
   };
 
   handleUploadSuccess = files => {
-    this.setState({ mediaPaths: files, media: null, uploading: false });
+    this.setState((prevState) => ({ mediaPaths: [...prevState.mediaPaths, ...files], media: null, spinnerActive: false }));
   };
 
   handleTimestampChange = timestamp => {
@@ -282,7 +282,7 @@ class Form extends Component {
         // Remove files and ask user to upload smaller files
         this.setState({dialogMode: DIALOG_MODES.LARGE_FILES});
       } else {
-        this.setState({ uploading: true });
+        this.setState({ spinnerActive: true });
         // Upload the files
         media.forEach(file => this.fileUploader.startUpload(file));
       }
@@ -427,7 +427,7 @@ class Form extends Component {
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict, 
       conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, media, submitting,
-      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, uploading, addMode
+      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, spinnerActive, addMode
     } = this.state;
     const {classes, isMobile} = this.props;
     return (
@@ -466,9 +466,9 @@ class Form extends Component {
           {/*Image*/}
           <div className="formItem">
             <h4>Upload pictures, videos or sound files</h4>
-            <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess}/>
+            <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess} setSpinner={(bool) => this.setState({spinnerActive: bool})}/>
             <MediaDisplay filesOnDeck={media}
-                          uploading={uploading}
+                          uploading={spinnerActive}
                           uploadedFiles={mediaPaths}
                           removeFiles={() => this.setState({media: null})}/>
           {media && media.length > 0 ?
