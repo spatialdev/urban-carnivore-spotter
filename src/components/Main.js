@@ -8,6 +8,7 @@ import ReportViewer from "./ReportViewer";
 import NotFound from './NotFound';
 import ResourceCard from "./ResourceCard";
 import Resources from "./Resources";
+import SplashPage from "./SplashPage";
 
 
 const Main = () => (
@@ -21,6 +22,7 @@ const Main = () => (
       <Route exact path="/resources/:species" component={ResourceCard}/>
       <Route component={NotFound}/>
     </Switch>
+    <SplashPage />
   </main>
 );
 
