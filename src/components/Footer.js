@@ -7,9 +7,11 @@ import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import Drawer from '@material-ui/core/Drawer';
 import { withStyles } from '@material-ui/core/styles';
+import { setOnExplore } from '../store/actions';
 
 import Form from './Form';
 import { withRouter } from "react-router";
+import {connect} from "react-redux";
 
 const styles = theme => ({
   list: {
@@ -50,8 +52,7 @@ const styles = theme => ({
     },
     '& p': {
       textTransform: 'capitalize',
-      margin: 0,
-      color: 'gray',
+      margin: 0
     }
   }
 });
@@ -91,13 +92,14 @@ class Footer extends Component {
 
   render() {
     const { open } = this.state;
-    const { classes, history } = this.props;
+    const { classes, history, isOnExplore } = this.props;
 
     return (
       <div className={classes.footerIconDiv}>
         <div className={classes.flexColumn}>
-          <Button className={classes.footerIcons} style={{ float: 'left', marginLeft: '50px' }} >
-            <MapIcon style={{ color: 'gray' }} onClick={() => history.push('/')}/>
+          <Button className={classes.footerIcons} style={{ float: 'left', marginLeft: '50px', color: isOnExplore===0? '#3411ff': 'grey' }} >
+            <MapIcon style={{ color: isOnExplore===0? '#3411FF': 'grey' }} onClick={() => {history.push('/');
+            setOnExplore(0)}}/>
             <p>Explore</p>
           </Button>
         </div>
@@ -122,8 +124,11 @@ class Footer extends Component {
           </Drawer>
         </div>
         <div className={classes.flexColumn}>
-          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px' }} onClick={() => history.push('/resources')}>
-            <SettingsIcon style={{ color: 'gray' }} />
+          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: isOnExplore===1? '#3411FF': 'grey' }} onClick={() => {
+            history.push('/resources');
+            setOnExplore(1)
+          }}>
+            <SettingsIcon style={{ color: isOnExplore===1? '#3411FF': 'grey' }} />
             <p>Resources</p>
           </Button>
         </div>
@@ -132,4 +137,10 @@ class Footer extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(Footer));
+const mapStateToProps = (state) => {
+  return {
+    isOnExplore: state.isOnExplore
+  };
+};
+
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(Footer)));
