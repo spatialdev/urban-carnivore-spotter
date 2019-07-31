@@ -473,3 +473,12 @@ padding: 0;
     position: relative
 }
 
+.reportSightingButton {
+    position: fixed;
+    left:45%;
+    top: 5vh;
+}
+
+.reportSightingButtonWrapper {
+    top: 5vh;
+}

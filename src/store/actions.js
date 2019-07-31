@@ -6,7 +6,7 @@ export const setMobile = (value) => {
         type: SET_MOBILE,
         value
     });
-}
+};
 
 export const updateFilter = (filterName, key, newValue) => {
     store.dispatch({
@@ -15,13 +15,13 @@ export const updateFilter = (filterName, key, newValue) => {
         key,
         newValue
     });
-}
+};
 
 export const resetFilter = () => {
     store.dispatch({
         type: RESET_FILTER
     });
-}
+};
 
 export const updateFilterDate = (startDate, endDate) => {
     store.dispatch({
@@ -29,17 +29,17 @@ export const updateFilterDate = (startDate, endDate) => {
         startDate,
         endDate
     });
-}
+};
 
 export const toggleFilterConfidence = () => {
     store.dispatch({
         type: TOGGLE_FILTER_CONFIDENCE
     });
-}
+};
 
 export const updateAllNeighborhoods = (allNeighborhoods) => {
     store.dispatch({
         type: UPDATE_ALL_NEIGHBORHOODS,
         value: allNeighborhoods
     })
-}
+};

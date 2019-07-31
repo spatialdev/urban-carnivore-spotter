@@ -7,10 +7,22 @@ import AppBar from '@material-ui/core/AppBar';
 import '../App.css';
 
 class DesktopHeader extends Component {
+  state = {
+    isOnExplore : true
+  };
+
+  goToResourcesPage  = (isOnExplore, history) => {
+    history.push('/resources');
+    this.setState({isOnExplore: false})
+  };
+  goToExplorePage = (isOnExplore, history) => {
+    history.push('/');
+    this.setState({isOnExplore: true})
+  };
 
   render() {
+    const { isOnExplore } = this.state;
     const { history } = this.props;
-
     return (
       <Sticky style={{top: 0, width: '100%', zIndex: 100}}>
         <AppBar position="static" className="appBar">
@@ -19,13 +31,10 @@ class DesktopHeader extends Component {
             Urban Carnivore Sightings
           </h1>
           <div className="nav">
-            <div id="explore" className="categories" onClick={() => history.push('/')}><h4>Explore</h4></div>
-            <div id="resources" className="categories" onClick={() => history.push('/resources')}><h4>Resources</h4>
+            <div id="explore" className="categories" onClick={() =>this.goToExplorePage(isOnExplore,history)}><h4 style={{textDecoration: isOnExplore? "underline":""}}>Explore</h4></div>
+            <div id="resources" className="categories" onClick={() =>this.goToResourcesPage(isOnExplore,history)}><h4 style={{textDecoration: !isOnExplore? "underline":""}}>Resources</h4>
             </div>
-            <div id="report" className="categories" onClick={() => history.push('/reports/create')}><h4>Report
-              Sightings</h4></div>
           </div>
-
         </AppBar>
       </Sticky>
     );
