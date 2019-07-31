@@ -299,25 +299,16 @@ List + Card
 Report Viewer
  */
 
-.reportViewerToolbar {
-    background-color: white;
-    position: fixed;
-    z-index: 103;
-    width: 100%;
-    border-bottom: 1px solid lightgrey;
-}
-
-.reportViewerToolbar > h4 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
 .backToExplore {
-    padding-left: 0 !important;
     z-index: 101;
+}
+
+.backToExploreContainer {
+    top: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+
 }
 
 .backToExplore > span {
@@ -327,17 +318,39 @@ Report Viewer
 }
 
 .reportCard {
+    top: 10vh;
     margin: 0 auto;
+    width: fit-content;
+}
+
+.reportViewer {
+    background-color: #ececec;
+    top: 20vh;
+    padding: 10px;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
 @media (min-width: 768px) {
     .reportCard {
-        max-width: 800px;
+        max-width: 400px;
         margin: 30px auto;
     }
 }
 
+.reportViewerTitle {
+    padding: 5px;
+}
 
+.buttonAndCardContainer {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: start;
+}
 /*
 Footer Styles
  */

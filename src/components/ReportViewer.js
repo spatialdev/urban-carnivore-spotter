@@ -45,28 +45,34 @@ class ReportViewer extends Component {
       })
     }
 
-    //Need to replace with actual neighborhood once we have those polygons
     return (
       <div className="reportViewer">
-        <Toolbar className="reportViewerToolbar">
-          <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
-          <h4>{report.species.toUpperCase()}</h4>
-        </Toolbar>
-        <Card className="reportCard">
-          {media ?
-            <ImageGallery items={media}
-                          showBullets={true} showIndex={false}
-                          showThumbnails={false} showVideo={true}/> : null}
-          <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px'}}>
-            <p><strong>Date:</strong> {new Date(report.timestamp).toDateString()}</p>
-            <p><strong>Time of Sighting:</strong> {jsDateToTimeString(report.timestamp)}</p>
-            <p><strong>Neighborhood:</strong> {report.neighborhood}</p>
-            <p><strong>Confidence:</strong> {report.confidence}</p>
-            <p style={{lineHeight:'.5'}}><strong>Number of Species:</strong></p>
-            <p style={{lineHeight:'.5'}}><strong>Adult: </strong> {report.numberOfAdultSpecies}</p>
-            <p style={{lineHeight:'.5'}}><strong>Young: </strong> {report.numberOfYoungSpecies}</p>
+        <div className="buttonAndCardContainer">
+          <div className="backToExploreContainer">
+            <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
           </div>
-        </Card>
+          <div>
+            <Card className="reportCard">
+              <div className= "reportViewerTitle">
+                <h4>{report.species.toUpperCase()}</h4>
+              </div>
+              {media.length!==0 ?
+                  <ImageGallery items={media}
+                                showBullets={true} showIndex={false}
+                                showThumbnails={false} showVideo={true}/> : null}
+              <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px'}}>
+                <p><strong>Date:</strong> {new Date(report.timestamp).toDateString()}</p>
+                <p><strong>Time of Sighting:</strong> {jsDateToTimeString(report.timestamp)}</p>
+                <p><strong>Neighborhood:</strong> {report.neighborhood}</p>
+                <p><strong>Confidence:</strong> {report.confidence}</p>
+                <p style={{lineHeight:'.5'}}><strong>Number of Species:</strong></p>
+                <p style={{lineHeight:'.5'}}><strong>Adult: </strong> {report.numberOfAdultSpecies}</p>
+                <p style={{lineHeight:'.5'}}><strong>Young: </strong> {report.numberOfYoungSpecies}</p>
+              </div>
+            </Card>
+          </div>
+        </div>
+
       </div>
     );
   }
