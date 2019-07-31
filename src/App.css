@@ -172,7 +172,7 @@ Form Wizard Styles
 }
 
 .formMap {
-    height: 300px;
+    height: 100%;
 }
 
 .react-datepicker-wrapper > div > input {
@@ -196,10 +196,6 @@ Form Wizard Styles
     font-size: 14px;
     margin-bottom: 0;
     color: gray;
-}
-
-input {
-    background-color: transparent;
 }
 
 /*
@@ -346,34 +342,6 @@ Report Viewer
 Footer Styles
  */
 
-.plusButton {
-    position: relative;
-    top: -50px;
-}
-
-.footerIconDiv {
-    border-top: 1px grey solid;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-    padding: 25px 0;
-    background-color: white;
-    /* position: fixed; */
-    position: sticky;
-    z-index: 101;
-
-}
-
-.footerIcons span {
-    display: block;
-}
-
-.footerIcons p {
-    text-transform: capitalize;
-    margin: 0;
-    color: gray;
-}
-
 .map {
     height: 100vh;
 }
@@ -462,7 +430,7 @@ padding: 0;
 }
 
 .interactiveMapContainer {
-    height: 500px;
+    height: calc(100vh - 250px);
     weight: 500px;
     align-items: center;
     text-align: center;
@@ -481,4 +449,9 @@ padding: 0;
 
 .reportSightingButtonWrapper {
     top: 5vh;
+}
+
+.constantHeightMapContainer {
+    height: 300px;
+    z-index: -1;
 }

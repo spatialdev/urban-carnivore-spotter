@@ -1,9 +1,14 @@
-import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER, UPDATE_ALL_NEIGHBORHOODS } from './constants';
+import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER, UPDATE_ALL_NEIGHBORHOODS, UPDATE_MOBILE_RESOURCE_EXPANDS } from './constants';
 import { getInitialFilter } from '../services/FilterService';
 
 const initialState = {
     filter: getInitialFilter([]),
     isMobile: false,
+    mobileResourceExpands: {
+        showTips: false,
+        showProjectDescription: false,
+        showContactUs: false
+    }
 };
 
 /**
@@ -64,6 +69,8 @@ const reducer = (state, action) => {
                 filter: {...state.filter,
                     neighborhoodFilter: newFilter
                 }}
+        case UPDATE_MOBILE_RESOURCE_EXPANDS:
+            return {...state, mobileResourceExpands: action.expands}
     }
     return state;
 };

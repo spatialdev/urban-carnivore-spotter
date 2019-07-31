@@ -28,7 +28,11 @@ const FormInfoDialog = (props) => {
                     <Button onClick={yesButton.onClick} color="primary">
                         {yesButton.message}
                     </Button>: null }
-            </DialogActions> : null
+            </DialogActions> :
+        //  Default to an 'ok' button
+            <DialogActions>
+                <Button onClick={onClose} color={"primary"}>Ok</Button>
+            </DialogActions>
         }
     </Dialog>
 };

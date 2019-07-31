@@ -32,7 +32,7 @@ const SpeciesCardDesktop = (props) => {
     <div className={classes.headerAndImageContainer}>
       <div className={classes.headerContainer}>
         <h3 className={classes.speciesHeader}>{speciesName}</h3>
-        <h4 className={classes.speciesHeader}>({latinName})</h4>
+        <h4 className={classes.speciesHeader}>(<em>{latinName}</em>)</h4>
       </div>
       <img className={classes.image}
          src={imagePath}

@@ -80,8 +80,9 @@ exports.getReport = functions.https.onRequest((req, res) => {
  */
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  let week_ago = toTimestamp(moment().subtract(1, 'week').toDate());
-  let initialQuery = collection.where('time_submitted', '<=', week_ago);
+  // let week_ago = toTimestamp(moment().subtract(1, 'week').toDate());
+  // let initialQuery = collection.where('time_submitted', '<=', week_ago);
+  let initialQuery = collection;
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
@@ -190,7 +191,7 @@ const sendEmail = (from, to, subject, text) => {
 
 sendNewSubmissionEmail = (reportSnapshot) => {
     const from = `"Test reporters" <${username}@example.com>`;
-    const to = `"Micah" <mjnacht@gmail.com>`;
+    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
     const subject = "New report submitted";
     const text = `A new report was submitted with the following characteristics:
         ID: ${reportSnapshot.id}

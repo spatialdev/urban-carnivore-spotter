@@ -11,6 +11,7 @@ class StaticFormMap extends Component {
     render() {
         const { centerLng, centerLat} = this.props;
         return (
+          <div className={"constantHeightMapContainer"}>
             <StaticMap style="mapbox://styles/mapbox/streets-v9"
                  center={{ lng: centerLng, lat: centerLat }}
                  className="formMap"
@@ -28,6 +29,7 @@ class StaticFormMap extends Component {
                     </Layer>
                 </div>
             </StaticMap>
+          </div>
         );
     }
 }
