@@ -6,7 +6,7 @@ import Header from './components/MobileHeader';
 import Footer from './components/Footer';
 import Main from './components/Main';
 import { connect } from 'react-redux';
-import {setMobile, setOnExplore, updateAllNeighborhoods} from './store/actions';
+import { setMobile, updateAllNeighborhoods} from './store/actions';
 import NeighborhoodService from './services/NeighborhoodService';
 
 import './App.css';
@@ -28,8 +28,6 @@ class App extends Component {
   checkIfMobile = () => {
     setMobile(window.innerWidth < 768);
   };
-
-
 
   render() {
     const {isMobile} = this.props;
