@@ -97,9 +97,8 @@ class Footer extends Component {
     return (
       <div className={classes.footerIconDiv}>
         <div className={classes.flexColumn}>
-          <Button className={classes.footerIcons} style={{ float: 'left', marginLeft: '50px', color: isOnExplore===0? '#3411ff': 'grey' }} >
-            <MapIcon style={{ color: isOnExplore===0? '#3411FF': 'grey' }} onClick={() => {history.push('/');
-            setOnExplore(0)}}/>
+          <Button className={classes.footerIcons} style={{ float: 'left', marginLeft: '50px', color: history.location.pathname==='/'? '#3411ff': 'grey' }} >
+            <MapIcon style={{ color: history.location.pathname==='/'? '#3411FF': 'grey' }} onClick={() => history.push('/')}/>
             <p>Explore</p>
           </Button>
         </div>
@@ -124,11 +123,10 @@ class Footer extends Component {
           </Drawer>
         </div>
         <div className={classes.flexColumn}>
-          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: isOnExplore===1? '#3411FF': 'grey' }} onClick={() => {
-            history.push('/resources');
-            setOnExplore(1)
-          }}>
-            <SettingsIcon style={{ color: isOnExplore===1? '#3411FF': 'grey' }} />
+          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: history.location.pathname==='/resources'?
+                '#3411FF': 'grey' }}
+                  onClick={() => history.push('/resources')}>
+            <SettingsIcon style={{ color: history.location.pathname==='/resources'? '#3411FF': 'grey' }} />
             <p>Resources</p>
           </Button>
         </div>

@@ -13,7 +13,6 @@ import { getInitialFilter } from '../services/FilterService';
 const initialState = {
     filter: getInitialFilter([]),
     isMobile: false,
-    isOnExplore: 0,
     mobileResourceExpands: {
         showTips: false,
         showProjectDescription: false,
@@ -81,8 +80,6 @@ const reducer = (state, action) => {
                 }};
         case UPDATE_MOBILE_RESOURCE_EXPANDS:
             return {...state, mobileResourceExpands: action.expands};
-        case SET_ON_EXPLORE:
-            return {...state, isOnExplore: action.value};
     }
     return state;
 };

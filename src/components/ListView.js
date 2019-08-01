@@ -10,7 +10,6 @@ import Map from "@material-ui/icons/Place";
 import FilterDrawer from './FilterDrawer';
 import {withStyles} from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
-import { setOnExplore } from '../store/actions';
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
 
@@ -96,7 +95,7 @@ class ListView extends Component {
             .map((report) => <ListCard report={report} key={report.id}/>)}
             <div >
                 <Fab  className={isMobile? classes.mapViewButtonContainerMobile : classes.mapViewButtonContainerDesktop} aria-label="Toggle"  size="small">
-                    <Map onClick={() => {history.push('/'); setOnExplore(0)}} className={isMobile? classes.mapViewButtonMobile : classes.mapViewButtonDesktop}/>
+                    <Map onClick={() => history.push('/')} className={isMobile? classes.mapViewButtonMobile : classes.mapViewButtonDesktop}/>
                 </Fab>
             </div>
         </div>
@@ -109,8 +108,7 @@ class ListView extends Component {
 const mapStateToProps = (state) => {
   return {
       isMobile: state.isMobile,
-      filter: state.filter,
-      isOnExplore: state.isOnExplore
+      filter: state.filter
   };
 };
 export default withRouter(connect(mapStateToProps)(withStyles(styles)(ListView)));

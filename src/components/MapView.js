@@ -17,7 +17,6 @@ import Dialog from "@material-ui/core/Dialog";
 import { speciesColorMap } from '../services/ColorService';
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
-import { setOnExplore } from '../store/actions';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -202,8 +201,7 @@ class MapView extends Component {
     showReportSightings = (isMobile, classes, history) => {
         if(!isMobile)
         {
-            return<Button variant="contained" color="primary" className="reportSightingButton" onClick={() => {history.push('/reports/create');
-            setOnExplore(2)}} >
+            return<Button variant="contained" color="primary" className="reportSightingButton" onClick={() => history.push('/reports/create')} >
                     Report Sightings
                     <AddIcon />
                 </Button>;
@@ -211,23 +209,21 @@ class MapView extends Component {
         }
     };
 
-    showListViewButton = (isMobile, isOnExplore, classes, history) => {
+    showListViewButton = (isMobile, classes, history) => {
         return isMobile ?         <div>
             <Fab className = {classes.listViewMobileWrapper} aria-label="Toggle"  size="small"  >
-                <List className = {classes.listViewButton} onClick={() => {history.push('/list');
-                setOnExplore(2)}}/>
+                <List className = {classes.listViewButton} onClick={() => history.push('/list')}/>
             </Fab>
         </div> : <div className = {classes.listViewDesktopWrapper}>
             <Fab variant="extended" aria-label="Toggle" className={classes.fab} size="medium">
-                <List className={classes.extendedIcon} onClick={() => {history.push('/list');
-                setOnExplore(2)}}/>
+                <List className={classes.extendedIcon} onClick={() => history.push('/list')}/>
                 List View
             </Fab>
         </div>
     };
 
     render() {
-        const {classes, isMobile, filter,history, isOnExplore} = this.props;
+        const {classes, isMobile, filter,history} = this.props;
         const {reports,legend,viewport} = this.state;
         return (
             <div className="mapContainer">
@@ -264,7 +260,7 @@ class MapView extends Component {
                             </Fab>
                         </div>
                     </div>
-                    {this.showListViewButton(isMobile, isOnExplore, classes, history)}
+                    {this.showListViewButton(isMobile, classes, history)}
                     <div >
                         <Dialog
                             open={legend}
@@ -287,8 +283,7 @@ class MapView extends Component {
 const mapStateToProps = (state) => {
     return {
         isMobile: state.isMobile,
-        filter: state.filter,
-        isOnExplore: state.isOnExplore
+        filter: state.filter
     };
 };
 export default withRouter(connect(mapStateToProps)(withStyles(styles)(MapView)));

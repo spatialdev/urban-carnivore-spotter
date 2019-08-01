@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
 import DialogContent from '@material-ui/core/DialogContent';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';

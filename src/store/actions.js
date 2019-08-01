@@ -59,10 +59,3 @@ export const updateMobileResourceExpands = (newExpands) => {
         expands: newExpands
     });
 };
-
-export const setOnExplore = (value) => {
-    store.dispatch({
-        type: SET_ON_EXPLORE,
-        value
-    })
-};
