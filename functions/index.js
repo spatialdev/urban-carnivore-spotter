@@ -279,6 +279,5 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
  */
 exports.reportAdded = functions.firestore.document(`${REPORTS}/{reportId}`)
     .onCreate((snapshot, context) => {
-      console.log('report added');
       sendNewSubmissionEmail(snapshot);
     });
