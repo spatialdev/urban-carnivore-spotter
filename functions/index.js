@@ -1,5 +1,5 @@
 const functions = require('firebase-functions');
-const cors = require('cors')({ origin: 'http://localhost' });
+const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
 const moment = require('moment');
 const turf = require('@turf/turf');
