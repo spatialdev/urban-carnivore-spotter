@@ -256,7 +256,7 @@ const formatSubmissionAsTable = (reportSnapshot) => {
 
 const sendNewSubmissionEmail = (reportSnapshot) => {
     const from = `"Test reporters" <${username}@example.com>`;
-    const to = `"Seattle Carnivore Spotter" <mjnacht@gmail.com>`;
+    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
     const subject = "New report submitted";
     const styles = `<style>
         table td + td { 
