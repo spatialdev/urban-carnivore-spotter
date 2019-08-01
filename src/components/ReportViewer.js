@@ -10,6 +10,9 @@ import { KeyboardArrowLeft } from "@material-ui/icons";
 import {jsDateToTimeString} from "../services/TimeService";
 
 import ImageGallery from 'react-image-gallery';
+import Placeholder from '../assets/placeholder.svg';
+import CardMedia from '@material-ui/core/CardMedia';
+import {connect} from "react-redux";
 
 const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
 
@@ -29,7 +32,7 @@ class ReportViewer extends Component {
   }
 
   render() {
-    const { history } = this.props;
+    const { history,isMobile } = this.props;
     const { report } = this.state;
 
     if (!report) {
@@ -44,9 +47,8 @@ class ReportViewer extends Component {
         media.push({ original: med, thumbnail: med });
       })
     }
-
     return (
-      <div className="reportViewer">
+      <div className={isMobile ? "reportViewerMobile": "reportViewerDesktop"}>
         <div className="buttonAndCardContainer">
           <div className="backToExploreContainer">
             <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
@@ -59,7 +61,8 @@ class ReportViewer extends Component {
               {media.length!==0 ?
                   <ImageGallery items={media}
                                 showBullets={true} showIndex={false}
-                                showThumbnails={false} showVideo={true}/> : null}
+                                showThumbnails={false} showVideo={true}/> : <CardMedia  className="reportPlaceHolderImage" image={Placeholder}
+                  />}
               <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px'}}>
                 <p><strong>Date:</strong> {new Date(report.timestamp).toDateString()}</p>
                 <p><strong>Time of Sighting:</strong> {jsDateToTimeString(report.timestamp)}</p>
@@ -78,4 +81,9 @@ class ReportViewer extends Component {
   }
 }
 
-export default withRouter(ReportViewer);
+const mapStateToProps = (state) => {
+  return {
+    isMobile: state.isMobile
+  };
+};
+export default withRouter((connect(mapStateToProps)(ReportViewer)));

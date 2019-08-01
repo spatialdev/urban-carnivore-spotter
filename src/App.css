@@ -304,7 +304,6 @@ Report Viewer
 }
 
 .backToExploreContainer {
-    top: 10vh;
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -318,14 +317,24 @@ Report Viewer
 }
 
 .reportCard {
-    top: 10vh;
     margin: 0 auto;
     width: fit-content;
+    min-height: 350px;
+    min-width: 350px;
 }
 
-.reportViewer {
+.reportViewerDesktop {
     background-color: #ececec;
-    top: 20vh;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.reportViewerMobile {
+    background-color: #ececec;
     padding: 10px;
     display: flex;
     justify-content: start;
@@ -350,6 +359,11 @@ Report Viewer
     justify-content: start;
     flex-direction: column;
     align-items: start;
+}
+
+.reportPlaceHolderImage {
+    min-height: 200px;
+    min-width: 200px;
 }
 /*
 Footer Styles
