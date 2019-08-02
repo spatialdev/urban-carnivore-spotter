@@ -80,7 +80,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
  */
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  // let week_ago = toTimestamp(moment().subtract(1, 'week').toDate());
+  // let week_ago = toTimestamp(moment().subtract(10, 'days').toDate());
   // let initialQuery = collection.where('time_submitted', '<=', week_ago);
   let initialQuery = collection;
   if (queryParams.species) {
@@ -174,7 +174,7 @@ exports.getNeighborhoods = functions.https.onRequest((req, res) => {
 });
 
 // Email helpers
-const sendEmail = (from, to, subject, text) => {
+const sendEmail = (from, to, subject, html) => {
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -184,21 +184,96 @@ const sendEmail = (from, to, subject, text) => {
         }
     });
 
-    const mailOptions = { from, to, subject, text };
+    const mailOptions = { from, to, subject, html };
 
     return transporter.sendMail(mailOptions);
 };
 
-sendNewSubmissionEmail = (reportSnapshot) => {
+const formatMediaPathAsTableRow = (mediaPath, index, total) => {
+  // Each mediaPath looks like
+  // https://base-url.com/v0/b/app-url/o/images%2Fmedia-id-here.jpeg?some-query-params
+  const firstSplit = mediaPath.split("%2F");
+  const id = firstSplit[1].split(".")[0];
+  const segments = firstSplit[0].split("/");
+  const location = segments[segments.length - 1];
+  const thumbnail = mediaPath.includes("images") ? `<img src=${mediaPath} alt="image thumbnail" style="width: 100px;"/>`
+                                                 : "No thumbnail for non-image media.";
+  // Don't style the bottom row, since we have a border around everything.
+  const trStyle = index === total - 1 ? '' : ' style="border-bottom: 1px solid black"';
+  return `<tr${trStyle}>
+        <td>${mediaPath}</td>
+        <td>${thumbnail}</td>
+        <td>${location}/</td>
+        <td>${id}</td>
+    </tr>`;
+};
+
+const formatSubmissionAsTable = (reportSnapshot) => {
+  const id = reportSnapshot.id;
+  const data = reportSnapshot.data();
+  const mediaPaths = data.mediaPaths;
+  const neighborhood = data.neighborhood;
+  const vocalizationDescription = data.vocalizationDesc ? data.vocalizationDesc : 'N/A';
+  const reactionDescription = data.reactionDescription ? data.reactionDescription : 'N/A';
+  const name = data.contactName ? data.contactName : 'N/A';
+  const email = data.contactEmail ? data.contactEmail : 'N/A';
+  const phone = data.contactPhone ? data.contactPhone : 'N/A';
+  const comments = data.generalComments ? data.generalComments : 'N/A';
+
+  return `<table style="border: 1px solid black">
+     <tr>
+       <th>ID</th>
+       <th>Media</th>
+       <th>Neighborhood</th>
+       <th>Optional Text Comments</th>
+       <th>Contact Information</th>
+       <th>Link to Report</th>
+     </tr>
+     <tr>
+        <td>${id}</td>
+        <td>
+            <table>
+                <tr>
+                  <th>Media Paths</th>
+                  <th>Media Thumbnails</th>
+                  <th>Media Bucket</th>
+                  <th>Media IDs</th>
+                </tr>
+                ${mediaPaths.map((path, index) => formatMediaPathAsTableRow(path, index, mediaPaths.length)).join("")}
+            </table>
+        </td>
+        <td>${neighborhood}</td>
+        <td><strong>Vocalization:</strong> ${vocalizationDescription}<br/>
+            <strong>Reaction:</strong> ${reactionDescription}<br/>
+            <strong>General comments:</strong> ${comments}
+        </td>
+        <strong>Name:</strong> ${name}<br/>
+            <strong>Email:</strong> ${email}<br/>
+            <strong>Phone:</strong> ${phone}
+        </td>
+        <td>${REPORT_URL_STUB}${id}</td>
+     </tr>
+   </table>`;
+};
+
+const sendNewSubmissionEmail = (reportSnapshot) => {
     const from = `"Test reporters" <${username}@example.com>`;
     const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
     const subject = "New report submitted";
-    const text = `A new report was submitted with the following characteristics:
-        ID: ${reportSnapshot.id}
-        ${JSON.stringify(reportSnapshot.data())}
-
-        This report can be accessed at ${REPORT_URL_STUB}${reportSnapshot.id}`;
-    return sendEmail(from, to, subject, text);
+    const styles = `<style>
+        table td + td { 
+            border-left: 1px solid black;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th {
+            border-bottom: 1px solid black;
+        }
+    </style>`;
+    const html = `<head>${styles}</head>A new report was submitted with the following characteristics:<br/>
+        ${formatSubmissionAsTable(reportSnapshot)}`;
+    return sendEmail(from, to, subject, html);
 };
 
 /**
