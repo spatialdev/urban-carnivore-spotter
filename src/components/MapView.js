@@ -211,12 +211,12 @@ class MapView extends Component {
 
     showListViewButton = (isMobile, classes, history) => {
         return isMobile ?         <div>
-            <Fab className = {classes.listViewMobileWrapper} aria-label="Toggle"  size="small"  >
-                <List className = {classes.listViewButton} onClick={() => history.push('/list')}/>
+            <Fab className = {classes.listViewMobileWrapper} aria-label="Toggle"  size="small" onClick={() => history.push('/list')} >
+                <List className = {classes.listViewButton}/>
             </Fab>
         </div> : <div className = {classes.listViewDesktopWrapper}>
-            <Fab variant="extended" aria-label="Toggle" className={classes.fab} size="medium">
-                <List className={classes.extendedIcon} onClick={() => history.push('/list')}/>
+            <Fab variant="extended" aria-label="Toggle" className={classes.fab} size="medium"  onClick={() => history.push('/list')}>
+                <List className={classes.extendedIcon}/>
                 List View
             </Fab>
         </div>
