@@ -90,7 +90,7 @@ class ReportViewer extends Component {
           <div className= "reportViewerTitle">
             <h4>{report.species.toUpperCase()}</h4>
           </div>
-          {media ?
+          {media.length!==0 ?
             <ImageGallery items={media}
                           renderItem={this.renderGalleryItem}
                           showBullets={true} showIndex={false}
