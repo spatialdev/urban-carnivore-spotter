@@ -203,7 +203,8 @@ const formatMediaPathAsTableRow = (mediaPath, index, total) => {
   return `<tr${trStyle}>
         <td>${mediaPath}</td>
         <td>${thumbnail}</td>
-        <td>${location}: ${id}</td>
+        <td>${location}/</td>
+        <td>${id}</td>
     </tr>`;
 };
 
@@ -235,6 +236,7 @@ const formatSubmissionAsTable = (reportSnapshot) => {
                 <tr>
                   <th>Media Paths</th>
                   <th>Media Thumbnails</th>
+                  <th>Media Bucket</th>
                   <th>Media IDs</th>
                 </tr>
                 ${mediaPaths.map((path, index) => formatMediaPathAsTableRow(path, index, mediaPaths.length)).join("")}
