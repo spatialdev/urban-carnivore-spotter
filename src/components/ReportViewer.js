@@ -16,6 +16,8 @@ import {connect} from "react-redux";
 
 const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
 
+const videoFormats = ['.mov', '.mp4', '.webm', '.ogg', '.avi', '.wmv', '.mkv'];
+
 class ReportViewer extends Component {
   state = {
     report: null,
@@ -31,6 +33,33 @@ class ReportViewer extends Component {
       .catch(error => error);
   }
 
+  renderGalleryItem(item) {
+    return (
+      <div className='image-gallery-image'>
+        { item.isVideo ?
+          <video width="100%" controls autoPlay>
+            <source src={item.original} />
+          </video>
+        :
+          <img
+            src={item.original}
+            alt={item.originalAlt}
+            srcSet={item.srcSet}
+            sizes={item.sizes}
+            title={item.originalTitle}
+          />
+        }
+
+        {
+          item.description &&
+            <span className='image-gallery-description'>
+              {item.description}
+            </span>
+        }
+      </div>
+    );
+  }
+
   render() {
     const { history,isMobile } = this.props;
     const { report } = this.state;
@@ -44,38 +73,40 @@ class ReportViewer extends Component {
 
     if (report.mediaPaths !== undefined && report.mediaPaths.length > 0) {
       report.mediaPaths.map(med => {
-        media.push({ original: med, thumbnail: med });
+        const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi
+        const extension = med.match(fileExtensionPattern)[0];
+        const isVideo = videoFormats.includes(extension.toLowerCase());
+        media.push({ original: med, thumbnail: med, isVideo: isVideo, ext: extension });
       })
     }
     return (
       <div className={isMobile ? "reportViewerMobile": "reportViewerDesktop"}>
         <div className="buttonAndCardContainer">
           <div className="backToExploreContainer">
-            <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
+          <Button className="backToExplore" onClick={() => history.goBack()}> <KeyboardArrowLeft/>Back</Button>
           </div>
           <div>
-            <Card className="reportCard">
-              <div className= "reportViewerTitle">
-                <h4>{report.species.toUpperCase()}</h4>
-              </div>
-              {media.length!==0 ?
-                  <ImageGallery items={media}
-                                showBullets={true} showIndex={false}
-                                showThumbnails={false} showVideo={true}/> : <CardMedia  className="reportPlaceHolderImage" image={Placeholder}
-                  />}
-              <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px'}}>
-                <p><strong>Date:</strong> {new Date(report.timestamp).toDateString()}</p>
-                <p><strong>Time of Sighting:</strong> {jsDateToTimeString(report.timestamp)}</p>
-                <p><strong>Neighborhood:</strong> {report.neighborhood}</p>
-                <p><strong>Confidence:</strong> {report.confidence}</p>
-                <p style={{lineHeight:'.5'}}><strong>Number of Species:</strong></p>
-                <p style={{lineHeight:'.5'}}><strong>Adult: </strong> {report.numberOfAdultSpecies}</p>
-                <p style={{lineHeight:'.5'}}><strong>Young: </strong> {report.numberOfYoungSpecies}</p>
-              </div>
-            </Card>
+        <Card className="reportCard">
+          <div className= "reportViewerTitle">
+            <h4>{report.species.toUpperCase()}</h4>
           </div>
+          {media ?
+            <ImageGallery items={media}
+                          renderItem={this.renderGalleryItem}
+                          showBullets={true} showIndex={false}
+                          showThumbnails={false} showVideo={true}/> : <CardMedia  className="reportPlaceHolderImage" image={Placeholder}/>}
+          <div style={{ backgroundColor: 'white', textAlign: 'left', paddingLeft: '30px'}}>
+            <p><strong>Date:</strong> {new Date(report.timestamp).toDateString()}</p>
+            <p><strong>Time of Sighting:</strong> {jsDateToTimeString(report.timestamp)}</p>
+            <p><strong>Neighborhood:</strong> {report.neighborhood}</p>
+            <p><strong>Confidence:</strong> {report.confidence}</p>
+            <p style={{lineHeight:'.5'}}><strong>Number of Species:</strong></p>
+            <p style={{lineHeight:'.5'}}><strong>Adult: </strong> {report.numberOfAdultSpecies}</p>
+            <p style={{lineHeight:'.5'}}><strong>Young: </strong> {report.numberOfYoungSpecies}</p>
+          </div>
+        </Card>
         </div>
-
+      </div>
       </div>
     );
   }
