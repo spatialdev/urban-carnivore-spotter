@@ -62,13 +62,12 @@ const DIALOG_MODES = {
 };
 
 const styles = {
-  allContent: {
-    height: '100%',
-    overflow: 'scroll',
-    position: 'static',
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: 'white'
+  overlay: {
+    height: '100vh',
+    width: '100vw',
+    position: 'fixed',
+    top: 0,
+    zIndex: 999,
   },
   header: {
     display: 'flex',
@@ -145,7 +144,7 @@ const styles = {
   },
   interactiveMapInnerContainer: {
     flex: 1,
-  }
+  },
 };
 
 //https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975
@@ -251,10 +250,13 @@ class Form extends Component {
       .then(response => {
         this.setState({submitting: false});
         if (response.status === 200) {
-          this.setState({dialogMode: DIALOG_MODES.THANKS}); // Open the submission recieved dialog
+          this.setState({dialogMode: DIALOG_MODES.THANKS}); // Open the submission received dialog
         } else {
           this.setState({dialogMode: DIALOG_MODES.ERROR});
         }
+      })
+      .catch(err => {
+        this.setState({submitting: false, dialogMode: DIALOG_MODES.ERROR});
       });
   };
 
@@ -430,7 +432,8 @@ class Form extends Component {
     } = this.state;
     const {classes, isMobile} = this.props;
     return (
-      <LoadingOverlay active={submitting} spinner text='Submitting...'>
+      <>
+        {submitting ? <LoadingOverlay active={submitting} spinner text='Submitting...' className={classes.overlay} />: null}
         <h2>Report a carnivore sighting</h2>
         <ValidatorForm onError={errors => console.log(errors)}
                        onSubmit={this.handleSubmit}
@@ -561,7 +564,7 @@ class Form extends Component {
           <hr/>
 
           {/*Observer details*/}
-          <div className={classes.allContent}>
+          <div>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Observer Details (Optional)", this.toggleShow('showObserverDetails'), showObserverDetails,
                 <div>
@@ -649,7 +652,7 @@ class Form extends Component {
           <br/>
 
           {/*Animal behavior*/}
-          <div className={classes.allContent}>
+          <div>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Animal Behavior (Optional)", this.toggleShow('showAnimalBehavior'), showAnimalBehavior,
                 <div>
@@ -758,7 +761,7 @@ class Form extends Component {
           <br/>
 
           {/*Contact*/}
-          <div className={classes.allContent}>
+          <div>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Contact Information (Optional)", this.toggleShow('showContactInformation'), showContactInformation,
                 <div>
@@ -833,7 +836,7 @@ class Form extends Component {
           </Button>
         </ValidatorForm>
         {this.getDialogFromMode(dialogMode)}
-      </LoadingOverlay>
+        </>
     );
   }
 }
