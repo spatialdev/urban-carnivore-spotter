@@ -18,6 +18,7 @@ import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
 import StaticFormMap from './StaticFormMap'
 import MediaDisplay from './MediaDisplay';
+import FormRadioButtons from './FormRadioButtons';
 import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -428,7 +429,8 @@ class Form extends Component {
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict, 
       conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, media, submitting,
-      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, spinnerActive, addMode
+      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, spinnerActive, addMode,
+      species
     } = this.state;
     const {classes, isMobile} = this.props;
     return (
@@ -507,28 +509,13 @@ class Form extends Component {
                     </Carousel>
               </DialogContent>
             </Dialog>
-              {speciesLst.map((type, idx) =>
-                    <span  className={isMobile ? classes.radioButtonContainerMobile : "radioButtonContainer"} key={idx}>
-                     <div  >
-                    <label >
-                      <input
-                          type="radio"
-                          name="react-tips"
-                          value={type}
-                          onChange={() => this.setState({species: type})}
-                      />
-                      {type}
-                    </label>
-                  </div>
-                    <div>
-                      <ResizableIconButton
-                        onClick={() => this.openCarousel(idx)}
-                        backgroundColor={'white'}
-                        color={'#4385E9'}>
-                          <Info />
-                      </ResizableIconButton>
-                    </div>
-                  </span>)}
+            <FormRadioButtons
+              species={speciesLst}
+              onChangeSelection={(species) => () => this.setState({species})}
+              onClickInfo={(index) => () => this.openCarousel(index)}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              value={species}/>
           </div>
 
           <div className="formItem">
