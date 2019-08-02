@@ -299,25 +299,15 @@ List + Card
 Report Viewer
  */
 
-.reportViewerToolbar {
-    background-color: white;
-    position: fixed;
-    z-index: 103;
-    width: 100%;
-    border-bottom: 1px solid lightgrey;
-}
-
-.reportViewerToolbar > h4 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
 .backToExplore {
-    padding-left: 0 !important;
     z-index: 101;
+}
+
+.backToExploreContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+
 }
 
 .backToExplore > span {
@@ -328,16 +318,53 @@ Report Viewer
 
 .reportCard {
     margin: 0 auto;
+    width: fit-content;
+    min-height: 350px;
+    min-width: 350px;
+}
+
+.reportViewerDesktop {
+    background-color: #ececec;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.reportViewerMobile {
+    background-color: #ececec;
+    padding: 10px;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
 @media (min-width: 768px) {
     .reportCard {
-        max-width: 800px;
+        max-width: 400px;
         margin: 30px auto;
     }
 }
 
+.reportViewerTitle {
+    padding: 5px;
+}
 
+.buttonAndCardContainer {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: start;
+}
+
+.reportPlaceHolderImage {
+    min-height: 200px;
+    min-width: 200px;
+}
 /*
 Footer Styles
  */
