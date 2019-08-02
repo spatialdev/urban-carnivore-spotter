@@ -15,7 +15,8 @@ import {withRouter} from "react-router-dom";
 import DialogContent from "@material-ui/core/DialogContent";
 import Dialog from "@material-ui/core/Dialog";
 import { speciesColorMap } from '../services/ColorService';
-import {Card, CardContent} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import AddIcon from '@material-ui/icons/Add';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -35,25 +36,25 @@ const styles = {
         boxShadow: '2px 2px 2px'
     },
     buttonContainerMobile: {
-        left: '88%',
+        left: '87%',
         position: 'fixed',
         bottom: '25%'
     },
     buttonContainerDesktop: {
-        left: '95%',
+        right: '3%',
         position: 'fixed',
-        bottom: '20%'
+        bottom: '5vh'
     },
 
     legendMobileContainer: {
-        top: '12%',
+        top: '24vh',
         left: '87%',
         position: 'fixed',
         backgroundColor: '#FFFFFF'
     },
     legendDesktopContainer: {
-        top: '12%',
-        left: '95%',
+        top: '24vh',
+        right: '3%',
         position: 'fixed',
         backgroundColor: '#FFFFFF'
     },
@@ -89,14 +90,31 @@ const styles = {
         height: 20,
         backgroundColor: '#FFFFFF'
     },
-    listViewButtonContainer: {
-        width: 35,
-        height: 35,
+    fab: {
+        margin: 1,
+        backgroundColor: '#FFFFFF'
+    },
+    extendedIcon: {
+        marginRight: 1,
+    },
+    listViewMobileWrapper: {
+        top: '15vh',
+        left: '87%',
+        position: 'fixed',
         backgroundColor: '#FFFFFF',
-        "&:hover": {
-            backgroundColor: "#FFFFFF"
-        }
-    }
+        '& svg': {
+            fontSize: 20,
+        },
+    },
+    listViewDesktopWrapper: {
+        top: '15vh',
+        right: '3%',
+        position: 'fixed',
+
+        '& svg': {
+            fontSize: 30,
+        },
+    },
 };
 class MapView extends Component {
     state = {
@@ -180,6 +198,30 @@ class MapView extends Component {
         }
     };
 
+    showReportSightings = (isMobile, classes, history) => {
+        if(!isMobile)
+        {
+            return<Button variant="contained" color="primary" className="reportSightingButton" onClick={() => history.push('/reports/create')} >
+                    Report Sightings
+                    <AddIcon />
+                </Button>;
+
+        }
+    };
+
+    showListViewButton = (isMobile, classes, history) => {
+        return isMobile ?         <div>
+            <Fab className = {classes.listViewMobileWrapper} aria-label="Toggle"  size="small" onClick={() => history.push('/list')} >
+                <List className = {classes.listViewButton}/>
+            </Fab>
+        </div> : <div className = {classes.listViewDesktopWrapper}>
+            <Fab variant="extended" aria-label="Toggle" className={classes.fab} size="medium"  onClick={() => history.push('/list')}>
+                <List className={classes.extendedIcon}/>
+                List View
+            </Fab>
+        </div>
+    };
+
     render() {
         const {classes, isMobile, filter,history} = this.props;
         const {reports,legend,viewport} = this.state;
@@ -205,6 +247,7 @@ class MapView extends Component {
                                         onClick={() => this.setState({popupInfo: report})}
                                 />
                             </Layer>)) : null}
+                    {this.showReportSightings(isMobile, classes, history)}
                     <div>
                         <Fab className = {isMobile? classes.legendMobileContainer : classes.legendDesktopContainer} aria-label = "Legend"  size="small">
                             <Help  onClick = {() => this.setState({legend: true})}/>
@@ -216,14 +259,8 @@ class MapView extends Component {
                                 <NavigationIcon className = {classes.navigationButton} onClick={() => this.updateLocation()}/>
                             </Fab>
                         </div>
-                        <br/>
-                        <div>
-                            <Fab className = {classes.listViewButtonContainer} aria-label="Toggle"  size="small">
-                                <List className = {classes.navigationButton} onClick={() => history.push('/list')}/>
-                            </Fab>
-                        </div>
                     </div>
-
+                    {this.showListViewButton(isMobile, classes, history)}
                     <div >
                         <Dialog
                             open={legend}

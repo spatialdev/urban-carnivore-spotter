@@ -1,6 +1,6 @@
 import { Map } from 'immutable';
 
-const speciesColorMap = Map({'black bear':'#801e78','bobcat': '#498029','coyote': '#561480','cougar/mountain lion': '#802a00','raccoon': '#093c80','opossum': '#FFDC26','river otter': '#7083ff'});
+const speciesColorMap = Map({'black bear': '#FF00D8','bobcat': '#fe1513','coyote': '#6D0891','cougar/mountain lion': '#2C9E0D','raccoon': '#95CAE9','opossum': '#171ab1','river otter': '#1F1F20'});
 
 export const getColorForSpecies = (species) => {
     const color = speciesColorMap.get(species.toLowerCase());

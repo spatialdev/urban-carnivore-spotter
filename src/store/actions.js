@@ -1,4 +1,13 @@
-import { SET_MOBILE, UPDATE_FILTER, UPDATE_FILTER_DATE, TOGGLE_FILTER_CONFIDENCE, RESET_FILTER, UPDATE_ALL_NEIGHBORHOODS, UPDATE_MOBILE_RESOURCE_EXPANDS } from './constants';
+import {
+    SET_MOBILE,
+    UPDATE_FILTER,
+    UPDATE_FILTER_DATE,
+    TOGGLE_FILTER_CONFIDENCE,
+    RESET_FILTER,
+    UPDATE_ALL_NEIGHBORHOODS,
+    UPDATE_MOBILE_RESOURCE_EXPANDS,
+    SET_ON_EXPLORE
+} from './constants';
 import {store} from './index';
 
 export const setMobile = (value) => {
@@ -6,7 +15,7 @@ export const setMobile = (value) => {
         type: SET_MOBILE,
         value
     });
-}
+};
 
 export const updateFilter = (filterName, key, newValue) => {
     store.dispatch({
@@ -15,13 +24,13 @@ export const updateFilter = (filterName, key, newValue) => {
         key,
         newValue
     });
-}
+};
 
 export const resetFilter = () => {
     store.dispatch({
         type: RESET_FILTER
     });
-}
+};
 
 export const updateFilterDate = (startDate, endDate) => {
     store.dispatch({
@@ -29,20 +38,20 @@ export const updateFilterDate = (startDate, endDate) => {
         startDate,
         endDate
     });
-}
+};
 
 export const toggleFilterConfidence = () => {
     store.dispatch({
         type: TOGGLE_FILTER_CONFIDENCE
     });
-}
+};
 
 export const updateAllNeighborhoods = (allNeighborhoods) => {
     store.dispatch({
         type: UPDATE_ALL_NEIGHBORHOODS,
         value: allNeighborhoods
     })
-}
+};
 
 export const updateMobileResourceExpands = (newExpands) => {
     store.dispatch({

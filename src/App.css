@@ -468,6 +468,16 @@ padding: 0;
     position: relative
 }
 
+.reportSightingButton {
+    position: fixed;
+    left:45%;
+    top: 5vh;
+}
+
+.reportSightingButtonWrapper {
+    top: 5vh;
+}
+
 .constantHeightMapContainer {
     height: 300px;
     z-index: -1;
@@ -476,4 +486,3 @@ padding: 0;
 .image-gallery-image video {
     padding-bottom: 3rem;
 }
-

@@ -9,7 +9,6 @@ import {withRouter} from "react-router-dom";
 import Map from "@material-ui/icons/Place";
 import FilterDrawer from './FilterDrawer';
 import {withStyles} from "@material-ui/core";
-import List from "./MapView";
 import Fab from "@material-ui/core/Fab";
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
