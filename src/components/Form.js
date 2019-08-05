@@ -21,6 +21,7 @@ import MediaDisplay from './MediaDisplay';
 import FormRadioButtons from './FormRadioButtons';
 import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
+import ClearIcon from '@material-ui/icons/Clear';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Info from '@material-ui/icons/InfoOutlined';
@@ -431,10 +432,14 @@ class Form extends Component {
       neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, spinnerActive, addMode,
       species
     } = this.state;
-    const {classes, isMobile} = this.props;
+    const {classes, isMobile, history} = this.props;
     return (
       <>
         {submitting ? <LoadingOverlay active={submitting} spinner text='Submitting...' className={classes.overlay} />: null}
+        {isMobile ?
+          <Fab color="primary" aria-label="Add" className={classes.fab}>
+            <ClearIcon onClick={() => history.push('/')}/>
+          </Fab>: null}
         <h2>Report a carnivore sighting</h2>
         <ValidatorForm onError={errors => console.log(errors)}
                        onSubmit={this.handleSubmit}
