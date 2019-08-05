@@ -18,13 +18,14 @@ const styles = {
   },
   speciesContent: {
     marginTop: 72,
-
+    paddingBottom: 24
   },
   header: {
     textAlign: 'left',
   },
   content: {
-    textAlign: 'left'
+    textAlign: 'left',
+    paddingBottom: 24
   },
   tabsContainer: {
     margin: '0px -32px 0px -32px',
@@ -67,6 +68,7 @@ class ResourcesDesktop extends Component {
                                    imagePath={getImageBySpecies(currData.shortname)}
           />}
         </div>
+        <hr/>
         <div>
           <h3 className={classes.header}>Seattle Urban Carnivore Project</h3>
           <div className={classes.content}>
@@ -74,6 +76,7 @@ class ResourcesDesktop extends Component {
             <a href="https://www.zoo.org/otters">learn more</a>
           </div>
         </div>
+        <hr/>
         <div>
           <h3 className={classes.header}>Contact Us</h3>
           <div className={classes.content} >
