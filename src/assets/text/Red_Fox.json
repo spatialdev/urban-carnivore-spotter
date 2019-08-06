@@ -1,0 +1,11 @@
+{
+	"name": "Red Fox",
+	"latin": "Vulpes vulpes",
+	"weight": "6.6 – 30.8 lbs / 3-14 kg",
+	"height": "14-20 in / 5.5-7.9 cm (avg)",
+	"larger": false,
+	"diet": "Omnivorous (Rodents, rabbits, insects, fruits)",
+	"ident": "Red, silver, gray or black fur; white tail tip, black legs and black ear tips",
+	"image": "assets/tips-images/river_otter.png",
+	"shortname": "fox"
+}
