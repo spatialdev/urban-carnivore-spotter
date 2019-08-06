@@ -53,6 +53,8 @@ class ResourcesDesktop extends Component {
             <Tabs
               value={tabValue}
               onChange={(e, tabValue) => this.setState({tabValue})}
+              variant="scrollable"
+              scrollButtons="auto"
             >
               {getAllSpecies().map((species, ind) => <Tab className={classes.tab} label={getDisplayName(species)} key={ind}/>)}
             </Tabs>
