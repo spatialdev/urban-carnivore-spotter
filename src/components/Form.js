@@ -32,7 +32,7 @@ import ResizableIconButton from "./ResizableIconButton";
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
-  'Raccoon', 'River Otter', 'Other/Unknown'];
+  'Raccoon', 'River Otter', 'Red Fox', 'Other/Unknown'];
 const confidenceLevels = ['Not at all confident', 'About 25% confident', 'About 50% confident', 'About 75% confident',
   'More than 75% confident', '100% confident'];
 const reactions = ['Stayed quiet', 'Shouted/made noise','I walked away', 'Other'];

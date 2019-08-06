@@ -66,7 +66,7 @@ const styles = {
     },
 };
 const speciesList = ['blackbear', 'bobcat', 'cougar', 'coyote', 'opossum',
-    'raccoon', 'riverotter'];
+    'raccoon', 'riverotter', 'fox'];
 
 class Resources extends Component {
     constructor(props) {
