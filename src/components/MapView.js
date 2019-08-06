@@ -17,7 +17,7 @@ import Dialog from "@material-ui/core/Dialog";
 import { speciesColorMap } from '../services/ColorService';
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
-import CloseButton from "react-dates/esm/components/CloseButton";
+import CloseIcon from '@material-ui/icons/Close';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -122,9 +122,9 @@ const styles = {
         flexDirection: 'column',
         justifyContent: 'space-around',
     },
-    closeButton : {
-        height: '10px',
-        width: '10px',
+    closeIcon : {
+        height: '15px',
+        width: '15px',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'scroll',
@@ -175,7 +175,7 @@ class MapView extends Component {
                     anchor={"bottom"}
             >
                 <div className={classes.reportLinkCloseButtonWrapper}>
-                        <CloseButton style = {{cursor: "pointer"}} className={classes.closeButton} onClick={() => this.setState({popupInfo: false})}/>
+                        <CloseIcon  style = {{cursor: "pointer"}} className={classes.closeIcon} onClick={() => this.setState({popupInfo: false})}/>
                         <PointTooltip report={popupInfo} />
                 </div>
             </Popup>
