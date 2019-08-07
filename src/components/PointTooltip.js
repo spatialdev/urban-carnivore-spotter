@@ -38,7 +38,7 @@ class PointTooltip extends Component {
                 <div><strong>Location:</strong> {report.data.neighborhood}</div>
             </div>
             <div className={classes.reportLink} onClick={() => history.push(`/reports/${report.id}`)}>
-                <KeyboardArrowRight/>
+                <KeyboardArrowRight style = {{cursor: "pointer"}}/>
             </div>
         </div>
     }
