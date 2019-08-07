@@ -124,7 +124,7 @@ class Resources extends Component {
                 {/* Seattle Urban Carnivore Project */}
                 {this.getCollapse(classes, "Seattle Urban Carnivore Project", this.toggleShow('showProjectDescription'), showProjectDescription,
                     <div className={classes.body}>
-                        <p>Urban Carnivore Spotter is part of the Seattle Urban Carnivore Project, a collaboration between the Seattle University and Woodland Park Zoo</p>
+                        <p>Carnivore Spotter is part of the Seattle Urban Carnivore Project, a collaboration between the Seattle University and Woodland Park Zoo</p>
                         <a href="https://www.zoo.org/otters">learn more</a>
                     </div>
 

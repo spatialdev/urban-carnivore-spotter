@@ -15,7 +15,7 @@ class DesktopHeader extends Component {
         <AppBar position="static" className="appBar">
           <div className="logo"/>
           <h1 className="headerTitle" onClick={() => history.push('/')} style={{ cursor: 'pointer' }}>
-            Urban Carnivore Sightings
+            Carnivore Spotter
           </h1>
           <div className="nav">
             <div id="explore" className="categories" onClick={() => history.push('/')}><h4 style={{textDecoration: history.location.pathname==='/'? "underline":""}}>Explore</h4></div>
