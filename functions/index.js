@@ -208,7 +208,7 @@ const formatMediaPathAsTableRow = (mediaPath, index, total) => {
     </tr>`;
 };
 
-const formatSubmissionAsTable = (reportSnapshot) => {
+const formatSubmissionAsTableRow = (reportSnapshot) => {
   const id = reportSnapshot.id;
   const data = reportSnapshot.data();
   const mediaPaths = data.mediaPaths;
@@ -220,16 +220,7 @@ const formatSubmissionAsTable = (reportSnapshot) => {
   const phone = data.contactPhone ? data.contactPhone : 'N/A';
   const comments = data.generalComments ? data.generalComments : 'N/A';
 
-  return `<table style="border: 1px solid black">
-     <tr>
-       <th>ID</th>
-       <th>Media</th>
-       <th>Neighborhood</th>
-       <th>Optional Text Comments</th>
-       <th>Contact Information</th>
-       <th>Link to Report</th>
-     </tr>
-     <tr>
+  return `<tr>
         <td>${id}</td>
         <td>
             <table>
@@ -252,7 +243,21 @@ const formatSubmissionAsTable = (reportSnapshot) => {
             <strong>Phone:</strong> ${phone}
         </td>
         <td>${REPORT_URL_STUB}${id}</td>
+     </tr>`;
+};
+
+const formatSubmissionAsTable = (reportSnapshots) => {
+
+  return `<table style="border: 1px solid black">
+     <tr>
+       <th>ID</th>
+       <th>Media</th>
+       <th>Neighborhood</th>
+       <th>Optional Text Comments</th>
+       <th>Contact Information</th>
+       <th>Link to Report</th>
      </tr>
+     ${reportSnapshots.map(snapshot => formatSubmissionAsTableRow(snapshot)).join('')}
    </table>`;
 };
 
@@ -272,8 +277,31 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
         }
     </style>`;
     const html = `<head>${styles}</head>A new report was submitted with the following characteristics:<br/>
-        ${formatSubmissionAsTable(reportSnapshot)}`;
+        ${formatSubmissionAsTable([reportSnapshot])}`;
     return sendEmail(from, to, subject, html);
+};
+
+const sendWeeklyDigestEmail = (reportSnapshots) => {
+  const from = `"Test reporters" <${username}@example.com>`;
+  const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
+  const subject = "Weekly Carnivore Spotting Submission Digest";
+  const styles = `<style>
+        table td + td {
+            border-left: 1px solid black;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th {
+            border-bottom: 1px solid black;
+        }
+        table tr + tr{
+            border-bottom: 1px solid black;
+        }
+    </style>`;
+  const html = `<head>${styles}</head>Over the past week, the following reports were submitted:<br/>
+      ${formatSubmissionAsTable(reportSnapshots)}`;
+  return sendEmail(from, to, subject, html);
 };
 
 /**
@@ -283,3 +311,17 @@ exports.reportAdded = functions.firestore.document(`${REPORTS}/{reportId}`)
     .onCreate((snapshot, context) => {
       sendNewSubmissionEmail(snapshot);
     });
+
+/**
+ * Every week, send a digest containing all of the submissions from the last week.
+ */
+exports.weeklyDigest = functions.pubsub.schedule('0 0 * * *')
+  .onRun(context => {
+    const weekAgo = toTimestamp(moment().subtract(1, 'week').toDate());
+    return database.collection(REPORTS)
+      .where('time_submitted', '>=', weekAgo)
+      .get()
+      .then(snapshot => {
+        return sendWeeklyDigestEmail(snapshot.docs);
+      });
+});
