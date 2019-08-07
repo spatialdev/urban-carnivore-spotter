@@ -263,7 +263,7 @@ const formatSubmissionAsTable = (reportSnapshots) => {
 
 const sendNewSubmissionEmail = (reportSnapshot) => {
     const from = `"Test reporters" <${username}@example.com>`;
-    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
+    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
     const subject = "New report submitted";
     const styles = `<style>
         table td + td { 
@@ -283,7 +283,7 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
 
 const sendWeeklyDigestEmail = (reportSnapshots) => {
   const from = `"Test reporters" <${username}@example.com>`;
-  const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
+  const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
   const subject = "Weekly Carnivore Spotting Submission Digest";
   const styles = `<style>
         table td + td {
