@@ -435,6 +435,7 @@ class Form extends Component {
         <ValidatorForm onError={errors => console.log(errors)}
                        onSubmit={this.handleSubmit}
                        className="formWizardBody" autoComplete="off">
+          {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
           <div className="formItem">
             <h4>When did you see the animal?</h4>
             {/*See https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975 for more information*/}
@@ -450,7 +451,6 @@ class Form extends Component {
               customInput={<CustomDatePickerInput/>}
             />
           </div>
-          {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
           <div className="formItem">
             <Dialog
                 open={addMode}
