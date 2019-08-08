@@ -188,7 +188,9 @@ class Form extends Component {
     generalComments: '',
     neighborhood: '',
     media: null,
-    mediaPaths: [],
+    imagePaths: [],
+    videoPaths: [],
+    audioPaths: [],
     dialogMode: DIALOG_MODES.CLOSED,
     submitting: false,
     permissionOpen: false,
@@ -244,8 +246,12 @@ class Form extends Component {
   };
 
   handleSubmit = () => {
-    let {dialogMode, submitting, ...report} = this.state;
+    // Pull out all of the fields we don't want to submit. Everything left in report will be submitted.
+    let {dialogMode, submitting, audioPaths, videoPaths, imagePaths, addMode, editMode, finalMap, carouselImageIndex,
+      permissionOpen, spinnerActive, showCarousel, showAnimalBehavior, showContactInformation, showObserverDetails,
+      ...report} = this.state;
     delete report['media'];
+    report.mediaPaths = [...audioPaths, ...videoPaths, ...imagePaths];
     this.setState({submitting: true});
     return axios.post(addReportUrl, report)
       .then(response => {
@@ -258,8 +264,9 @@ class Form extends Component {
       });
   };
 
-  handleUploadSuccess = files => {
-    this.setState((prevState) => ({ mediaPaths: [...prevState.mediaPaths, ...files], media: null, spinnerActive: false }));
+  handleUploadSuccess = mediaType => files => {
+    const pathsToUpdate = `${mediaType}Paths`;
+    this.setState({ [pathsToUpdate]: files, media: null, spinnerActive: false });
   };
 
   handleTimestampChange = timestamp => {
@@ -425,8 +432,9 @@ class Form extends Component {
       mapLat, mapLng, timestamp, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
       onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict, 
-      conflictDesc, contactName, contactEmail, contactPhone, generalComments, mediaPaths, media, submitting,
-      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, spinnerActive, addMode
+      conflictDesc, contactName, contactEmail, contactPhone, generalComments, media, submitting,
+      neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, spinnerActive, addMode,
+      imagePaths, audioPaths, videoPaths
     } = this.state;
     const {classes, isMobile} = this.props;
     return (
@@ -468,7 +476,7 @@ class Form extends Component {
             <MediaUpload uploadMedia={this.setMedia} getMediaPaths={this.handleUploadSuccess} setSpinner={(bool) => this.setState({spinnerActive: bool})}/>
             <MediaDisplay filesOnDeck={media}
                           uploading={spinnerActive}
-                          uploadedFiles={mediaPaths}
+                          numUploadedFiles={imagePaths.length + audioPaths.length + videoPaths.length}
                           removeFiles={() => this.setState({media: null})}/>
           {media && media.length > 0 ?
             // Setting dialogMode to DIALOG_MODES.PERMISSION opens the permission dialog, where clicking "agree" actually calls the media upload function
