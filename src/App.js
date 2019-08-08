@@ -8,13 +8,18 @@ import Main from './components/Main';
 import { connect } from 'react-redux';
 import { setMobile, updateAllNeighborhoods} from './store/actions';
 import NeighborhoodService from './services/NeighborhoodService';
+import * as ReactGA from 'react-ga';
 
 import './App.css';
 
+const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
 
 class App extends Component {
 
   componentDidMount() {
+    // Initialize Google Analytics
+    ReactGA.initialize(trackingId);
+    ReactGA.pageview(window.location.pathname);
     this.checkIfMobile();
     window.addEventListener('resize', this.checkIfMobile);
     NeighborhoodService.getAllNeighborhoods()

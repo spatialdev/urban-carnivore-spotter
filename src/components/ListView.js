@@ -10,6 +10,7 @@ import Map from "@material-ui/icons/Place";
 import FilterDrawer from './FilterDrawer';
 import {withStyles} from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
+import * as ReactGA from "react-ga";
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
 
@@ -65,6 +66,7 @@ class ListView extends Component {
   };
 
   componentDidMount() {
+    ReactGA.pageview(window.location.pathname);
     axios.get(getReports)
       .then(reports => {
         this.setState({ reports: reports.data });

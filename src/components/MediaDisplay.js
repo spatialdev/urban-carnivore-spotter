@@ -55,7 +55,6 @@ const MediaDisplay = (props) => {
         <span onClick={removeFiles} className={classes.iconTextSpan}><CancelOutlinedIcon fontSize='small' className={classes.icon}/> Remove files</span>
       </div>
       : null}
-
     {uploading ?
       <CircularProgress/>
       : null}

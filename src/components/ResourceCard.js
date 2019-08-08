@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {KeyboardArrowLeft} from "@material-ui/icons";
 import SpeciesCardMobile from './SpeciesCardMobile';
 import {getImageBySpecies, getDataForSpecies} from "../services/SpeciesService";
+import * as ReactGA from "react-ga";
 
 const styles = {
     mobileImage: {
@@ -42,6 +43,7 @@ class ResourceCard extends Component {
     };
 
     componentDidMount() {
+        ReactGA.pageview(window.location.pathname);
         const { match: { params: { species } } } = this.props;
             this.setState({species: species})
     }

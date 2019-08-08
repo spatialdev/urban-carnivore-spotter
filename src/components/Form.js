@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import * as ReactGA from 'react-ga';
 
 import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -222,6 +223,7 @@ class Form extends Component {
   };
 
   componentDidMount = () => {
+    ReactGA.pageview(window.location.pathname);
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
 

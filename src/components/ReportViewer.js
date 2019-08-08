@@ -13,9 +13,9 @@ import ImageGallery from 'react-image-gallery';
 import Placeholder from '../assets/placeholder.svg';
 import CardMedia from '@material-ui/core/CardMedia';
 import {connect} from "react-redux";
+import * as ReactGA from "react-ga";
 
 const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
-
 const videoFormats = ['.mov', '.mp4', '.webm', '.ogg', '.avi', '.wmv', '.mkv'];
 
 class ReportViewer extends Component {
@@ -24,6 +24,7 @@ class ReportViewer extends Component {
   };
 
   componentDidMount() {
+    ReactGA.pageview(window.location.pathname);
     const { match: { params: { id } } } = this.props;
 
     axios.get(getReport + `?id=${id}`)
