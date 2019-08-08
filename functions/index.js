@@ -315,7 +315,7 @@ exports.reportAdded = functions.firestore.document(`${REPORTS}/{reportId}`)
 /**
  * Every week, send a digest containing all of the submissions from the last week.
  */
-exports.weeklyDigest = functions.pubsub.schedule('0 0 * * *')
+exports.weeklyDigest = functions.pubsub.schedule('0 10 * * 2')
   .onRun(context => {
     const weekAgo = toTimestamp(moment().subtract(1, 'week').toDate());
     return database.collection(REPORTS)
