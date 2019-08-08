@@ -39,6 +39,7 @@ const styles = {
 
 const MediaDisplay = (props) => {
   const { filesOnDeck, uploading, uploadedFiles, removeFiles, classes } = props;
+  console.log(uploadedFiles.length);
   return <div className={classes.allContent}>
     {filesOnDeck && filesOnDeck.length > 0 && !uploading ?
       <div>
@@ -55,7 +56,6 @@ const MediaDisplay = (props) => {
         <span onClick={removeFiles} className={classes.iconTextSpan}><CancelOutlinedIcon fontSize='small' className={classes.icon}/> Remove files</span>
       </div>
       : null}
-
     {uploading ?
       <CircularProgress/>
       : null}

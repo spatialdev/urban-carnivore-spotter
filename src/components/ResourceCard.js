@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {KeyboardArrowLeft} from "@material-ui/icons";
 import SpeciesCardMobile from './SpeciesCardMobile';
 import {getImageBySpecies, getDataForSpecies} from "../services/SpeciesService";
+import * as ReactGA from "react-ga";
 
 const styles = {
     mobileImage: {
@@ -36,12 +37,17 @@ const styles = {
     }
 
 };
+const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
+
 class ResourceCard extends Component {
     state = {
         species: null
     };
 
     componentDidMount() {
+        // Initialize Google Analytics
+        ReactGA.initialize(trackingId);
+        ReactGA.pageview(window.location.pathname);
         const { match: { params: { species } } } = this.props;
             this.setState({species: species})
     }

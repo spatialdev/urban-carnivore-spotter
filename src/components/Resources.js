@@ -7,6 +7,7 @@ import { getDisplayName } from '../services/ColorService';
 import {connect} from "react-redux";
 import ResourcesDesktop from './ResourcesDesktop';
 import {updateMobileResourceExpands} from "../store/actions";
+import * as ReactGA from "react-ga";
 
 const styles = {
     allContentMobile: {
@@ -67,6 +68,7 @@ const styles = {
 };
 const speciesList = ['blackbear', 'bobcat', 'cougar', 'coyote', 'opossum',
     'raccoon', 'riverotter', 'fox'];
+const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
 
 class Resources extends Component {
     constructor(props) {
@@ -78,6 +80,12 @@ class Resources extends Component {
             showProjectDescription: false,
             showContactUs: false,
         };
+    }
+    componentDidMount() {
+        // Initialize Google Analytics
+        console.log(trackingId)
+        ReactGA.initialize(trackingId);
+        ReactGA.pageview(window.location.pathname);
     }
 
     getCollapse = (classes, headerTitle, onClick, expand, child) => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
+import * as ReactGA from 'react-ga';
 
 import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -220,6 +221,9 @@ class Form extends Component {
   };
 
   componentDidMount = () => {
+    // Initialize Google Analytics
+    ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
+    ReactGA.pageview(window.location.pathname);
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
 
@@ -259,7 +263,7 @@ class Form extends Component {
   };
 
   handleUploadSuccess = files => {
-    this.setState((prevState) => ({ mediaPaths: [...prevState.mediaPaths, ...files], media: null, spinnerActive: false }));
+    this.setState({ mediaPaths: [ ...files], media: null, spinnerActive: false });
   };
 
   handleTimestampChange = timestamp => {

@@ -10,6 +10,7 @@ import Map from "@material-ui/icons/Place";
 import FilterDrawer from './FilterDrawer';
 import {withStyles} from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
+import * as ReactGA from "react-ga";
 
 const getReports = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports';
 
@@ -58,6 +59,7 @@ const styles = {
 
     }
 };
+const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
 
 class ListView extends Component {
   state = {
@@ -65,6 +67,9 @@ class ListView extends Component {
   };
 
   componentDidMount() {
+    // Initialize Google Analytics
+    ReactGA.initialize(trackingId);
+    ReactGA.pageview(window.location.pathname);
     axios.get(getReports)
       .then(reports => {
         this.setState({ reports: reports.data });
