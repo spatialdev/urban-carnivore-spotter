@@ -38,7 +38,7 @@ class MediaUpload extends Component {
   };
 
   render() {
-    const { classes, setSpinner } = this.props;
+    const { classes, setSpinner, getMediaPaths } = this.props;
 
     return (
       <Grid container className={classes.root} spacing={16}>
@@ -51,7 +51,7 @@ class MediaUpload extends Component {
                   <AddIcon/>
                   <p>Photos</p>
                   <Uploader acceptType="images/*" reference="images" getMedia={this.getMedia}
-                            passPaths={this.getUploaderPaths} setSpinner={setSpinner}/>
+                            passPaths={getMediaPaths("image")} setSpinner={setSpinner}/>
                 </label>
               </Paper>
             </Grid>
@@ -62,7 +62,7 @@ class MediaUpload extends Component {
                   <AddIcon/>
                   <p>Videos</p>
                   <Uploader acceptType="video/*" reference="videos" getMedia={this.getMedia}
-                            passPaths={this.getUploaderPaths} setSpinner={setSpinner}/>
+                            passPaths={getMediaPaths("video")} setSpinner={setSpinner}/>
                 </label>
               </Paper>
             </Grid>
@@ -73,7 +73,7 @@ class MediaUpload extends Component {
                   <AddIcon/>
                   <p>Sound files</p>
                   <Uploader acceptType="audio/*" reference="audio" getMedia={this.getMedia}
-                            passPaths={this.getUploaderPaths} setSpinner={setSpinner}/>
+                            passPaths={getMediaPaths("audio")} setSpinner={setSpinner}/>
                 </label>
               </Paper>
             </Grid>
