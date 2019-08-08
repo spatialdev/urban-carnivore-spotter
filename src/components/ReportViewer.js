@@ -17,7 +17,6 @@ import * as ReactGA from "react-ga";
 
 const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
 const videoFormats = ['.mov', '.mp4', '.webm', '.ogg', '.avi', '.wmv', '.mkv'];
-const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
 
 class ReportViewer extends Component {
   state = {
@@ -25,8 +24,6 @@ class ReportViewer extends Component {
   };
 
   componentDidMount() {
-    // Initialize Google Analytics
-    ReactGA.initialize(trackingId);
     ReactGA.pageview(window.location.pathname);
     const { match: { params: { id } } } = this.props;
 

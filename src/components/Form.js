@@ -221,8 +221,6 @@ class Form extends Component {
   };
 
   componentDidMount = () => {
-    // Initialize Google Analytics
-    ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
     ReactGA.pageview(window.location.pathname);
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!

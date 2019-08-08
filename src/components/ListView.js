@@ -59,7 +59,6 @@ const styles = {
 
     }
 };
-const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
 
 class ListView extends Component {
   state = {
@@ -67,8 +66,6 @@ class ListView extends Component {
   };
 
   componentDidMount() {
-    // Initialize Google Analytics
-    ReactGA.initialize(trackingId);
     ReactGA.pageview(window.location.pathname);
     axios.get(getReports)
       .then(reports => {

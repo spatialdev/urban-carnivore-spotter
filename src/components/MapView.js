@@ -142,8 +142,6 @@ class MapView extends Component {
     };
 
     componentDidMount() {
-        // Initialize Google Analytics
-        ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
         ReactGA.pageview(window.location.pathname);
         const url = getReports+"?mapLat=47.608013&mapLng=-122.335167";
         axios.get(url)

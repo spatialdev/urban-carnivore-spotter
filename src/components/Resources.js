@@ -68,7 +68,6 @@ const styles = {
 };
 const speciesList = ['blackbear', 'bobcat', 'cougar', 'coyote', 'opossum',
     'raccoon', 'riverotter', 'fox'];
-const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
 
 class Resources extends Component {
     constructor(props) {
@@ -82,9 +81,6 @@ class Resources extends Component {
         };
     }
     componentDidMount() {
-        // Initialize Google Analytics
-        console.log(trackingId)
-        ReactGA.initialize(trackingId);
         ReactGA.pageview(window.location.pathname);
     }
 
