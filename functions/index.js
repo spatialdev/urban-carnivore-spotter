@@ -211,6 +211,7 @@ const formatMediaPathAsTableRow = (mediaPath, index, total) => {
 const formatSubmissionAsTableRow = (reportSnapshot) => {
   const id = reportSnapshot.id;
   const data = reportSnapshot.data();
+  const species = data.species;
   const mediaPaths = data.mediaPaths;
   const neighborhood = data.neighborhood;
   const vocalizationDescription = data.vocalizationDesc ? data.vocalizationDesc : 'N/A';
@@ -222,6 +223,7 @@ const formatSubmissionAsTableRow = (reportSnapshot) => {
 
   return `<tr>
         <td>${id}</td>
+        <td>${species}</td>
         <td>
             <table>
                 <tr>
@@ -251,6 +253,7 @@ const formatSubmissionAsTable = (reportSnapshots) => {
   return `<table style="border: 1px solid black">
      <tr>
        <th>ID</th>
+       <th>Species</th>
        <th>Media</th>
        <th>Neighborhood</th>
        <th>Optional Text Comments</th>
@@ -263,7 +266,7 @@ const formatSubmissionAsTable = (reportSnapshots) => {
 
 const sendNewSubmissionEmail = (reportSnapshot) => {
     const from = `"Test reporters" <${username}@example.com>`;
-    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
+    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
     const subject = "New report submitted";
     const styles = `<style>
         table td + td { 
@@ -283,7 +286,7 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
 
 const sendWeeklyDigestEmail = (reportSnapshots) => {
   const from = `"Test reporters" <${username}@example.com>`;
-  const to = `"Seattle Carnivore Spotter" <seattlecarnivores@gmail.com>`;
+  const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
   const subject = "Weekly Carnivore Spotting Submission Digest";
   const styles = `<style>
         table td + td {
