@@ -18,7 +18,7 @@ const Main = () => (
       <Route exact path="/reports/create" component={Form}/>
       <Route exact path="/list" component={ListView}/>
       <Route exact path="/reports/:id" component={ReportViewer}/>
-        <Route exact path="/resources" component={Resources}/>
+      <Route exact path="/resources" component={Resources}/>
       <Route exact path="/resources/:species" component={ResourceCard}/>
       <Route component={NotFound}/>
     </Switch>

@@ -261,7 +261,7 @@ class Form extends Component {
   };
 
   handleUploadSuccess = files => {
-    this.setState({ mediaPaths: [ ...files], media: null, spinnerActive: false });
+    this.setState((prevState) => ({ mediaPaths: [...prevState.mediaPaths, ...files], media: null, spinnerActive: false }));
   };
 
   handleTimestampChange = timestamp => {

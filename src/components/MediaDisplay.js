@@ -39,7 +39,6 @@ const styles = {
 
 const MediaDisplay = (props) => {
   const { filesOnDeck, uploading, uploadedFiles, removeFiles, classes } = props;
-  console.log(uploadedFiles.length);
   return <div className={classes.allContent}>
     {filesOnDeck && filesOnDeck.length > 0 && !uploading ?
       <div>
