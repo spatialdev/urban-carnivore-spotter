@@ -37,7 +37,6 @@ const styles = {
     }
 
 };
-
 class ResourceCard extends Component {
     state = {
         species: null
