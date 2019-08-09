@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import MapIcon from '@material-ui/icons/Map';
 import SettingsIcon from '@material-ui/icons/Settings';

@@ -69,12 +69,11 @@ class ReportViewer extends Component {
       return <CircularProgress/>
     }
 
-    const date = new Date(report.timestamp);
     let media = [];
 
     if (report.mediaPaths !== undefined && report.mediaPaths.length > 0) {
       report.mediaPaths.map(med => {
-        const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi
+        const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
         const extension = med.match(fileExtensionPattern)[0];
         const isVideo = videoFormats.includes(extension.toLowerCase());
         media.push({ original: med, thumbnail: med, isVideo: isVideo, ext: extension });

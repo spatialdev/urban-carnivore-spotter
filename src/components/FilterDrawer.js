@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Collapse, Card, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
+import { Button, Collapse, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import FilterCheckboxes from './FilterCheckboxes';
