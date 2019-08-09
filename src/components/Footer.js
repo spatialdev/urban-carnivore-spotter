@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import MapIcon from '@material-ui/icons/Map';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -69,11 +69,10 @@ const Footer = (props) => {
           </Fab>
         </div>
         <div className={classes.flexColumn}>
-          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: history.location.pathname==='/resources' ||
-            history.location.pathname.includes('/resources/')?
+          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: history.location.pathname.includes('/resources')?
                 '#3411FF': 'grey' }}
                   onClick={() => history.push('/resources')}>
-            <SettingsIcon style={{ color: history.location.pathname==='/resources' || history.location.pathname.includes('/resources/')? '#3411FF': 'grey' }} />
+            <SettingsIcon style={{ color: history.location.pathname.includes('/resources')? '#3411FF': 'grey' }} />
             <p>Resources</p>
           </Button>
         </div>
