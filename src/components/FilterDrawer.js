@@ -54,6 +54,9 @@ const styles = {
     },
     separator: {
         margin: 0
+    },
+    datePicker: {
+        paddingLeft: '10px'
     }
 };
 
@@ -152,6 +155,7 @@ class FilterDrawer extends React.Component {
                     {/* Time and Day */}
                     {this.getCollapse(classes, "Time of Sighting", this.toggleShow('showTime'), showTime,
                         <>
+                        <div className={classes.datePicker}>
                             Date:
                             <DateRangePicker
                                 startDate={startDate}
@@ -167,6 +171,7 @@ class FilterDrawer extends React.Component {
                                 small={true}
                                 daySize={30}
                             />
+                        </div>
                             <FilterCheckboxes
                                 filter={timeFilter}
                                 allLabel="Any time of day"

@@ -10,9 +10,6 @@ const styles = {
     checkedCheckbox: {
         color: '#93C838'
     },
-    showAllButton: {
-        margin: 'auto'
-    },
     allContent: {
         padding: '0px 0px 0px 24px',
         width: '100%'
@@ -72,7 +69,7 @@ class FilterCheckboxes extends Component {
                 </Collapse>
                 <Button
                     onClick={() => this.setState(state => ({...state, viewAll: !state.viewAll}))}
-                    className={classes.showAllButton}>
+                    className="showAllButton">
                     {viewAll ? <>Hide Some <ExpandLessIcon/></> : <>Show All <ExpandMoreIcon/></>}</Button>
                 </>
                 : null}

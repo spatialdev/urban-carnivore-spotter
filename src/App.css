@@ -486,3 +486,8 @@ padding: 0;
 .image-gallery-image video {
     padding-bottom: 3rem;
 }
+
+.showAllButton {
+    width: fit-content;
+    margin: auto;
+}
