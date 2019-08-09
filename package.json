@@ -63,6 +63,5 @@
   "devDependencies": {
     "redux-devtools": "^3.5.0",
     "gh-pages": "^2.0.1"
-  },
-  "homepage": "http://spatialdev.github.io/urban-carnivore-spotter"
+  }
 }
