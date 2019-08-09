@@ -22,7 +22,7 @@ export default class NeighborhoodService {
                 }
                 return "Unknown";
             });
-    }
+    };
 
     static getAllNeighborhoods = () => {
         return axios.get(ALL_NEIGHBORHOODS_ENDPOINT)

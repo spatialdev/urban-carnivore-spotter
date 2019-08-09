@@ -6,7 +6,6 @@ import {
     RESET_FILTER,
     UPDATE_ALL_NEIGHBORHOODS,
     UPDATE_MOBILE_RESOURCE_EXPANDS,
-    SET_ON_EXPLORE
 } from './constants';
 import { getInitialFilter } from '../services/FilterService';
 

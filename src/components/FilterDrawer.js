@@ -113,7 +113,7 @@ class FilterDrawer extends React.Component {
         const { dateRangeFocused } = this.state;
         return (dateRangeFocused === START_DATE && !(endDate === null || date.isSameOrBefore(endDate, 'day'))) ||
             (dateRangeFocused === END_DATE && !(startDate === null || date.isSameOrAfter(startDate, 'day')));
-    }
+    };
 
     render = () => {
         const {classes, close, filter: {startDate, endDate, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;

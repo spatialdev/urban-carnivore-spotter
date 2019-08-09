@@ -1,6 +1,5 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
-import Placeholder from '../assets/placeholder.svg';
 import SpeciesCardInfo from './SpeciesCardInfo';
 
 import {withStyles} from '@material-ui/core';

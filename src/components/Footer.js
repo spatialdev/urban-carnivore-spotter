@@ -69,10 +69,10 @@ const Footer = (props) => {
           </Fab>
         </div>
         <div className={classes.flexColumn}>
-          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: history.location.pathname==='/resources'?
+          <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: history.location.pathname.includes('/resources/')?
                 '#3411FF': 'grey' }}
                   onClick={() => history.push('/resources')}>
-            <SettingsIcon style={{ color: history.location.pathname==='/resources'? '#3411FF': 'grey' }} />
+            <SettingsIcon style={{ color: history.location.pathname.includes('/resources/')? '#3411FF': 'grey' }} />
             <p>Resources</p>
           </Button>
         </div>
