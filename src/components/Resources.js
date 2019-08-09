@@ -7,6 +7,7 @@ import { getDisplayName } from '../services/ColorService';
 import {connect} from "react-redux";
 import ResourcesDesktop from './ResourcesDesktop';
 import {updateMobileResourceExpands} from "../store/actions";
+import * as ReactGA from "react-ga";
 
 const styles = {
     allContentMobile: {
@@ -78,6 +79,9 @@ class Resources extends Component {
             showProjectDescription: false,
             showContactUs: false,
         };
+    }
+    componentDidMount() {
+        ReactGA.pageview(window.location.pathname);
     }
 
     getCollapse = (classes, headerTitle, onClick, expand, child) => {

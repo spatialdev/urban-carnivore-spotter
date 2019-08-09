@@ -18,13 +18,12 @@ import { speciesColorMap } from '../services/ColorService';
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import * as ReactGA from "react-ga";
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
 });
-
 const getReports = "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports";
-
 const styles = {
     filterContainer: {
         backgroundColor: 'white',
@@ -143,6 +142,7 @@ class MapView extends Component {
     };
 
     componentDidMount() {
+        ReactGA.pageview(window.location.pathname);
         const url = getReports+"?mapLat=47.608013&mapLng=-122.335167";
         axios.get(url)
             .then(reports => {
@@ -260,7 +260,9 @@ class MapView extends Component {
                             <Layer type="circle"
                                 key ={report.id}
                                 paint={{'circle-color': getColorForSpecies(report.data.species.toLowerCase()),
-                                    'circle-radius': 7}}>
+                                    'circle-radius': 7,
+                                    'circle-stroke-width': .3,
+                                    'circle-stroke-opacity': 1}}>
                                 <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
                                         onClick={() => this.setState({popupInfo: report})}
                                 />
