@@ -35,12 +35,17 @@ class App extends Component {
   };
 
   render() {
-    const {isMobile} = this.props;
+    const {isMobile, history} = this.props;
+    // If we are on the mobile create reports page, show nothing. Otherwise, show either the mobile header or the
+    // desktop header.
+    const header = isMobile && history.location.pathname === '/reports/create' ? null : isMobile ? <Header/> : <DesktopHeader/>;
+    // If we are on mobile, and not on the create reports page, show a footer.
+    const footer = isMobile && history.location.pathname !== '/reports/create' ? <Footer/> : null;
     return (
       <div className="App">
-        {isMobile ? <Header/> : <DesktopHeader/>}
+        {header}
         <Main/>
-        {isMobile ? <Footer/> : null}
+        {footer}
       </div>
     );
   }

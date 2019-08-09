@@ -19,8 +19,10 @@ import MediaUpload from './MediaUpload';
 import FormMap from './FormMap';
 import StaticFormMap from './StaticFormMap'
 import MediaDisplay from './MediaDisplay';
+import FormRadioButtons from './FormRadioButtons';
 import NeighborhoodService from '../services/NeighborhoodService';
 import {Collapse, Fab, withStyles} from "@material-ui/core";
+import ClearIcon from '@material-ui/icons/Clear';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 import Info from '@material-ui/icons/InfoOutlined';
@@ -59,17 +61,17 @@ const DIALOG_MODES = {
   ERROR: 'error',
   LARGE_FILES: 'largeFiles',
   PERMISSION: 'permission',
-  CLOSED: 'closed'
+  CLOSED: 'closed',
+  MISSING_FIELD: 'missing field',
 };
 
 const styles = {
-  allContent: {
-    height: '100%',
-    overflow: 'scroll',
-    position: 'static',
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: 'white'
+  overlay: {
+    height: '100vh',
+    width: '100vw',
+    position: 'fixed',
+    top: 0,
+    zIndex: 999,
   },
   header: {
     display: 'flex',
@@ -130,9 +132,8 @@ const styles = {
     paddingRight: 35,
   },
   addButtonContainer: {
-    position: 'absolute',
-    left: '34%',
-    top: '15%',
+    position: 'relative',
+    top: -250,
     zIndex: 0,
   },
   doneButtonContainer: {
@@ -146,7 +147,7 @@ const styles = {
   },
   interactiveMapInnerContainer: {
     flex: 1,
-  }
+  },
 };
 
 //https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975
@@ -259,10 +260,13 @@ class Form extends Component {
       .then(response => {
         this.setState({submitting: false});
         if (response.status === 200) {
-          this.setState({dialogMode: DIALOG_MODES.THANKS}); // Open the submission recieved dialog
+          this.setState({dialogMode: DIALOG_MODES.THANKS}); // Open the submission received dialog
         } else {
           this.setState({dialogMode: DIALOG_MODES.ERROR});
         }
+      })
+      .catch(err => {
+        this.setState({submitting: false, dialogMode: DIALOG_MODES.ERROR});
       });
   };
 
@@ -381,6 +385,11 @@ class Form extends Component {
           open={true}
           onClose={this.handleClose}
           message={THANKS_FOR_SUBMITTING}/>;
+      case DIALOG_MODES.MISSING_FIELD:
+        return <FormInfoDialog
+          open={true}
+          onClose={() => this.setState({dialogMode: DIALOG_MODES.CLOSED})}
+          message={"Your report is missing some required fields! Please fill in all required fields and re-submit."}/>;
       default:
         return null;
     }
@@ -433,16 +442,21 @@ class Form extends Component {
     const {
       mapLat, mapLng, timestamp, confidence, numberOfAdultSpecies,
       numberOfYoungSpecies, numberOfAdults, numberOfChildren, reaction, reactionDescription, numberOfDogs, dogSize,
-      onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict, 
+      onLeash, animalBehavior, animalEating, vocalization, vocalizationDesc, carnivoreResponse, carnivoreConflict,
       conflictDesc, contactName, contactEmail, contactPhone, generalComments, media, submitting,
       neighborhood, dialogMode, showObserverDetails, showAnimalBehavior, showContactInformation, spinnerActive, addMode,
-      imagePaths, audioPaths, videoPaths
+      imagePaths, audioPaths, videoPaths, species
     } = this.state;
-    const {classes, isMobile} = this.props;
+    const {classes, isMobile, history} = this.props;
     return (
-      <LoadingOverlay active={submitting} spinner text='Submitting...'>
+      <>
+        {submitting ? <LoadingOverlay active={submitting} spinner text='Submitting...' className={classes.overlay} />: null}
+        {isMobile ?
+          <Fab color="primary" aria-label="Add" className={classes.fab}>
+            <ClearIcon onClick={() => history.push('/')}/>
+          </Fab>: null}
         <h2>Report a carnivore sighting</h2>
-        <ValidatorForm onError={errors => console.log(errors)}
+        <ValidatorForm onError={() => this.setState({dialogMode: DIALOG_MODES.MISSING_FIELD})}
                        onSubmit={this.handleSubmit}
                        className="formWizardBody" autoComplete="off">
           {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
@@ -514,28 +528,13 @@ class Form extends Component {
                     </Carousel>
               </DialogContent>
             </Dialog>
-              {speciesLst.map((type, idx) =>
-                    <span  className={isMobile ? classes.radioButtonContainerMobile : "radioButtonContainer"} key={idx}>
-                     <div  >
-                    <label >
-                      <input
-                          type="radio"
-                          name="react-tips"
-                          value={type}
-                          onChange={() => this.setState({species: type})}
-                      />
-                      {type}
-                    </label>
-                  </div>
-                    <div>
-                      <ResizableIconButton
-                        onClick={() => this.openCarousel(idx)}
-                        backgroundColor={'white'}
-                        color={'#4385E9'}>
-                          <Info />
-                      </ResizableIconButton>
-                    </div>
-                  </span>)}
+            <FormRadioButtons
+              species={speciesLst}
+              onChangeSelection={(species) => () => this.setState({species})}
+              onClickInfo={(index) => () => this.openCarousel(index)}
+              validators={['required']}
+              errorMessages={['This field is required']}
+              value={species}/>
           </div>
 
           <div className="formItem">
@@ -571,7 +570,7 @@ class Form extends Component {
           <hr/>
 
           {/*Observer details*/}
-          <div className={classes.allContent}>
+          <div>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Observer Details (Optional)", this.toggleShow('showObserverDetails'), showObserverDetails,
                 <div>
@@ -659,7 +658,7 @@ class Form extends Component {
           <br/>
 
           {/*Animal behavior*/}
-          <div className={classes.allContent}>
+          <div>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Animal Behavior (Optional)", this.toggleShow('showAnimalBehavior'), showAnimalBehavior,
                 <div>
@@ -768,7 +767,7 @@ class Form extends Component {
           <br/>
 
           {/*Contact*/}
-          <div className={classes.allContent}>
+          <div>
             {/* Species Identification Tips */}
             {this.getCollapse(classes, "Contact Information (Optional)", this.toggleShow('showContactInformation'), showContactInformation,
                 <div>
@@ -843,7 +842,7 @@ class Form extends Component {
           </Button>
         </ValidatorForm>
         {this.getDialogFromMode(dialogMode)}
-      </LoadingOverlay>
+        </>
     );
   }
 }
