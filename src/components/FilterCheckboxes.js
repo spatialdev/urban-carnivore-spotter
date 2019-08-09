@@ -10,6 +10,13 @@ const styles = {
     checkedCheckbox: {
         color: '#93C838'
     },
+    showAllButton: {
+    width: 'fitContent',
+    margin: 'auto'
+    },
+    showAllButtonWrapper: {
+     allContent: 'left'
+    },
     allContent: {
         padding: '0px 0px 0px 24px',
         width: '100%'
@@ -67,10 +74,12 @@ class FilterCheckboxes extends Component {
                                 this.getButton(itemKey, itemState.value, () => updateValues(itemKey, !itemState.value), classes))}
                     </FormGroup>
                 </Collapse>
-                <Button
-                    onClick={() => this.setState(state => ({...state, viewAll: !state.viewAll}))}
-                    className="showAllButton">
-                    {viewAll ? <>Hide Some <ExpandLessIcon/></> : <>Show All <ExpandMoreIcon/></>}</Button>
+                    <div  className={classes.showAllButtonWrapper}>
+                        <Button
+                            onClick={() => this.setState(state => ({...state, viewAll: !state.viewAll}))}
+                            className={classes.showAllButton}>
+                            {viewAll ? <>Hide Some <ExpandLessIcon/></> : <>Show All <ExpandMoreIcon/></>}</Button>
+                    </div>
                 </>
                 : null}
         </FormControl>
