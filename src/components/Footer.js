@@ -64,8 +64,8 @@ const Footer = (props) => {
           </Button>
         </div>
         <div className={classes.flexColumn}>
-          <Fab color="primary" aria-label="Add" className={classes.plusButton} size={"large"} onClick={() => history.push('/reports/create')}>
-            <AddIcon/>
+          <Fab style={{backgroundColor: '#8acc25'}} aria-label="Add" className={classes.plusButton} size={"large"} onClick={() => history.push('/reports/create')}>
+            <AddIcon style={{color: '#FFFFFF'}}/>
           </Fab>
         </div>
         <div className={classes.flexColumn}>
