@@ -116,12 +116,12 @@ Desktop Header
     font-size: 14px;
     color: white;
     position: absolute;
-    left: 27%;
+    left: 30%;
 }
 
 @media (min-width: 768px) {
     .headerTitle {
-        left: 26%;
+        left: 28%;
     }
 }
 
@@ -133,7 +133,7 @@ Desktop Header
 
 @media (min-width: 1280px) {
     .headerTitle {
-        left: 20%;
+        left: 21%;
     }
 }
 

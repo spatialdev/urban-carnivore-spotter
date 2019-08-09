@@ -34,7 +34,7 @@ import ResizableIconButton from "./ResizableIconButton";
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
-  'Raccoon', 'River Otter', 'Other/Unknown'];
+  'Raccoon', 'River Otter', 'Red Fox', 'Other/Unknown'];
 const confidenceLevels = ['Not at all confident', 'About 25% confident', 'About 50% confident', 'About 75% confident',
   'More than 75% confident', '100% confident'];
 const reactions = ['Stayed quiet', 'Shouted/made noise','I walked away', 'Other'];
@@ -450,6 +450,7 @@ class Form extends Component {
         <ValidatorForm onError={() => this.setState({dialogMode: DIALOG_MODES.MISSING_FIELD})}
                        onSubmit={this.handleSubmit}
                        className="formWizardBody" autoComplete="off">
+          {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
           <div className="formItem">
             <h4>When did you see the animal?</h4>
             {/*See https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975 for more information*/}
@@ -465,7 +466,6 @@ class Form extends Component {
               customInput={<CustomDatePickerInput/>}
             />
           </div>
-          {this.renderMap(classes, isMobile,neighborhood, mapLng, mapLat)}
           <div className="formItem">
             <Dialog
                 open={addMode}

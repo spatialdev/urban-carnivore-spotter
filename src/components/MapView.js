@@ -17,6 +17,7 @@ import Dialog from "@material-ui/core/Dialog";
 import { speciesColorMap } from '../services/ColorService';
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 
 const Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN
@@ -115,6 +116,20 @@ const styles = {
             fontSize: 30,
         },
     },
+    reportLinkCloseButtonWrapper : {
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+    closeIcon : {
+        height: '15px',
+        width: '15px',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'scroll',
+        margin: 4
+    },
 };
 class MapView extends Component {
     state = {
@@ -152,14 +167,17 @@ class MapView extends Component {
 
     renderPopup() {
         const {popupInfo} = this.state;
+        const {classes} = this.props;
         if(popupInfo)
         {
             return <Popup
                     coordinates={[popupInfo.data.mapLng, popupInfo.data.mapLat]}
-                    onClick={() => this.setState({popupInfo: false})}
                     anchor={"bottom"}
             >
-                <PointTooltip report={popupInfo} />
+                <div className={classes.reportLinkCloseButtonWrapper}>
+                        <CloseIcon  style = {{cursor: "pointer"}} className={classes.closeIcon} onClick={() => this.setState({popupInfo: false})}/>
+                        <PointTooltip report={popupInfo} />
+                </div>
             </Popup>
         }
     }

@@ -25,6 +25,7 @@ const SplashPage = (props) => {
         <li className={classes.bulleted}>Opossum</li>
         <li className={classes.bulleted}>Raccoon</li>
         <li className={classes.bulleted}>River Otter</li>
+        <li className={classes.bulleted}>Red Fox</li>
       </ul>
       <p>These are terrestrial (not marine) mammals in the taxonomic order Carnivora (*except for opossums). Some of them have a carnivorous diet (eating other animals). Many of them, however, have an omnivorous diet, eating plants as well as animals.</p>
       <p>You can use this observation form to submit observations of any of the above animals (or if you think you may have seen one of them, but aren’t sure!)</p>
