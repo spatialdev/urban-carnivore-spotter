@@ -60,7 +60,8 @@ const DIALOG_MODES = {
   ERROR: 'error',
   LARGE_FILES: 'largeFiles',
   PERMISSION: 'permission',
-  CLOSED: 'closed'
+  CLOSED: 'closed',
+  MISSING_FIELD: 'missing field',
 };
 
 const styles = {
@@ -375,6 +376,11 @@ class Form extends Component {
           open={true}
           onClose={this.handleClose}
           message={THANKS_FOR_SUBMITTING}/>;
+      case DIALOG_MODES.MISSING_FIELD:
+        return <FormInfoDialog
+          open={true}
+          onClose={() => this.setState({dialogMode: DIALOG_MODES.CLOSED})}
+          message={"Your report is missing some required fields! Please fill in all required fields and re-submit."}/>;
       default:
         return null;
     }
@@ -441,7 +447,7 @@ class Form extends Component {
             <ClearIcon onClick={() => history.push('/')}/>
           </Fab>: null}
         <h2>Report a carnivore sighting</h2>
-        <ValidatorForm onError={errors => console.log(errors)}
+        <ValidatorForm onError={() => this.setState({dialogMode: DIALOG_MODES.MISSING_FIELD})}
                        onSubmit={this.handleSubmit}
                        className="formWizardBody" autoComplete="off">
           <div className="formItem">
