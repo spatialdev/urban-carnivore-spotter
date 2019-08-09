@@ -279,18 +279,13 @@ class MapView extends Component {
                         </div>
                     </div>
                     {this.showListViewButton(isMobile, classes, history)}
-                    <div >
-                        <Dialog
-                            open={legend}
-                            onClose={this.handleClose}
-                            className="two-col-special"
-                        >
-                            <DialogContent  >
-                                <div >
-                                    {this.showLegend()}
-                                </div>
-                            </DialogContent>
-                        </Dialog>
+                    <div>
+                        <div className={legend ? "legend-open" : "legend-closed"}>
+                            <CloseIcon  style = {{cursor: "pointer"}} className="legend-close" onClick={this.handleClose}/>
+                            <div className="two-col-special">
+                                {this.showLegend()}
+                            </div>
+                        </div>
                     </div>
                 </Map2>
             </div>
