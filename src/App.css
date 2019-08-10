@@ -418,6 +418,38 @@ Footer Styles
     z-index: 1;
 }
 
+.legend-open {
+    display: block;
+    top: 24vh;
+    right: 3%;
+    position: fixed;
+    height: auto;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 5px;
+    min-width: 175px;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .legend-open {
+        right: 10px;
+    }
+}
+
+.legend-closed {
+    display: none;
+}
+
+.legend-close {
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
 li a {
     text-decoration: none;
 }
@@ -435,13 +467,12 @@ li {
 }
 
 .two-col-special {
-margin: 0;
-padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .two-col-special span {
     display: inline-block;
-    width: 7%;
     margin: 0;
     padding: 0;
     vertical-align: center;
