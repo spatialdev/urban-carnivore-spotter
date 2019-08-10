@@ -450,8 +450,8 @@ class Form extends Component {
       <>
         {submitting ? <LoadingOverlay active={submitting} spinner text='Submitting...' className={classes.overlay} />: null}
         {isMobile ?
-          <Fab color="primary" aria-label="Add" className={classes.fab}>
-            <ClearIcon onClick={() => history.push('/')}/>
+          <Fab style={{backgroundColor: '#8acc25'}} aria-label="Add" className={classes.fab}>
+            <ClearIcon style={{color: '#FFFFFF'}} onClick={() => history.push('/')}/>
           </Fab>: null}
         <h2>Report a carnivore sighting</h2>
         <ValidatorForm onError={() => this.setState({dialogMode: DIALOG_MODES.MISSING_FIELD})}

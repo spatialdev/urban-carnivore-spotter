@@ -80,9 +80,8 @@ exports.getReport = functions.https.onRequest((req, res) => {
  */
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  // let week_ago = toTimestamp(moment().subtract(10, 'days').toDate());
-  // let initialQuery = collection.where('time_submitted', '<=', week_ago);
-  let initialQuery = collection;
+  let week_ago = toTimestamp(moment().subtract(10, 'days').toDate());
+  let initialQuery = collection.where('time_submitted', '<=', week_ago);
   if (queryParams.species) {
     initialQuery = initialQuery.where('species', '==', queryParams.species);
   }
