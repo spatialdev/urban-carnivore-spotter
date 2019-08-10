@@ -30,15 +30,15 @@ class PointTooltip extends Component {
     render() {
         const { report, classes, history } = this.props;
         return <div className={classes.allContent}>
-            <img className={classes.image} src = {report.data.mediaPaths && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : Placeholder}  />
+            <img className={classes.image} src = {report.data.mediaPaths && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : Placeholder}   alt=""/>
             <div className={classes.info}>
                 <div><strong>{report.data.species}</strong></div>
                 <div><strong>Date & Time:</strong></div>
                 <div>{firebaseTimeToDateTimeString(report.data.timestamp)}</div>
                 <div><strong>Location:</strong> {report.data.neighborhood}</div>
             </div>
-            <div className={classes.reportLink} onClick={() => history.push(`/reports/${report.id}`)}>
-                <KeyboardArrowRight style = {{cursor: "pointer"}}/>
+            <div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => history.push(`/reports/${report.id}`)}>
+                <KeyboardArrowRight/>
             </div>
         </div>
     }

@@ -10,7 +10,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import Dialog from '@material-ui/core/Dialog';
 
 import DatePicker from 'react-datepicker';
-import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import 'react-datepicker/dist/react-datepicker.css';
 import LoadingOverlay from 'react-loading-overlay';
 import ScrollLock from 'react-scrolllock';
@@ -25,13 +25,11 @@ import {Collapse, Fab, withStyles} from "@material-ui/core";
 import ClearIcon from '@material-ui/icons/Clear';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
-import Info from '@material-ui/icons/InfoOutlined';
 import {connect} from "react-redux";
 import { getAllSpecies, getDataForSpecies, getImageBySpecies } from "../services/SpeciesService";
 import FormInfoDialog from './FormInfoDialog';
 import SpeciesCard from "./SpeciesCardMobile";
 import FormSelect from "./FormSelect";
-import ResizableIconButton from "./ResizableIconButton";
 const addReportUrl = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/addReport';
 // Options
 const speciesLst = ['Black Bear', 'Bobcat', 'Cougar/Mountain Lion', 'Coyote', 'Opossum',
@@ -47,7 +45,7 @@ const carnivoreResponses = ['Animal did not seem to notice observer', 'Animal ra
   'Animal stood ground-seemed interested in observer', 'Animal ignored or was uninterested in observer',
   'Animal moved towards observer, pets or livestock, and not simply to access an escape route', 'The animal walked or moved away'];
 const conflictOptions = ['There was no interaction','Animal made physical contact with pet or livestock',
-  'Animal made physical contact with human(s)', 'Interacted with human-related item or place (e.g., trash can, birdfeeder, fence/yard, attic)','I walked away'];
+  'Animal made physical contact with human(s)', 'Interacted with human-related item or place (e.g., trash can, bird feeder, fence/yard, attic)','I walked away'];
 const counts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 // constants

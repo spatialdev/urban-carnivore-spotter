@@ -337,7 +337,7 @@ Report Viewer
     background-color: #ececec;
     padding: 10px;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
@@ -356,9 +356,9 @@ Report Viewer
 
 .buttonAndCardContainer {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .reportPlaceHolderImage {

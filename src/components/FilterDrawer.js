@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Collapse, Card, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
+import { Button, Collapse, FormControl, FormControlLabel, FormGroup, Checkbox} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import FilterCheckboxes from './FilterCheckboxes';
@@ -54,6 +54,9 @@ const styles = {
     },
     separator: {
         margin: 0
+    },
+    datePicker: {
+        paddingLeft: '10px'
     }
 };
 
@@ -113,7 +116,7 @@ class FilterDrawer extends React.Component {
         const { dateRangeFocused } = this.state;
         return (dateRangeFocused === START_DATE && !(endDate === null || date.isSameOrBefore(endDate, 'day'))) ||
             (dateRangeFocused === END_DATE && !(startDate === null || date.isSameOrAfter(startDate, 'day')));
-    }
+    };
 
     render = () => {
         const {classes, close, filter: {startDate, endDate, confidenceFilterActive, carnivoreFilter, neighborhoodFilter, timeFilter}} = this.props;
@@ -152,6 +155,7 @@ class FilterDrawer extends React.Component {
                     {/* Time and Day */}
                     {this.getCollapse(classes, "Time of Sighting", this.toggleShow('showTime'), showTime,
                         <>
+                        <div className={classes.datePicker}>
                             Date:
                             <DateRangePicker
                                 startDate={startDate}
@@ -167,6 +171,7 @@ class FilterDrawer extends React.Component {
                                 small={true}
                                 daySize={30}
                             />
+                        </div>
                             <FilterCheckboxes
                                 filter={timeFilter}
                                 allLabel="Any time of day"

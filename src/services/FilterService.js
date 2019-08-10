@@ -44,23 +44,23 @@ const DATE_BOUNDS = [
 const insideDateBounds = (target, startDate, endDate) => {
     return (startDate === null || target.isSameOrAfter(startDate, 'day')) &&
         (endDate === null || target.isSameOrBefore(endDate, 'day'));
-}
+};
 
 const insideAnyActiveTimeBounds = (date, filter) => {
     const { timeFilter } = filter;
     return DATE_BOUNDS.filter(bounds => timeFilter[bounds.name].value)
         .some(bounds => insideTimeBounds(date, bounds));
-}
+};
 
 const insideTimeBounds = (date, bounds) => {
     const hour = date.getHours();
     return hour < bounds.late && hour >= bounds.early;
-}
+};
 
 const matchesOtherCarnivore = (filter, species) => {
     const { carnivoreFilter } = filter;
     return carnivoreFilter['Other'].value && carnivoreFilter[species] === undefined;
-}
+};
 
 export const getInitialFilter = (allNeighborhoods) => {
     // Carnivore, neighborhood, and times defaults
@@ -75,16 +75,15 @@ export const getInitialFilter = (allNeighborhoods) => {
     const defaultTimeFilter = {all: {order: 0, value: true}};
     allTimes.forEach((time, ind) => defaultTimeFilter[time] = {order: ind+1, value: true});
 
-    const initialFilter = {
+    return {
         carnivoreFilter: {...defaultCarnivoreFilter},
         neighborhoodFilter: {...defaultNeighborhoodFilter},
         startDate: null,
         endDate: null,
         timeFilter: {...defaultTimeFilter},
         confidenceFilterActive: false,
-    }
-    return initialFilter;
-}
+    };
+};
 
 /**
  * Returns true if the report should be shown, given the filter
@@ -106,4 +105,4 @@ export const dataMatchesFilter = (report, filter) => {
     (filter.timeFilter.all.value || insideAnyActiveTimeBounds(parsedDate, filter)) &&
     // ok with confidence
     (!filter.confidenceFilterActive || data.confidence === HIGH_CONFIDENCE || data.confidence === MEDIUM_CONFIDENCE);
-}
+};

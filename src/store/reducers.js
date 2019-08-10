@@ -5,8 +5,7 @@ import {
     TOGGLE_FILTER_CONFIDENCE,
     RESET_FILTER,
     UPDATE_ALL_NEIGHBORHOODS,
-    UPDATE_MOBILE_RESOURCE_EXPANDS,
-    SET_ON_EXPLORE
+    UPDATE_MOBILE_RESOURCE_EXPANDS
 } from './constants';
 import { getInitialFilter } from '../services/FilterService';
 
