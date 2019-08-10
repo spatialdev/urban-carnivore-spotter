@@ -5,6 +5,7 @@ import Sticky from 'react-sticky-fill';
 import AppBar from '@material-ui/core/AppBar';
 import '../App.css';
 import {connect} from "react-redux";
+import zooLogo from '../assets/logo.png';
 
 class DesktopHeader extends Component {
 
@@ -13,7 +14,9 @@ class DesktopHeader extends Component {
     return (
       <Sticky style={{top: 0, width: '100%', zIndex: 100}}>
         <AppBar position="static" className="appBar">
-          <div className="logo"/>
+          <div className="logoContainer">
+            <img className="logo" src={zooLogo} alt={"Woodland Park Zoo logo"}/>
+          </div>
           <h1 className="headerTitle" onClick={() => history.push('/')} style={{ cursor: 'pointer' }}>
             Carnivore Spotter
           </h1>

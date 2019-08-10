@@ -137,14 +137,18 @@ Desktop Header
     }
 }
 
-.logo {
+.logoContainer {
     height: 100px;
     width: 100px;
-    background: url('assets/logo.png') no-repeat;
-    background-size: contain;
     position: absolute;
     left: 12%;
-    box-shadow: 1px 1px 1px grey;
+    background-color: #8acc25;
+}
+
+.logo {
+    height: 60px;
+    width: 60px;
+    margin: 20px;
 }
 
 /*
