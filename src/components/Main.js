@@ -9,7 +9,7 @@ import NotFound from './NotFound';
 import ResourceCard from "./ResourceCard";
 import Resources from "./Resources";
 import SplashPage from "./SplashPage";
-
+import UnsupportedBrowserNotice from "./UnsupportedBrowserNotice";
 
 const Main = () => (
   <main className="Main">
@@ -22,7 +22,8 @@ const Main = () => (
       <Route exact path="/resources/:species" component={ResourceCard}/>
       <Route component={NotFound}/>
     </Switch>
-    <SplashPage />
+    <SplashPage/>
+    <UnsupportedBrowserNotice/>
   </main>
 );
 

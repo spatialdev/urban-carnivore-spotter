@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
+import supported from '@mapbox/mapbox-gl-supported';
 
-const StaticMap = ReactMapboxGl({
-    accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
-    dragPan: false,
-    interactive: false
-});
+
+let StaticMap = null;
+if (supported({})) {
+  StaticMap = ReactMapboxGl({
+      accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
+      dragPan: false,
+      interactive: false
+  });
+}
 
 class StaticFormMap extends Component {
     render() {
         const { centerLng, centerLat} = this.props;
         return (
           <div className={"constantHeightMapContainer"}>
-            <StaticMap style="mapbox://styles/mapbox/streets-v9"
+            {StaticMap && <StaticMap style="mapbox://styles/mapbox/streets-v9"
                  center={{ lng: centerLng, lat: centerLat }}
                  className="formMap"
             >
@@ -28,7 +33,7 @@ class StaticFormMap extends Component {
                         <Feature coordinates={[centerLng, centerLat]} />
                     </Layer>
                 </div>
-            </StaticMap>
+            </StaticMap>}
           </div>
         );
     }

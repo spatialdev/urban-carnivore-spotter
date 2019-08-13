@@ -19,10 +19,16 @@ import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import * as ReactGA from "react-ga";
+import supported from '@mapbox/mapbox-gl-supported';
 
-const Map2 = ReactMapboxGl({
-    accessToken: process.env.REACT_APP_MAPBOX_TOKEN
-});
+let Map2 = null;
+if (supported({})) {
+    Map2 = ReactMapboxGl({
+        accessToken: process.env.REACT_APP_MAPBOX_TOKEN
+    });
+}
+
+
 const getReports = "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports";
 const styles = {
     filterContainer: {
@@ -248,7 +254,7 @@ class MapView extends Component {
                 { !isMobile && <div className={classes.filterContainer}>
                     <FilterDrawer/>
                 </div>}
-                <Map2 style="mapbox://styles/mapbox/streets-v9"
+                {Map2 && <Map2 style="mapbox://styles/mapbox/streets-v9"
                       className="map"
                       center={viewport.center}
                       zoom={viewport.zoom}
@@ -289,7 +295,7 @@ class MapView extends Component {
                             </div>
                         </div>
                     </div>
-                </Map2>
+                </Map2>}
             </div>
         );
     }
