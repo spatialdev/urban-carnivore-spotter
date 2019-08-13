@@ -37,7 +37,7 @@ const styles = {
         left: '5%',
         bottom: '5%',
         width: 250,
-        zIndex: 1,
+        zIndex: 1000,
         height: '60%',
         boxShadow: '2px 2px 2px'
     },

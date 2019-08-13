@@ -33,7 +33,7 @@ const styles = {
         position: 'sticky',
         top: 0,
         backgroundColor: 'white',
-        zIndex: 1000,
+        zIndex: 1,
         padding: '4px 24px 4px 24px',
     },
     filterBox: {},
