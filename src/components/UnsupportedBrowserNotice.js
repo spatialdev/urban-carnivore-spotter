@@ -12,7 +12,7 @@ const styles = {
   }
 };
 
-const SplashPage = (props) => {
+const UnsupportedBrowserNotice = (props) => {
   const {cookies} = props;
   return <Dialog open={!cookies.get(SEEN_UNSUPPORTED_BROWSER_BEFORE) && !isSupported({})}
           onClose={() => cookies.set(SEEN_UNSUPPORTED_BROWSER_BEFORE, true)}>
@@ -23,4 +23,4 @@ const SplashPage = (props) => {
   </Dialog>
 };
 
-export default withStyles(styles)(withCookies(SplashPage));
+export default withStyles(styles)(withCookies(UnsupportedBrowserNotice));
