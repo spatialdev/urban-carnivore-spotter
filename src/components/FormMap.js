@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import ReactMapboxGl, { Layer, Feature } from 'react-mapbox-gl';
+import supported from '@mapbox/mapbox-gl-supported';
 
-const Map = ReactMapboxGl({
-  accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
-  dragPan: false
-});
+let Map = null;
+if (supported({})) {
+  Map = ReactMapboxGl({
+    accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
+    dragPan: false
+  });
+}
 
 class FormMap extends Component {
 
@@ -19,7 +23,7 @@ class FormMap extends Component {
     const { centerLng, centerLat } = this.props;
     return (
       <div style={{height: '100%'}}>
-        <Map style="mapbox://styles/mapbox/streets-v9"
+        {Map && <Map style="mapbox://styles/mapbox/streets-v9"
              center={{ lng: centerLng, lat: centerLat }}
              className="formMap"
         >
@@ -34,7 +38,7 @@ class FormMap extends Component {
             <Feature coordinates={[centerLng, centerLat]} draggable
                      onDragEnd={e => this.onDragEnd(e)}/>
           </Layer>
-        </Map>
+        </Map>}
       </div>
     );
   }

@@ -243,7 +243,7 @@ List + Card
     left: 5%;
     bottom: 5%;
     width: 250px;
-    z-index: 1;
+    z-index: 1000;
     height: 60%;
     box-shadow: 2px 2px 2px;
 }
