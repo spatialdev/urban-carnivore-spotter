@@ -261,18 +261,40 @@ class MapView extends Component {
                       onMoveEnd={e => this.onMoveEnd(e)}
                 >
                     {this.renderPopup()}
-                    {reports ? reports.filter(report => dataMatchesFilter(report, filter))
-                        .map(report => (
-                            <Layer type="circle"
-                                key ={report.id}
-                                paint={{'circle-color': getColorForSpecies(report.data.species.toLowerCase()),
-                                    'circle-radius': 7,
-                                    'circle-stroke-width': .3,
-                                    'circle-stroke-opacity': 1}}>
+                    <Layer type="circle"
+                           paint = {{
+                               'circle-radius': 7,
+                               'circle-stroke-width': .3,
+                               'circle-stroke-opacity': 1,
+                               'circle-color': [
+                                   'match',
+                                   ['get', 'species'],
+                                   'Red Fox',
+                                   '#FE1513',
+                                   'Black Bear',
+                                   '#000000',
+                                   'Bobcat', '#a30cfe',
+                                   'Coyote',
+                                   '#FECE17',
+                                   'Cougar/Mountain Lion', '#2C9E0D',
+                                   'Raccoon', '#FF1EC1',
+                                   'Opossum',
+                                   '#FE7901',
+                                   'River Otter',
+                                   '#171AB1',
+                                   'Other/Unknown',
+                                   '#805b14',
+                                   '#e2dcc6'
+                               ]}
+                           }>
+                        {reports ? reports.filter(report => dataMatchesFilter(report, filter))
+                            .map(report => (
                                 <Feature  key ={report.id} coordinates={[report.data.mapLng, report.data.mapLat]}
-                                        onClick={() => this.setState({popupInfo: report})}
+                                          properties={report.data} onClick={() =>
+                                              this.setState({popupInfo: report})}
                                 />
-                            </Layer>)) : null}
+                            )) : null}
+                    </Layer>
                     {this.showReportSightings(isMobile, classes, history)}
                     <div>
                         <Fab className = {isMobile? classes.legendMobileContainer : classes.legendDesktopContainer} aria-label = "Legend"  size="small">
