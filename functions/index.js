@@ -60,7 +60,7 @@ exports.addReport = functions.https.onRequest((req, res) => {
  *
  * Returns an object containing just the relevant fields from the document.
  */
-getSingleDocumentRelevantData = (document) => {
+filterReport = (document) => {
   const allData = document.data();
   return {
     mediaPaths: allData.mediaPaths,
@@ -85,7 +85,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
       .get()
       .then(doc => {
         if (doc.exists) {
-          return res.status(200).send(getSingleDocumentRelevantData(doc));
+          return res.status(200).send(filterReport(doc));
         } else {
           return res.status(200).send('No data!');
         }
@@ -139,7 +139,7 @@ buildQuery = (queryParams, collection) => {
  *
  * Returns an object containing just the relevant fields from the document.
  */
-getRelevantData = (document) => {
+filterReports = (document) => {
   const allData = document.data();
   return {
     timestamp: allData.timestamp,
@@ -182,13 +182,13 @@ exports.getReports = functions.https.onRequest((req, res) => {
               const distance = turf.distance(from, to, options);
               // If distance is within 500 miles from the query lat long
               if (distance <= 500) {
-                items.push({ id: doc.id, data: getRelevantData(doc) });
+                items.push({ id: doc.id, data: filterReports(doc) });
               }
             }
           });
         } else {
           snapshot.forEach(doc => {
-            items.push({ id: doc.id, data: getRelevantData(doc) });
+            items.push({ id: doc.id, data: filterReports(doc) });
           });
         }
         return items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
