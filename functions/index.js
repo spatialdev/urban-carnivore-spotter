@@ -49,6 +49,30 @@ exports.addReport = functions.https.onRequest((req, res) => {
     });
   });
 });
+/**
+ * Reports contain a lot of extraneous (and personally identifying!) information that we should not be sending to all
+ * clients. This pulls out the important fields for a single report viewing, which are:
+ *  - timestamp
+ *  - species
+ *  - neighborhood
+ *  - confidence
+ *  - mediaPaths
+ *
+ * Returns an object containing just the relevant fields from the document.
+ */
+getSingleDocumentRelevantData = (document) => {
+  const allData = document.data();
+  return {
+    mediaPaths: allData.mediaPaths,
+    species: allData.species,
+    timestamp: allData.timestamp,
+    neighborhood: allData.neighborhood,
+    confidence: allData.confidence,
+    numberOfAdultSpecies: allData.numberOfAdultSpecies,
+    numberOfYoungSpecies: allData.numberOfYoungSpecies
+  }
+};
+
 
 exports.getReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -61,7 +85,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
       .get()
       .then(doc => {
         if (doc.exists) {
-          return res.status(200).send(doc.data());
+          return res.status(200).send(getSingleDocumentRelevantData(doc));
         } else {
           return res.status(200).send('No data!');
         }
