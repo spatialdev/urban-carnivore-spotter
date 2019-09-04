@@ -100,6 +100,21 @@ buildQuery = (queryParams, collection) => {
   return initialQuery;
 };
 
+/**
+ * Reports contain a lot of extraneous (and personally identifying!) information that we should not be sending to all
+ * clients. This pulls out the important fields, which are:
+ *  - timestamp
+ *  - species
+ *  - neighborhood
+ *  - confidence
+ *  - time_submitted
+ *  - id
+ *  - mediaPaths
+ *  - mapLng
+ *  - mapLat
+ *
+ * Returns an object containing just the relevant fields from the document.
+ */
 getRelevantData = (document) => {
   const allData = document.data();
   return {
