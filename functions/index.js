@@ -49,6 +49,30 @@ exports.addReport = functions.https.onRequest((req, res) => {
     });
   });
 });
+/**
+ * Reports contain a lot of extraneous (and personally identifying!) information that we should not be sending to all
+ * clients. This pulls out the important fields for a single report viewing, which are:
+ *  - timestamp
+ *  - species
+ *  - neighborhood
+ *  - confidence
+ *  - mediaPaths
+ *
+ * Returns an object containing just the relevant fields from the document.
+ */
+filterReport = (document) => {
+  const allData = document.data();
+  return {
+    mediaPaths: allData.mediaPaths,
+    species: allData.species,
+    timestamp: allData.timestamp,
+    neighborhood: allData.neighborhood,
+    confidence: allData.confidence,
+    numberOfAdultSpecies: allData.numberOfAdultSpecies,
+    numberOfYoungSpecies: allData.numberOfYoungSpecies
+  }
+};
+
 
 exports.getReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
@@ -61,7 +85,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
       .get()
       .then(doc => {
         if (doc.exists) {
-          return res.status(200).send(doc.data());
+          return res.status(200).send(filterReport(doc));
         } else {
           return res.status(200).send('No data!');
         }
@@ -100,6 +124,36 @@ buildQuery = (queryParams, collection) => {
   return initialQuery;
 };
 
+/**
+ * Reports contain a lot of extraneous (and personally identifying!) information that we should not be sending to all
+ * clients. This pulls out the important fields, which are:
+ *  - timestamp
+ *  - species
+ *  - neighborhood
+ *  - confidence
+ *  - time_submitted
+ *  - id
+ *  - mediaPaths
+ *  - mapLng
+ *  - mapLat
+ *
+ * Returns an object containing just the relevant fields from the document.
+ */
+filterReports = (document) => {
+  const allData = document.data();
+  return {
+    timestamp: allData.timestamp,
+    species: allData.species,
+    neighborhood: allData.neighborhood,
+    confidence: allData.confidence,
+    time_submitted: allData.time_submitted,
+    id: allData.id,
+    mediaPaths: allData.mediaPaths,
+    mapLng: allData.mapLng,
+    mapLat: allData.mapLat
+  }
+};
+
 exports.getReports = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== 'GET') {
@@ -128,13 +182,13 @@ exports.getReports = functions.https.onRequest((req, res) => {
               const distance = turf.distance(from, to, options);
               // If distance is within 500 miles from the query lat long
               if (distance <= 500) {
-                items.push({ id: doc.id, data: doc.data() });
+                items.push({ id: doc.id, data: filterReports(doc) });
               }
             }
           });
         } else {
           snapshot.forEach(doc => {
-            items.push({ id: doc.id, data: doc.data() });
+            items.push({ id: doc.id, data: filterReports(doc) });
           });
         }
         return items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
