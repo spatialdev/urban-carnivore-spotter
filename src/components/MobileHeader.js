@@ -35,8 +35,8 @@ class MobileHeader extends Component {
         <AppBar position="static" color="default">
           <div className="headerDiv">
             <h1 style={{ display: 'table-cell', cursor: 'pointer', marginLeft: 20}}
-                onClick={() => history.push('/')} className="header">Carnivore Spotter</h1>
-            {location.pathname === '/' || location.pathname === '/list' ?
+                onClick={() => location.pathname.indexOf('tacoma') !== -1 ? history.push('/tacoma') : history.push('/')} className="header">Carnivore Spotter</h1>
+            {location.pathname === '/' || location.pathname === '/list' || location.pathname === '/tacoma' || location.pathname === '/tacoma/list' ?
               <Button className="filterButton" onClick={this.toggleDrawer('right', true)}>Filter</Button> :
               null
             }

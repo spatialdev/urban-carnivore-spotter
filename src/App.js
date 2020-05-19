@@ -6,7 +6,7 @@ import Header from './components/MobileHeader';
 import Footer from './components/Footer';
 import Main from './components/Main';
 import { connect } from 'react-redux';
-import { setMobile, updateAllNeighborhoods} from './store/actions';
+import {setMobile, setUrl, updateAllNeighborhoods} from './store/actions';
 import NeighborhoodService from './services/NeighborhoodService';
 import * as ReactGA from 'react-ga';
 
@@ -21,6 +21,7 @@ class App extends Component {
     ReactGA.initialize(trackingId);
     ReactGA.pageview(window.location.pathname);
     this.checkIfMobile();
+    this.checkIfTacomaUrl();
     window.addEventListener('resize', this.checkIfMobile);
     NeighborhoodService.getAllNeighborhoods()
       .then(allNeighborhoods => updateAllNeighborhoods(allNeighborhoods));
@@ -34,11 +35,15 @@ class App extends Component {
     setMobile(window.innerWidth < 768);
   };
 
+  checkIfTacomaUrl = () => {
+    setUrl(window.location.pathname.indexOf('tacoma') !== -1)
+  };
+
   render() {
     const {isMobile, history} = this.props;
     // If we are on the mobile create reports page, show nothing. Otherwise, show either the mobile header or the
     // desktop header.
-    const header = isMobile && history.location.pathname === '/reports/create' ? null : isMobile ? <Header/> : <DesktopHeader/>;
+    const header = isMobile && (history.location.pathname === '/reports/create' || history.location.pathname === '/tacoma/reports/create') ? null : isMobile ? <Header/> : <DesktopHeader/>;
     // If we are on mobile, and not on the create reports page, show a footer.
     const footer = isMobile && history.location.pathname !== '/reports/create' ? <Footer/> : null;
     return (

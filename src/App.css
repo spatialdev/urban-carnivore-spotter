@@ -137,6 +137,8 @@ Desktop Header
     }
 }
 
+
+
 .logoContainer {
     height: 100px;
     width: 100px;
@@ -149,6 +151,20 @@ Desktop Header
     height: 60px;
     width: 60px;
     margin: 20px;
+}
+
+.logoContainer2 {
+    height: 210px;
+    width: 210px;
+    position: absolute;
+    left: 5%;
+    background-color: #FFFFFF;
+}
+
+.logo2 {
+    height: 200px;
+    width: 200px;
+    margin: 5px;
 }
 
 /*

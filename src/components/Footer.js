@@ -59,19 +59,19 @@ const Footer = (props) => {
       <div className={classes.footerIconDiv}>
         <div className={classes.flexColumn}>
           <Button className={classes.footerIcons} style={{ float: 'left', marginLeft: '50px', color: history.location.pathname==='/'? '#3411ff': 'grey' }} >
-            <MapIcon style={{ color: history.location.pathname==='/'? '#3411FF': 'grey' }} onClick={() => history.push('/')}/>
+            <MapIcon style={{ color: history.location.pathname==='/' || history.location.pathname.includes('tacoma')? '#3411FF': 'grey' }} onClick={() => history.location.pathname.includes('tacoma')? history.push('/tacoma'): history.push('/')}/>
             <p>Explore</p>
           </Button>
         </div>
         <div className={classes.flexColumn}>
-          <Fab style={{backgroundColor: '#8acc25'}} aria-label="Add" className={classes.plusButton} size={"large"} onClick={() => history.push('/reports/create')}>
+          <Fab style={{backgroundColor: '#8acc25'}} aria-label="Add" className={classes.plusButton} size={"large"} onClick={() => history.location.pathname.includes('tacoma') ? history.push('/tacoma/reports/create'): history.push('/reports/create')}>
             <AddIcon style={{color: '#FFFFFF'}}/>
           </Fab>
         </div>
         <div className={classes.flexColumn}>
           <Button className={classes.footerIcons} style={{ float: 'right', marginRight: '50px', color: history.location.pathname.includes('/resources')?
                 '#3411FF': 'grey' }}
-                  onClick={() => history.push('/resources')}>
+                  onClick={() => history.location.pathname.includes('tacoma')? history.push('/tacoma/resources') : history.push('/resources')}>
             <SettingsIcon style={{ color: history.location.pathname.includes('/resources')? '#3411FF': 'grey' }} />
             <p>Resources</p>
           </Button>

@@ -162,8 +162,8 @@ class Form extends Component {
   state = {
     species: '',
     timestamp: new Date(),
-    mapLat: 47.668733,
-    mapLng: -122.354291,
+    mapLat: window.location.pathname.indexOf('tacoma') === -1 ? 47.668733: 47.3049119,
+    mapLng: window.location.pathname.indexOf('tacoma') === -1 ? -122.354291: -122.522997,
     confidence: '',
     animalFeatures: '',
     numberOfAdultSpecies: '1',
