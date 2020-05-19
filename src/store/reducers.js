@@ -1,5 +1,6 @@
 import {
     SET_MOBILE,
+    SET_URL,
     UPDATE_FILTER,
     UPDATE_FILTER_DATE,
     TOGGLE_FILTER_CONFIDENCE,
@@ -12,6 +13,7 @@ import { getInitialFilter } from '../services/FilterService';
 const initialState = {
     filter: getInitialFilter([]),
     isMobile: false,
+    isTacomaUrl: false,
     mobileResourceExpands: {
         showTips: false,
         showProjectDescription: false,
