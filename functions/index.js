@@ -11,11 +11,15 @@ const database = admin.firestore();
 const NEIGHBORHOOD = 'neighborhood';
 const UNIQUES = 'uniques';
 const REPORTS = 'reports';
-const REPORT_URL_STUB = 'https://console.firebase.google.com/u/1/project/seattlecarnivores-edca2/database/firestore/data~2Freports~2F';
+const REPORTS_TACOMA = 'reportsTacoma';
+const REPORT_URL_STUB = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2Freports';
+const TACOMA_REPORTS_URL = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2FreportsTacoma~2F1';
 
 // initialize username/password
-const username = functions.config().email.username;
-const password = functions.config().email.password;
+// const username = functions.config().email.username;
+// const password = functions.config().email.password;
+const username = "someotheremailaddress3@gmail.com";
+const password = "critigen";
 /**
  * Internal helper method that converts JS Date objects to firebase timestamps.
  * Thanks to https://stackoverflow.com/questions/53482750/convert-date-to-timestamp-for-storing-into-firebase-firestore-in-javascript
@@ -32,14 +36,19 @@ exports.addReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
+    console.log("is tacoma");
     const reportWithTimestamp = Object.assign(req.body, {time_submitted: toTimestamp(new Date())});
+     console.log(reportWithTimestamp);
+    const isInTacoma = req.body.isTacoma;
+    console.log("isInTacoma"+isInTacoma)
     // Add neighborhood to the list of unique neighborhoods, if it's not already present
     const updateNeighborhoodsPromise = database.collection(UNIQUES).doc(NEIGHBORHOOD)
       .update({
         values: admin.firestore.FieldValue.arrayUnion(reportWithTimestamp[NEIGHBORHOOD])
       });
     // Add the full report to the database.
-    const addReportPromise = database.collection(REPORTS).add(reportWithTimestamp);
+    let BUCKET = isInTacoma ? REPORTS_TACOMA : REPORTS;
+    const addReportPromise = database.collection(BUCKET).add(reportWithTimestamp);
     return Promise.all([updateNeighborhoodsPromise, addReportPromise])
       .then(ref => {
         return res.status(200).send('Success!');
@@ -81,7 +90,8 @@ exports.getReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-    return database.collection(REPORTS).doc(req.query.id)
+    const COLLECTION = req.query.isTacoma==='true' ? REPORTS_TACOMA: REPORTS;
+    return database.collection(COLLECTION).doc(req.query.id)
       .get()
       .then(doc => {
         if (doc.exists) {
@@ -162,13 +172,25 @@ exports.getReports = functions.https.onRequest((req, res) => {
       });
     }
     let reports = database.collection(REPORTS);
-    return buildQuery(req.query, reports)
-      .get()
-      .then(snapshot => {
+    let reports_tacoma = database.collection(REPORTS_TACOMA);
+    let querySnapshotPromise = buildQuery(req.query, reports).get();
+    let querySnapshotPromise1 = buildQuery(req.query, reports_tacoma).get();
+
+    console.log(querySnapshotPromise);
+    // return buildQuery(req.query, reports_tacoma)
+    //   .get()
+    //   return Promise.all([querySnapshotPromise, querySnapshotPromise1])
+      console.log(querySnapshotPromise1);
+      return Promise.all([querySnapshotPromise1, querySnapshotPromise]).then(values => {
         let items = [];
-        if (snapshot.empty) {
-          res.status(200).send('No data!');
-        } else if (req.query.mapLat !== undefined && req.query.mapLng !== undefined) {
+
+  values.forEach(snapshot => {
+        // if (snapshot.empty) {
+        //   res.status(200).send('No data!');
+        // }
+      if(!snapshot.empty)
+      {
+        if (req.query.mapLat !== undefined && req.query.mapLng !== undefined) {
           const queryLatitude = Number(req.query.mapLat);
           const queryLongitude = Number(req.query.mapLng);
           const from = turf.point([queryLongitude, queryLatitude]);
@@ -191,8 +213,38 @@ exports.getReports = functions.https.onRequest((req, res) => {
             items.push({ id: doc.id, data: filterReports(doc) });
           });
         }
-        return items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
-      })
+      }
+      });
+      return items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);})
+      // return Promise.all([querySnapshotPromise]).then(snapshot => {
+      //   let items = [];
+      //   if (snapshot.empty) {
+      //     res.status(200).send('No data!');
+      //   } else if (req.query.mapLat !== undefined && req.query.mapLng !== undefined) {
+      //     const queryLatitude = Number(req.query.mapLat);
+      //     const queryLongitude = Number(req.query.mapLng);
+      //     const from = turf.point([queryLongitude, queryLatitude]);
+      //     const options = { units: 'miles' };
+      //     snapshot.forEach(doc => {
+      //       const data = doc.data();
+      //       let dataLatitude = data['mapLat'];
+      //       let dataLongitude = data['mapLng'];
+      //       if (dataLatitude !== undefined && dataLongitude !== undefined) {
+      //         const to = turf.point([dataLongitude,dataLatitude]);
+      //         const distance = turf.distance(from, to, options);
+      //         // If distance is within 500 miles from the query lat long
+      //         if (distance <= 500) {
+      //           items.push({ id: doc.id, data: filterReports(doc) });
+      //         }
+      //       }
+      //     });
+      //   } else {
+      //     snapshot.forEach(doc => {
+      //       items.push({ id: doc.id, data: filterReports(doc) });
+      //     });
+      //   }
+      //   return items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);
+      // })
       .catch(err => {
         res.status(500).send(`Error getting documents: ${err}`);
       });

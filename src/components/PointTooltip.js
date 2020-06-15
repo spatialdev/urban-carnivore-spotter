@@ -29,6 +29,8 @@ const styles = {
 class PointTooltip extends Component {
     render() {
         const { report, classes, history } = this.props;
+        console.log(report);
+        report.data.isTacoma = true;
         return <div className={classes.allContent}>
             <img className={classes.image} src = {report.data.mediaPaths && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : Placeholder}   alt=""/>
             <div className={classes.info}>
@@ -37,7 +39,8 @@ class PointTooltip extends Component {
                 <div>{firebaseTimeToDateTimeString(report.data.timestamp)}</div>
                 <div><strong>Location:</strong> {report.data.neighborhood}</div>
             </div>
-            <div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => history.push(`/reports/${report.id}`)}>
+            {/*<div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => history.push(`/reports/${report.id}&${report.data.isTacoma}`)}>*/}
+             <div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => history.push(`/reports/${report.id}&${report.data.isTacoma}`)}>
                 <KeyboardArrowRight/>
             </div>
         </div>

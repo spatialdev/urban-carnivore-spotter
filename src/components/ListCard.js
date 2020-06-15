@@ -33,7 +33,7 @@ const ListCard = props => {
         <Typography variant={'subtitle1'}>{firebaseTimeToDateTimeString(report.data.timestamp)}</Typography>
         <Typography style={{ color: 'grey' }}>{report.data.neighborhood ? report.data.neighborhood : "Unknown"}</Typography>
         <li>
-          <Link to={`/reports/${report.id}`}>See Report</Link>
+          <Link to={`/reports/${report.id}&${report.data.isTacoma}`}>See Report</Link>
         </li>
       </CardContent>
     </CardContent>
