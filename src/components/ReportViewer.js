@@ -16,6 +16,7 @@ import {connect} from "react-redux";
 import * as ReactGA from "react-ga";
 
 const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
+const getTacomaReport = 'http://localhost:5000/seattlecarnivores-edca2/us-central1/getTacomaReport';
 const videoFormats = ['.mov', '.mp4', '.webm', '.ogg', '.avi', '.wmv', '.mkv'];
 
 class ReportViewer extends Component {
@@ -26,8 +27,8 @@ class ReportViewer extends Component {
   componentDidMount() {
     ReactGA.pageview(window.location.pathname);
     const { match: { params: { id } } } = this.props;
-
-    axios.get(getReport + `?id=${id}`)
+    const path = window.location.pathname.includes('/reports/tacoma')? getTacomaReport : getReport;
+    axios.get( path + `?id=${id}`)
       .then(report => {
         this.setState({ report: report.data });
       })

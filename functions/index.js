@@ -36,10 +36,10 @@ exports.addReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-    console.log("is tacoma");
+    console.log(req.body);
     const reportWithTimestamp = Object.assign(req.body, {time_submitted: toTimestamp(new Date())});
      console.log(reportWithTimestamp);
-    const isInTacoma = !req.url.includes('/reports/tacoma');
+    const isInTacoma = true;
     console.log("isInTacoma"+isInTacoma)
     // Add neighborhood to the list of unique neighborhoods, if it's not already present
     const updateNeighborhoodsPromise = database.collection(UNIQUES).doc(NEIGHBORHOOD)
@@ -90,14 +90,37 @@ exports.getReport = functions.https.onRequest((req, res) => {
         message: 'Not allowed'
       });
     }
-    const COLLECTION = req.query.isTacoma==='true' ? REPORTS_TACOMA: REPORTS;
-    return database.collection(COLLECTION).doc(req.query.id)
+    console.log(req.url)
+    return database.collection(REPORTS).doc(req.query.id)
       .get()
       .then(doc => {
         if (doc.exists) {
           return res.status(200).send(filterReport(doc));
         } else {
           return res.status(200).send('No data!');
+        }
+      })
+      .catch(error => {
+        return res.status(500).send(`Error getting documents: ${error}`);
+      })
+  });
+});
+
+exports.getTacomaReport = functions.https.onRequest((req, res) => {
+  return cors(req, res, () => {
+    if (req.method !== 'GET') {
+      return res.status(401).json({
+        message: 'Not allowed'
+      });
+    }
+    console.log(req.url)
+    return database.collection(REPORTS_TACOMA).doc(req.query.id)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return res.status(200).send(filterReport(doc));
+        } else {
+          return res.status(200).send('No datas!');
         }
       })
       .catch(error => {
