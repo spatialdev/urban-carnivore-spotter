@@ -57,7 +57,7 @@ const NotFound = (props) => {
             <p className={classes.text}>Sorry, the page you are looking for could not be found.</p>
             <Button
                 variant="contained"
-                onClick={() => history.push('/')}
+                onClick={() => window.location.pathname.indexOf('tacoma')===-1 ? history.push('/') : history.push('/tacoma')}
                 className={classes.button}
                 size="large">Back to Map</Button>
             <br/>

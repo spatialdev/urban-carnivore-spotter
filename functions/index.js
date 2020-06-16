@@ -39,7 +39,7 @@ exports.addReport = functions.https.onRequest((req, res) => {
     console.log("is tacoma");
     const reportWithTimestamp = Object.assign(req.body, {time_submitted: toTimestamp(new Date())});
      console.log(reportWithTimestamp);
-    const isInTacoma = req.body.isTacoma;
+    const isInTacoma = !req.url.includes('/reports/tacoma');
     console.log("isInTacoma"+isInTacoma)
     // Add neighborhood to the list of unique neighborhoods, if it's not already present
     const updateNeighborhoodsPromise = database.collection(UNIQUES).doc(NEIGHBORHOOD)

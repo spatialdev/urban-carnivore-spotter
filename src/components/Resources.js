@@ -120,7 +120,7 @@ class Resources extends Component {
                     <div className={classes.body}>
                         {speciesList.map((type, idx) =>
                             <li key={idx}>
-                                <Link to={`/resources/${type}`}>{getDisplayName(type)}</Link>
+                                <Link to={window.location.pathname.indexOf('tacoma')===-1 ? `/resources/${type}` : `/tacoma/resources/${type}`}>{getDisplayName(type)}</Link>
                             </li>)
                         }
                     </div>

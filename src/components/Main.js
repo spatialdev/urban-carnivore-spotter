@@ -20,6 +20,7 @@ const Main = () => (
       <Route exact path="/(list|tacoma/list)" component={ListView}/>
       <Route exact path="/reports/:id" component={ReportViewer}/>
       <Route exact path="/tacoma/reports/:id" component={ReportViewer}/>
+      <Route exact path="/tacoma/reports/tacoma/:id" component={ReportViewer}/>
       <Route exact path="/(resources|tacoma/resources)" component={Resources}/>
       <Route exact path="/resources/:species" component={ResourceCard}/>
         <Route exact path="/tacoma/resources/:species" component={ResourceCard}/>

@@ -30,7 +30,9 @@ class PointTooltip extends Component {
     render() {
         const { report, classes, history } = this.props;
         console.log(report);
-        report.data.isTacoma = true;
+
+        const isInTacoma = report.data!==undefined && report.data.isTacoma !==undefined ? report.data.isTacoma : false;
+        const path = window.location.pathname.indexOf('tacoma')===-1 ? '/reports' : '/tacoma/reports';
         return <div className={classes.allContent}>
             <img className={classes.image} src = {report.data.mediaPaths && report.data.mediaPaths.length>0 ? report.data.mediaPaths[0] : Placeholder}   alt=""/>
             <div className={classes.info}>
@@ -40,9 +42,11 @@ class PointTooltip extends Component {
                 <div><strong>Location:</strong> {report.data.neighborhood}</div>
             </div>
             {/*<div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => history.push(`/reports/${report.id}&${report.data.isTacoma}`)}>*/}
-             <div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => history.push(`/reports/${report.id}&${report.data.isTacoma}`)}>
+
+            <div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => isInTacoma ? history.push(`${path}/tacoma/${report.id}`) : history.push(`${path}/${report.id}`) }>
                 <KeyboardArrowRight/>
             </div>
+
         </div>
     }
 };
