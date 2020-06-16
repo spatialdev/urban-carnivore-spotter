@@ -16,7 +16,7 @@ import {connect} from "react-redux";
 import * as ReactGA from "react-ga";
 
 const getReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport';
-const getTacomaReport = 'http://localhost:5000/seattlecarnivores-edca2/us-central1/getTacomaReport';
+const getTacomaReport = 'https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getTacomaReport';
 const videoFormats = ['.mov', '.mp4', '.webm', '.ogg', '.avi', '.wmv', '.mkv'];
 
 class ReportViewer extends Component {
