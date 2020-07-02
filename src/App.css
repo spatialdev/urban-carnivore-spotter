@@ -151,18 +151,10 @@ Desktop Header
     margin: 20px;
 }
 
-.logoContainer2 {
-    height: 210px;
-    width: 210px;
-    position: absolute;
-    left: 5%;
-    background-color: #8acc25;
-}
-
 .logo2 {
-    height: 200px;
-    width: 200px;
-    margin: 5px;
+    height: 80px;
+    width: 80px;
+    margin: 10px;
 }
 
 /*

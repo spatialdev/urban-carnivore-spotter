@@ -16,7 +16,7 @@ class DesktopHeader extends Component {
     return (
       <Sticky style={{top: 0, width: '100%', zIndex: 100}}>
         <AppBar position="static" className="appBar">
-            {isTacoma ?  <div className="logoContainer2"><img className="logo2" src={tacomaLogo} alt={"Pt. Defiance Zoo logo"}/></div> :  <div className="logoContainer"><img className="logo" src={zooLogo} alt={"Woodland Park Zoo logo"}/></div>}
+            {isTacoma ?  <div className="logoContainer"><img className="logo2" src={tacomaLogo} alt={"Pt. Defiance Zoo logo"}/></div> :  <div className="logoContainer"><img className="logo" src={zooLogo} alt={"Woodland Park Zoo logo"}/></div>}
           <h1 className={isTacoma? "headerTitle" : "headerTitle"} onClick={() => isTacoma ? history.push('/tacoma') : history.push('/')} style={{ cursor: 'pointer' }}>
             Carnivore Spotter
           </h1>

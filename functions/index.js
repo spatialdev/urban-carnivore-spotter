@@ -16,10 +16,9 @@ const REPORT_URL_STUB = 'https://console.firebase.google.com/project/seattlecarn
 const TACOMA_REPORTS_URL = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2FreportsTacoma';
 
 // initialize username/password
-// const username = functions.config().email.username;
-// const password = functions.config().email.password;
-const username = "someotheremailaddress3@gmail.com";
-const password = "critigen";
+const username = functions.config().email.username;
+const password = functions.config().email.password;
+
 /**
  * Internal helper method that converts JS Date objects to firebase timestamps.
  * Thanks to https://stackoverflow.com/questions/53482750/convert-date-to-timestamp-for-storing-into-firebase-firestore-in-javascript

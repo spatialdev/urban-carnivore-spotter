@@ -137,7 +137,7 @@ class MapView extends Component {
     state = {
         viewport: {
             center: window.location.pathname.indexOf('tacoma')===-1 ? [-122.335167, 47.608013] : [-122.522997,47.3049119],
-            zoom: [12],
+            zoom: [10],
         },
         popupInfo: null,
         reports: null,
