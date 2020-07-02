@@ -66,7 +66,6 @@ const DIALOG_MODES = {
 const TACOMA_LINE_FOR_BBOX = turf.lineString([[-122.670442006814, 47.0600919913851], [-122.320456134032, 47.3206338868513]]);
 const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
 
-
 const styles = {
   overlay: {
     height: '100vh',
@@ -229,15 +228,13 @@ class Form extends Component {
   updatePlace = (lat,lng) => {
      neighborhoodService.isInTacoma(lat, lng)
         .then(place => {
+          // If place from neighborhoodService comes back as Unknown, check if the point lies within the TACOMA_BBOX
           if (place==="Unknown")
           {
             const point = turf.point([lng, lat]);
-            console.log("unknown" + turf.booleanPointInPolygon(point, TACOMA_BBOX));
-
             this.setState({isTacoma:turf.booleanPointInPolygon(point, TACOMA_BBOX)});
           }
           else{
-            console.log("else"+place);
              this.setState({isTacoma:place === "Tacoma"});
           }
         });
@@ -247,7 +244,6 @@ class Form extends Component {
     ReactGA.pageview(window.location.pathname);
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
-
     this.updateNeighborhood(this.state.mapLat, this.state.mapLng);
     this.updatePlace(this.state.mapLat, this.state.mapLng);
     // Request the user's geolocation and default to there

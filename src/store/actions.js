@@ -1,6 +1,5 @@
 import {
     SET_MOBILE,
-    SET_URL,
     UPDATE_FILTER,
     UPDATE_FILTER_DATE,
     TOGGLE_FILTER_CONFIDENCE,
@@ -13,13 +12,6 @@ import {store} from './index';
 export const setMobile = (value) => {
     store.dispatch({
         type: SET_MOBILE,
-        value
-    });
-};
-
-export const setUrl = (value) => {
-    store.dispatch({
-        type: SET_URL,
         value
     });
 };

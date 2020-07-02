@@ -41,12 +41,9 @@ class PointTooltip extends Component {
                 <div>{firebaseTimeToDateTimeString(report.data.timestamp)}</div>
                 <div><strong>Location:</strong> {report.data.neighborhood}</div>
             </div>
-            {/*<div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => history.push(`/reports/${report.id}&${report.data.isTacoma}`)}>*/}
-
             <div className={classes.reportLink} style = {{cursor: "pointer"}} onClick={() => isInTacoma ? history.push(`${path}/tacoma/${report.id}`) : history.push(`${path}/${report.id}`) }>
                 <KeyboardArrowRight/>
             </div>
-
         </div>
     }
 };

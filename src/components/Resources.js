@@ -48,7 +48,7 @@ const styles = {
     expandHeader: {
         margin: 16,
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     headerTitle: {
         fontWeight: 'bold',
