@@ -33,7 +33,7 @@ export default class NeighborhoodService {
             .send()
             .then(response => {
                 const places = response.body.features;
-                return places && places.length > 0 ? places[0].text: "Unknown";
+                return places && places.length > 0 ? places[0].text: {};
             });
     };
 

@@ -15,9 +15,11 @@ const REPORTS_TACOMA = 'reportsTacoma';
 const REPORT_URL_STUB = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2Freports';
 const TACOMA_REPORTS_URL = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2FreportsTacoma';
 
+const username = "someotheremailaddress3@gmail.com";
+const password = "critigen";
 // initialize username/password
-const username = functions.config().email.username;
-const password = functions.config().email.password;
+// const username = functions.config().email.username;
+// const password = functions.config().email.password;
 
 /**
  * Internal helper method that converts JS Date objects to firebase timestamps.
@@ -81,8 +83,8 @@ filterReport = (document) => {
 exports.getReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== 'GET') {
-      return res.status(401).json({
-        message: 'Not allowed'
+      return res.status(404).json({
+        message: 'Not found'
       });
     }
     return database.collection(REPORTS).doc(req.query.id)
@@ -91,7 +93,7 @@ exports.getReport = functions.https.onRequest((req, res) => {
         if (doc.exists) {
           return res.status(200).send(filterReport(doc));
         } else {
-          return res.status(200).send('No data!');
+          return res.status(200).send({});
         }
       })
       .catch(error => {
@@ -103,8 +105,8 @@ exports.getReport = functions.https.onRequest((req, res) => {
 exports.getTacomaReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
     if (req.method !== 'GET') {
-      return res.status(401).json({
-        message: 'Not allowed'
+      return res.status(404).json({
+        message: 'Not found'
       });
     }
     return database.collection(REPORTS_TACOMA).doc(req.query.id)
@@ -113,7 +115,7 @@ exports.getTacomaReport = functions.https.onRequest((req, res) => {
         if (doc.exists) {
           return res.status(200).send(filterReport(doc));
         } else {
-          return res.status(200).send('No data!');
+          return res.status(200).send({});
         }
       })
       .catch(error => {
@@ -190,8 +192,8 @@ exports.getReports = functions.https.onRequest((req, res) => {
     let reports = database.collection(REPORTS);
     let reports_tacoma = database.collection(REPORTS_TACOMA);
     let querySnapshotPromise = buildQuery(req.query, reports).get();
-    let querySnapshotPromise1 = buildQuery(req.query, reports_tacoma).get();
-    return Promise.all([querySnapshotPromise1, querySnapshotPromise]).then(values => {
+    let querySnapshotPromiseTacoma = buildQuery(req.query, reports_tacoma).get();
+    return Promise.all([querySnapshotPromiseTacoma, querySnapshotPromise]).then(values => {
         let items = [];
         values.forEach(snapshot => {
             if(!snapshot.empty)
@@ -427,7 +429,7 @@ exports.weeklyDigest = functions.pubsub.schedule('0 10 * * 2')
 /**
  * Every week, send a digest containing all of the submissions from the Tacoma collection from last week.
  */
-exports.weeklyDigest = functions.pubsub.schedule('0 10 * * 2')
+exports.weeklyDigestTacoma = functions.pubsub.schedule('0 10 * * 2')
   .onRun(context => {
     const weekAgo = toTimestamp(moment().subtract(1, 'week').toDate());
     return database.collection(REPORTS_TACOMA)

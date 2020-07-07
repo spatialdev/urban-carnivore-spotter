@@ -228,14 +228,14 @@ class Form extends Component {
   updatePlace = (lat,lng) => {
      neighborhoodService.isInTacoma(lat, lng)
         .then(place => {
-          // If place from neighborhoodService comes back as Unknown, check if the point lies within the TACOMA_BBOX
-          if (place==="Unknown")
+          // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+          if (JSON.stringify(place) === '{}')
           {
             const point = turf.point([lng, lat]);
             this.setState({isTacoma:turf.booleanPointInPolygon(point, TACOMA_BBOX)});
           }
           else{
-             this.setState({isTacoma:place === "Tacoma"});
+             this.setState({isTacoma:place.toString().toLowerCase() === "tacoma"});
           }
         });
   };
@@ -328,7 +328,7 @@ class Form extends Component {
   handleClose = () => {
     const { history, handleDrawerState, fromDrawer } = this.props;
     this.setState({dialogMode: DIALOG_MODES.CLOSED}, () => {
-      history.push('/');
+      history.location.pathname.includes('tacoma') ? history.push('/tacoma') : history.push('/');
       if (fromDrawer) {
         handleDrawerState(false);
       }
