@@ -24,6 +24,19 @@ export default class NeighborhoodService {
             });
     };
 
+    isInTacoma = (lat, lng) => {
+        // Create request
+        return this.geocodingService.reverseGeocode({
+            query: [lng, lat],
+            types: ['place']
+        })
+            .send()
+            .then(response => {
+                const places = response.body.features;
+                return places && places.length > 0 ? places[0].text: {};
+            });
+    };
+
     static getAllNeighborhoods = () => {
         return axios.get(ALL_NEIGHBORHOODS_ENDPOINT)
             .then(neighborhoods => neighborhoods.data.sort());

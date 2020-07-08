@@ -72,19 +72,22 @@ class ResourcesDesktop extends Component {
         </div>
         <hr/>
         <div>
-          <h3 className={classes.header}>Seattle Urban Carnivore Project</h3>
+          <h3 className={classes.header}> {window.location.pathname.indexOf('tacoma')===-1 ? 'Seattle Urban Carnivore Project and Grit City Carnivore Project': 'Grit City Carnivore Project and Seattle Urban Carnivore Project'}</h3>
           <div className={classes.content}>
-            <p>Carnivore Spotter is part of the Seattle Urban Carnivore Project, a collaboration between the Seattle University and Woodland Park Zoo.</p>
-            <a href="https://www.zoo.org/carnivorespotter">learn more</a>
+            <p>Carnivore Spotter was developed by Woodland Park Zoo and Seattle University and is a component of both the
+              <a href="https://www.zoo.org/seattlecarnivores"> Seattle Urban Carnivore Project</a>
+                and the <a href="https://gritcitycarnivores.org/">Grit City Carnivore Project</a>. Together we're studying carnivores throughout the Puget Sound region as part of the Urban Wildlife Information Network. </p>
+              {window.location.pathname.indexOf('tacoma')===-1 ? <a href="https://www.zoo.org/carnivorespotter">Seattle Urban Carnivore Project - learn more</a> : <a href="https://gritcitycarnivores.org/">Grit City Carnivore Project - learn more and contact us</a> }
           </div>
         </div>
         <hr/>
-        <div>
+          { window.location.pathname.indexOf('tacoma')===-1?<div>
           <h3 className={classes.header}>Contact Us</h3>
           <div className={classes.content} >
             <a href="mailto:seattlecarnivores@zoo.org">seattlecarnivores@zoo.org</a>
           </div>
-        </div>
+        </div> : <div/>}
+
       </div>
     </div>
   }

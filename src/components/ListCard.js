@@ -23,6 +23,8 @@ const styles = theme => ({
 
 const ListCard = props => {
   const { classes, report } = props;
+  const isInTacoma = report.data!==undefined && report.data.isTacoma !==undefined ? report.data.isTacoma : false;
+  const path = window.location.pathname.indexOf('tacoma')===-1 ? '/reports' : '/tacoma/reports';
   return <Card className="card">
     <CardContent className={classes.allContent}>
       <CardMedia className="cardPicture"
@@ -33,7 +35,7 @@ const ListCard = props => {
         <Typography variant={'subtitle1'}>{firebaseTimeToDateTimeString(report.data.timestamp)}</Typography>
         <Typography style={{ color: 'grey' }}>{report.data.neighborhood ? report.data.neighborhood : "Unknown"}</Typography>
         <li>
-          <Link to={`/reports/${report.id}`}>See Report</Link>
+          <Link to={isInTacoma ? `${path}/tacoma/${report.id}`: `${path}/${report.id}`}>See Report</Link>
         </li>
       </CardContent>
     </CardContent>

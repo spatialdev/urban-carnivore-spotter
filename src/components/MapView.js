@@ -6,14 +6,11 @@ import FilterDrawer from './FilterDrawer';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { dataMatchesFilter } from '../services/FilterService';
-import { getColorForSpecies } from '../services/ColorService';
 import NavigationIcon from '@material-ui/icons/Navigation';
 import Fab from '@material-ui/core/Fab';
 import List from "@material-ui/icons/List";
 import Help from "@material-ui/icons/HelpOutline";
 import {withRouter} from "react-router-dom";
-import DialogContent from "@material-ui/core/DialogContent";
-import Dialog from "@material-ui/core/Dialog";
 import { speciesColorMap } from '../services/ColorService';
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
@@ -139,7 +136,7 @@ const styles = {
 class MapView extends Component {
     state = {
         viewport: {
-            center: [-122.335167, 47.608013],
+            center: window.location.pathname.indexOf('tacoma') === -1 ? [-122.335167, 47.608013] : [-122.522997,47.3049119],
             zoom: [10],
         },
         popupInfo: null,
@@ -216,16 +213,17 @@ class MapView extends Component {
         }
         else {
             this.setState({viewport: {
-                    center: [-122.354291, 47.668733],
+                    center: window.location.pathname.indexOf('tacoma')===-1? [-122.354291, 47.668733]: [-122.522997, 47.3049119],
                     zoom: [10],
                 }})
         }
     };
 
     showReportSightings = (isMobile, classes, history) => {
+
         if(!isMobile)
         {
-            return<Button variant="contained" color="primary" className="reportSightingButton" onClick={() => history.push('/reports/create')} >
+            return<Button variant="contained" color="primary" className="reportSightingButton" onClick={() => history.location.pathname.indexOf('tacoma') !== -1 ? history.push('/tacoma/reports/create') : history.push('/reports/create')} >
                     Report Sightings
                     <AddIcon />
                 </Button>;
@@ -234,12 +232,13 @@ class MapView extends Component {
     };
 
     showListViewButton = (isMobile, classes, history) => {
+        let isTacoma = history.location.pathname.indexOf('tacoma') !== -1;
         return isMobile ?         <div>
-            <Fab className = {classes.listViewMobileWrapper} aria-label="Toggle"  size="small" onClick={() => history.push('/list')} >
+            <Fab className = {classes.listViewMobileWrapper} aria-label="Toggle"  size="small" onClick={() => isTacoma ? history.push('/tacoma/list') : history.push('/list')} >
                 <List className = {classes.listViewButton}/>
             </Fab>
         </div> : <div className = {classes.listViewDesktopWrapper}>
-            <Fab variant="extended" aria-label="Toggle" className={classes.fab} size="medium"  onClick={() => history.push('/list')}>
+            <Fab variant="extended" aria-label="Toggle" className={classes.fab} size="medium"  onClick={() => isTacoma ? history.push('/tacoma/list') : history.push('/list')}>
                 <List className={classes.extendedIcon}/>
                 List View
             </Fab>

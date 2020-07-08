@@ -97,7 +97,7 @@ class ListView extends Component {
             .map((report) => <ListCard report={report} key={report.id}/>)}
             <div >
                 <Fab  className={isMobile? classes.mapViewButtonContainerMobile : classes.mapViewButtonContainerDesktop} aria-label="Toggle"  size="small">
-                    <Map onClick={() => history.push('/')} className={isMobile? classes.mapViewButtonMobile : classes.mapViewButtonDesktop}/>
+                    <Map onClick={() => history.location.pathname.indexOf('tacoma') === -1 ? history.push('/') : history.push('/tacoma')} className={isMobile? classes.mapViewButtonMobile : classes.mapViewButtonDesktop}/>
                 </Fab>
             </div>
         </div>

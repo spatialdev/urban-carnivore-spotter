@@ -15,7 +15,11 @@ const SplashPage = (props) => {
   return <Dialog open={!cookies.get(VISITED_BEFORE)}
           onClose={() => cookies.set(VISITED_BEFORE, true)}>
     <DialogContent>
-      <p>The Seattle Urban Carnivore project is a partnership between Woodland Park Zoo and Seattle University and aims to explore how mammalian carnivores live and interact with people across urban and suburban areas in the Seattle region.</p>
+        {window.location.pathname.indexOf('tacoma') === -1 ?
+            <p>The Seattle Urban Carnivore project is a partnership between Woodland Park Zoo and Seattle University and aims to explore how mammalian carnivores live and interact with people across urban and suburban areas in the Seattle region.</p>:
+            <p>Thank you for reporting your sightings of coyotes and other carnivores! This information is essential for helping us gain a better understanding of our wild neighbors.​<br/>​<br/>
+                Carnivore Spotter gathers sightings from throughout Western Washington to learn how mammalian carnivores live and interact with people in our region. These studies are being undertaken by researchers at Point Defiance Zoo & Aquarium, Northwest Trek Wildlife Park, Woodland Park Zoo, University of Washington Tacoma and Seattle University.
+            </p>}
       <p>The project focuses on the following species:</p>
       <ul>
         <li className={classes.bulleted}>Black Bear</li>

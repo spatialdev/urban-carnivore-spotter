@@ -38,7 +38,7 @@ class App extends Component {
     const {isMobile, history} = this.props;
     // If we are on the mobile create reports page, show nothing. Otherwise, show either the mobile header or the
     // desktop header.
-    const header = isMobile && history.location.pathname === '/reports/create' ? null : isMobile ? <Header/> : <DesktopHeader/>;
+    const header = isMobile && (history.location.pathname === '/reports/create' || history.location.pathname === '/tacoma/reports/create') ? null : isMobile ? <Header/> : <DesktopHeader/>;
     // If we are on mobile, and not on the create reports page, show a footer.
     const footer = isMobile && history.location.pathname !== '/reports/create' ? <Footer/> : null;
     return (

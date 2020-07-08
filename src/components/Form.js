@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 import * as ReactGA from 'react-ga';
+import * as turf from '@turf/turf'
 
 import Button from '@material-ui/core/Button';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -62,6 +63,8 @@ const DIALOG_MODES = {
   CLOSED: 'closed',
   MISSING_FIELD: 'missing field',
 };
+const TACOMA_LINE_FOR_BBOX = turf.lineString([[-122.670442006814, 47.0600919913851], [-122.320456134032, 47.3206338868513]]);
+const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
 
 const styles = {
   overlay: {
@@ -162,8 +165,8 @@ class Form extends Component {
   state = {
     species: '',
     timestamp: new Date(),
-    mapLat: 47.668733,
-    mapLng: -122.354291,
+    mapLat: window.location.pathname.indexOf('tacoma') === -1 ? 47.668733: 47.3049119,
+    mapLng: window.location.pathname.indexOf('tacoma') === -1 ? -122.354291: -122.522997,
     confidence: '',
     animalFeatures: '',
     numberOfAdultSpecies: '1',
@@ -202,7 +205,8 @@ class Form extends Component {
     editMode: false,
     addMode: false,
     finalMap: true,
-    spinnerActive: false
+    spinnerActive: false,
+    isTacoma: false
   };
 
   constructor(props) {
@@ -221,13 +225,27 @@ class Form extends Component {
         }));
   };
 
+  updatePlace = (lat,lng) => {
+     neighborhoodService.isInTacoma(lat, lng)
+        .then(place => {
+          // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+          if (JSON.stringify(place) === '{}')
+          {
+            const point = turf.point([lng, lat]);
+            this.setState({isTacoma:turf.booleanPointInPolygon(point, TACOMA_BBOX)});
+          }
+          else{
+             this.setState({isTacoma:place.toString().toLowerCase() === "tacoma"});
+          }
+        });
+  };
+
   componentDidMount = () => {
     ReactGA.pageview(window.location.pathname);
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
-
     this.updateNeighborhood(this.state.mapLat, this.state.mapLng);
-
+    this.updatePlace(this.state.mapLat, this.state.mapLng);
     // Request the user's geolocation and default to there
     // See https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API for more information
     if (navigator.geolocation) {
@@ -244,6 +262,7 @@ class Form extends Component {
   getMapCoordinates = dataFromMap => {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
     this.updateNeighborhood(dataFromMap.lat, dataFromMap.lng);
+    this.updatePlace(dataFromMap.lat, dataFromMap.lng)
   };
 
   handleSubmit = () => {
@@ -309,7 +328,7 @@ class Form extends Component {
   handleClose = () => {
     const { history, handleDrawerState, fromDrawer } = this.props;
     this.setState({dialogMode: DIALOG_MODES.CLOSED}, () => {
-      history.push('/');
+      history.location.pathname.includes('tacoma') ? history.push('/tacoma') : history.push('/');
       if (fromDrawer) {
         handleDrawerState(false);
       }
@@ -451,7 +470,7 @@ class Form extends Component {
         {submitting ? <LoadingOverlay active={submitting} spinner text='Submitting...' className={classes.overlay} />: null}
         {isMobile ?
           <Fab style={{backgroundColor: '#8acc25'}} aria-label="Add" className={classes.fab}>
-            <ClearIcon style={{color: '#FFFFFF'}} onClick={() => history.push('/')}/>
+            <ClearIcon style={{color: '#FFFFFF'}} onClick={() => history.location.pathname.includes('tacoma') ? history.push('/tacoma') : history.push('/')}/>
           </Fab>: null}
         <h2>Report a carnivore sighting</h2>
         <ValidatorForm onError={() => this.setState({dialogMode: DIALOG_MODES.MISSING_FIELD})}

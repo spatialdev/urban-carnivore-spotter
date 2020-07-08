@@ -51,10 +51,12 @@ const styles = {
         justifyContent: 'space-between'
     },
     headerTitle: {
-        alignText: 'left',
         fontWeight: 'bold',
-        fontSize: 18,
-        lineHeight:'50px'
+        fontSize: 16,
+        lineHeight:'50px',
+        maxWidth: '250px',
+        justifyContent: 'left',
+        textAlign:'left'
     },
     collapsible: {
         textAlign: 'left',
@@ -118,7 +120,7 @@ class Resources extends Component {
                     <div className={classes.body}>
                         {speciesList.map((type, idx) =>
                             <li key={idx}>
-                                <Link to={`/resources/${type}`}>{getDisplayName(type)}</Link>
+                                <Link to={window.location.pathname.indexOf('tacoma')===-1 ? `/resources/${type}` : `/tacoma/resources/${type}`}>{getDisplayName(type)}</Link>
                             </li>)
                         }
                     </div>
@@ -126,21 +128,29 @@ class Resources extends Component {
                 <hr/>
 
                 {/* Seattle Urban Carnivore Project */}
-                {this.getCollapse(classes, "Seattle Urban Carnivore Project", this.toggleShow('showProjectDescription'), showProjectDescription,
-                    <div className={classes.body}>
-                        <p>Carnivore Spotter is part of the Seattle Urban Carnivore Project, a collaboration between the Seattle University and Woodland Park Zoo</p>
-                        <a href="https://www.zoo.org/carnivorespotter">learn more</a>
-                    </div>
+
+                {this.getCollapse(classes, window.location.pathname.indexOf('tacoma')===-1 ? "Seattle Urban Carnivore Project and Grit City Carnivore Project": "Grit City Carnivore Project and Seattle Urban Carnivore Project", this.toggleShow('showProjectDescription'), showProjectDescription,
+
+
+          <div className={classes.body}>
+            <p>Carnivore Spotter was developed by Woodland Park Zoo and Seattle University and is a component of both the
+              <a href="https://www.zoo.org/seattlecarnivores"> Seattle Urban Carnivore Project</a>
+               and the <a href="https://gritcitycarnivores.org/">Grit City Carnivore Project</a>. Together we're studying carnivores throughout the Puget Sound region as part of the Urban Wildlife Information Network. </p>
+              {window.location.pathname.indexOf('tacoma')===-1 ? <a href="https://www.zoo.org/carnivorespotter">Seattle Urban Carnivore Project - learn more</a> : <a href="https://gritcitycarnivores.org/">Grit City Carnivore Project - learn more</a> }
+        </div>
 
                 )}
                 <hr/>
 
                 {/* Contact Us */}
-                {this.getCollapse(classes, "Contact Us", this.toggleShow('showContactUs'), showContactUs,
+                { window.location.pathname.indexOf('tacoma')===-1? this.getCollapse(classes, "Contact Us", this.toggleShow('showContactUs'), showContactUs,
                     <div className={classes.body} >
                         <a href="mailto:seattlecarnivores@zoo.org">seattlecarnivores@zoo.org</a>
                     </div>
-                )}
+                ): this.getCollapse(classes, "Contact Us", this.toggleShow('showContactUs'), showContactUs,
+                    <div className={classes.body} >
+                        <a href="https://gritcitycarnivores.org">Grit City Carnivore Project</a>
+                    </div>)}
                 <hr/>
             </div>
         );

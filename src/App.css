@@ -151,6 +151,12 @@ Desktop Header
     margin: 20px;
 }
 
+.logo2 {
+    height: 80px;
+    width: 80px;
+    margin: 10px;
+}
+
 /*
 Form Wizard Styles
  */
