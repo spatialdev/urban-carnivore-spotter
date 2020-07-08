@@ -371,8 +371,7 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
 
 const sendWeeklyDigestEmail = (reportSnapshots) => {
   const from = `"Test reporters" <${username}@example.com>`;
-  const to = `"Seattle Carnivore Spotter" <30sayana@gmail.com>`;
-  //const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
+  const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
   const subject = "Weekly Carnivore Spotting Submission Digest";
   const styles = `<style>
         table td + td {
