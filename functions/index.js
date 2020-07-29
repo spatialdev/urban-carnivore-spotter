@@ -12,8 +12,8 @@ const NEIGHBORHOOD = 'neighborhood';
 const UNIQUES = 'uniques';
 const REPORTS = 'reports';
 const REPORTS_TACOMA = 'reportsTacoma';
-const REPORT_URL_STUB = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2Freports';
-const TACOMA_REPORTS_URL = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2FreportsTacoma';
+const REPORT_URL_STUB = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2Freports~2F';
+const TACOMA_REPORTS_URL = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2FreportsTacoma~2F';
 
 // initialize username/password
 const username = functions.config().email.username;
@@ -350,7 +350,7 @@ const formatSubmissionAsTable = (reportSnapshots) => {
 };
 
 const sendNewSubmissionEmail = (reportSnapshot) => {
-    const from = `"Test reporters" <${username}@example.com>`;
+    const from = `"Test reporters" <${username}@gmail.com>`;
     const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
     const subject = "New report submitted";
     const styles = `<style>
@@ -370,7 +370,7 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
 };
 
 const sendWeeklyDigestEmail = (reportSnapshots) => {
-  const from = `"Test reporters" <${username}@example.com>`;
+  const from = `"Test reporters" <${username}@gmail.com>`;
   const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
   const subject = "Weekly Carnivore Spotting Submission Digest";
   const styles = `<style>
@@ -395,7 +395,7 @@ const sendWeeklyDigestEmail = (reportSnapshots) => {
 /**
  * Whenever a new document is added to the reports collection, send a notification email.
  */
-exports.reportAdded = functions.firestore.document(`${REPORTS}/{reportId}`)
+exports.sendEmailOnReportCreation = functions.firestore.document(`${REPORTS}/{reportId}`)
     .onCreate((snapshot, context) => {
       sendNewSubmissionEmail(snapshot);
     });
@@ -403,7 +403,7 @@ exports.reportAdded = functions.firestore.document(`${REPORTS}/{reportId}`)
 /**
  * Whenever a new document is added to the Tacoma reports collection, send a notification email.
  */
-exports.reportAdded = functions.firestore.document(`${REPORTS_TACOMA}/{reportId}`)
+exports.sendEmailOnReportTacomaCreation = functions.firestore.document(`${REPORTS_TACOMA}/{reportId}`)
     .onCreate((snapshot, context) => {
       sendNewSubmissionEmail(snapshot);
     });
