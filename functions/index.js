@@ -408,7 +408,6 @@ exports.sendEmailOnReportTacomaCreation = functions.firestore.document(`${REPORT
       sendNewSubmissionEmail(snapshot);
     });
 
-
 /**
  * Every week, send a digest containing all of the submissions from the last week.
  */
