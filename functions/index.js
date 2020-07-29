@@ -370,7 +370,7 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
 };
 
 const sendWeeklyDigestEmail = (reportSnapshots) => {
-  const from = `"Test reporters" <${username}@gmail.com>`;
+  const from = `"Test reporters" <${username}@example.com>`;
   const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
   const subject = "Weekly Carnivore Spotting Submission Digest";
   const styles = `<style>
@@ -391,22 +391,6 @@ const sendWeeklyDigestEmail = (reportSnapshots) => {
       ${formatSubmissionAsTable(reportSnapshots)}`;
   return sendEmail(from, to, subject, html);
 };
-
-/**
- * Whenever a new document is added to the reports collection, send a notification email.
- */
-exports.reportAdded = functions.firestore.document(`${REPORTS}/{reportId}`)
-    .onCreate((snapshot, context) => {
-      sendNewSubmissionEmail(snapshot);
-    });
-
-/**
- * Whenever a new document is added to the Tacoma reports collection, send a notification email.
- */
-exports.reportAdded = functions.firestore.document(`${REPORTS_TACOMA}/{reportId}`)
-    .onCreate((snapshot, context) => {
-      sendNewSubmissionEmail(snapshot);
-    });
 
 /**
  * Whenever a new document is added to the reports collection, send a notification email.
