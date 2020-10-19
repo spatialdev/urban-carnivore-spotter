@@ -10,17 +10,23 @@ class Uploader extends Component {
     mediaPaths: [],
   };
 
-  handleChangeImage = e => {
-    const { target: { files } } = e;
+  handleChangeImage = (e) => {
+    const {
+      target: { files },
+    } = e;
     const { getMedia, acceptType, setSpinner } = this.props;
     setSpinner(true);
-    if (acceptType === "images/*") {
-      Promise.all(Array.from(files).map(file => imageCompression(file, {maxSizeMB: .5})))
-        .then(files => {
+    if (acceptType === 'image/*') {
+      Promise.all(
+        Array.from(files).map((file) =>
+          imageCompression(file, { maxSizeMB: 0.5 }),
+        ),
+      )
+        .then((files) => {
           getMedia(files, this.fileUploader);
           setSpinner(false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           setSpinner(false);
         });
@@ -28,14 +34,13 @@ class Uploader extends Component {
       getMedia(Array.from(files), this.fileUploader);
       setSpinner(false);
     }
-
   };
 
-  handleUploadError = error => {
+  handleUploadError = (error) => {
     console.error(error);
   };
 
-  handleUploadSuccess = async filename => {
+  handleUploadSuccess = async (filename) => {
     const { passPaths, reference } = this.props;
     const { mediaPaths } = this.state;
     await firebase
@@ -43,10 +48,9 @@ class Uploader extends Component {
       .ref(reference)
       .child(filename)
       .getDownloadURL()
-      .then(url => mediaPaths.push(url));
+      .then((url) => mediaPaths.push(url));
 
     passPaths(mediaPaths);
-
   };
 
   render() {
@@ -62,7 +66,7 @@ class Uploader extends Component {
           onChange={this.handleChangeImage}
           onUploadError={this.handleUploadError}
           onUploadSuccess={this.handleUploadSuccess}
-          ref={instance => this.fileUploader = instance}
+          ref={(instance) => (this.fileUploader = instance)}
         />
       </div>
     );
@@ -71,7 +75,7 @@ class Uploader extends Component {
 
 Uploader.propTypes = {
   acceptType: PropTypes.string.isRequired,
-  reference: PropTypes.string.isRequired
+  reference: PropTypes.string.isRequired,
 };
 
 export default Uploader;
