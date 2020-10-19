@@ -10,27 +10,29 @@ import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import { withStyles } from '@material-ui/core/styles';
 import Uploader from './Uploader';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     flexGrow: 1,
   },
   paper: {
     height: 140,
     width: 100,
-    border: 'dashed 2px gray',
+    border: 'dashed 2px gray'
   },
   control: {
     padding: theme.spacing.unit * 2,
   },
 });
 
+
 class MediaUpload extends Component {
+
   getMedia = (dataFromChild, uploader) => {
     const { uploadMedia } = this.props;
     uploadMedia(dataFromChild, uploader);
   };
 
-  getUploaderPaths = (paths) => {
+  getUploaderPaths = paths => {
     const { getMediaPaths } = this.props;
     getMediaPaths(paths);
   };
@@ -41,52 +43,37 @@ class MediaUpload extends Component {
     return (
       <Grid container className={classes.root} spacing={16}>
         <Grid item xs={12}>
-          <Grid container justify='center' spacing={16}>
+          <Grid container justify="center" spacing={16}>
             <Grid key={0} item>
-              <Paper className='paper'>
+              <Paper className="paper">
                 <label style={{ cursor: 'pointer' }}>
-                  <CameraAltIcon />
-                  <AddIcon />
+                  <CameraAltIcon/>
+                  <AddIcon/>
                   <p>Photos</p>
-                  <Uploader
-                    acceptType='image/*'
-                    reference='images'
-                    getMedia={this.getMedia}
-                    passPaths={getMediaPaths('image')}
-                    setSpinner={setSpinner}
-                  />
+                  <Uploader acceptType="images/*" reference="images" getMedia={this.getMedia}
+                            passPaths={getMediaPaths("image")} setSpinner={setSpinner}/>
                 </label>
               </Paper>
             </Grid>
             <Grid key={1} item>
-              <Paper className='paper'>
+              <Paper className="paper">
                 <label style={{ cursor: 'pointer' }}>
-                  <PlayArrowIcon />
-                  <AddIcon />
+                  <PlayArrowIcon/>
+                  <AddIcon/>
                   <p>Videos</p>
-                  <Uploader
-                    acceptType='video/*'
-                    reference='videos'
-                    getMedia={this.getMedia}
-                    passPaths={getMediaPaths('video')}
-                    setSpinner={setSpinner}
-                  />
+                  <Uploader acceptType="video/*" reference="videos" getMedia={this.getMedia}
+                            passPaths={getMediaPaths("video")} setSpinner={setSpinner}/>
                 </label>
               </Paper>
             </Grid>
             <Grid key={2} item>
-              <Paper className='paper'>
+              <Paper className="paper">
                 <label style={{ cursor: 'pointer' }}>
-                  <VolumeUpIcon />
-                  <AddIcon />
+                  <VolumeUpIcon/>
+                  <AddIcon/>
                   <p>Sound files</p>
-                  <Uploader
-                    acceptType='audio/*'
-                    reference='audio'
-                    getMedia={this.getMedia}
-                    passPaths={getMediaPaths('audio')}
-                    setSpinner={setSpinner}
-                  />
+                  <Uploader acceptType="audio/*" reference="audio" getMedia={this.getMedia}
+                            passPaths={getMediaPaths("audio")} setSpinner={setSpinner}/>
                 </label>
               </Paper>
             </Grid>
