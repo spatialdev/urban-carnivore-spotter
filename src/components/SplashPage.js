@@ -5,8 +5,34 @@ import { withCookies } from "react-cookie";
 const VISITED_BEFORE = "visitedBefore";
 
 const styles = {
+  title: {
+    fontWeight: "600",
+    fontSize: "1.1em",
+    fontFamily: "Raleway",
+  },
+  text: {
+    fontFamily: "Raleway",
+    fontSize: "0.85em",
+  },
+  italicText: {
+    fontFamily: "Raleway",
+    fontSize: "0.8em",
+    fontStyle: "italic",
+    color: "rgba(0,0,0,0.6)",
+  },
+  bulletedTitle: {
+    fontWeight: "600",
+    fontSize: "0.9em",
+    fontFamily: "Raleway",
+  },
   bulleted: {
     listStyleType: "disc",
+    fontFamily: "Raleway",
+    fontSize: "0.85em",
+    "&::marker": {
+      color: "#8DCA22",
+      fontWeight: "bold",
+    },
   },
 };
 
@@ -18,15 +44,16 @@ const SplashPage = (props) => {
       onClose={() => cookies.set(VISITED_BEFORE, true)}
     >
       <DialogContent>
+        <h4 className={classes.title}>Welcome to Carnivore Spotter!</h4>
         {window.location.pathname.indexOf("tacoma") === -1 ? (
-          <p>
+          <p className={classes.text}>
             The Seattle Urban Carnivore project is a partnership between
             Woodland Park Zoo and Seattle University and aims to explore how
             mammalian carnivores live and interact with people across urban and
             suburban areas in the Seattle region.
           </p>
         ) : (
-          <p>
+          <p className={classes.text}>
             Thank you for reporting your sightings of coyotes and other
             carnivores! This information is essential for helping us gain a
             better understanding of our wild neighbors.​
@@ -39,7 +66,9 @@ const SplashPage = (props) => {
             and Seattle University.
           </p>
         )}
-        <p>The project focuses on the following species:</p>
+        <p className={classes.bulletedTitle}>
+          The project focuses on the following species:
+        </p>
         <ul>
           <li className={classes.bulleted}>Black Bear</li>
           <li className={classes.bulleted}>Bobcat</li>
@@ -50,17 +79,23 @@ const SplashPage = (props) => {
           <li className={classes.bulleted}>River Otter</li>
           <li className={classes.bulleted}>Red Fox</li>
         </ul>
-        <p>
+        <p className={classes.italicText}>
           These are terrestrial (not marine) mammals in the taxonomic order
           Carnivora (*except for opossums). Some of them have a carnivorous diet
           (eating other animals). Many of them, however, have an omnivorous
           diet, eating plants as well as animals.
         </p>
-        <p>
+        <p className={classes.text}>
           You can use this observation form to submit observations of any of the
           above animals (or if you think you may have seen one of them, but
           aren’t sure!) We encourage reports with photos, videos or audio to
           increase report confidence.
+        </p>
+        <p className={classes.text}>
+          Each dot on this map represents an observation submitted to Carnivore
+          Spotter; there may be multiple observations of individual animals.
+          Every report is reviewed by project staff, but only those with media
+          (photos, video or audio) can be verified for accuracy.
         </p>
       </DialogContent>
     </Dialog>
