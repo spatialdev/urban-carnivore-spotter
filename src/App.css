@@ -77,10 +77,14 @@ Header
 Desktop Header
  */
 .categories {
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
   text-transform: uppercase;
   color: black;
+  font-weight: bold;
   height: 37px !important;
+  padding: 0 1em;
+  cursor: pointer;
 }
 
 .categories > h4 {
@@ -90,8 +94,9 @@ Desktop Header
 }
 
 .nav {
-  display: inline-block;
-  float: right;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 .appBar {
@@ -99,16 +104,32 @@ Desktop Header
   display: table !important;
 }
 
-#explore {
-  background-color: #8acc25;
-}
-
 #report {
   background-color: #ffd700;
 }
 
+#explore {
+  background-color: #cadb2a;
+}
+
+#explore:hover {
+  background-color: #8dca22;
+}
+
 #resources {
-  background-color: #39c9bb;
+  background-color: #39c9ba;
+}
+
+#resources:hover {
+  background-color: #01a0a4;
+}
+
+#faq {
+  background-color: #fecb00;
+}
+
+#faq:hover {
+  background-color: #f99d30;
 }
 
 .headerTitle {
