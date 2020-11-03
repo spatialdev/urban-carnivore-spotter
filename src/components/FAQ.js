@@ -3,6 +3,8 @@ import { withStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import contactImage from "../assets/Raccoon-Thinking.svg";
+import expandIcon from "../assets/Expand.svg";
+import closeIcon from "../assets/Close.svg";
 
 const styles = {
   mobileFaqWrapper: {
@@ -72,23 +74,29 @@ const styles = {
     display: "flex",
     flexDirection: "column",
   },
+  qAndAHeader: {
+    display: "flex",
+    flexDirection: "row",
+  },
   q: {
     color: "rgba(2,2,30,0.85)",
     fontWeight: 600,
     letterSpacing: "0.5px",
     fontSize: "1em",
-    margin: "1em 0",
+    margin: "1em",
   },
   a: {
     color: "rgba(2,2,30,0.7)",
     fontWeight: 500,
     letterSpacing: "0.44px",
     fontSize: "0.9em",
+    marginLeft: "2.5em",
   },
 };
 
 class FAQ extends Component {
   state = {
+    isOpen: {},
     qAndA: [
       {
         question: "Why am I having issues with reporting my observation?",
@@ -140,9 +148,21 @@ class FAQ extends Component {
       },
     ],
   };
+
+  handleOpenAnswer = (q) => {
+    const { isOpen } = this.state;
+    const question = isOpen[q];
+    if (question) {
+      this.setState({ isOpen: { ...isOpen, [q]: !question } });
+    } else {
+      this.setState({ isOpen: { ...isOpen, [q]: true } });
+    }
+  };
+
   render() {
     const { classes, isMobile } = this.props;
-    const { qAndA } = this.state;
+    const { qAndA, isOpen } = this.state;
+
     return (
       <div className={isMobile ? classes.mobileFaqWrapper : classes.faqWrapper}>
         <div className={isMobile ? classes.mobileContact : classes.contact}>
@@ -164,8 +184,25 @@ class FAQ extends Component {
             {qAndA.map(({ question, answer }) => {
               return (
                 <div className={classes.qAndA}>
-                  <div className={classes.q}>{question}</div>
-                  <div className={classes.a}>{answer}</div>
+                  <div className={classes.qAndAHeader}>
+                    {isOpen[question] ? (
+                      <img
+                        src={closeIcon}
+                        alt="Hide Answer"
+                        onClick={() => this.handleOpenAnswer(question)}
+                      />
+                    ) : (
+                      <img
+                        src={expandIcon}
+                        alt="Expand Answer"
+                        onClick={() => this.handleOpenAnswer(question)}
+                      />
+                    )}
+                    <div className={classes.q}>{question}</div>
+                  </div>
+                  {isOpen[question] && (
+                    <div className={classes.a}>{answer}</div>
+                  )}
                 </div>
               );
             })}
