@@ -43,7 +43,7 @@ class ReportViewer extends Component {
       .catch((error) => error);
   }
 
-  renderGalleryItem(item) {
+  renderMediaItem(item) {
     return (
       <div className="image-gallery-image">
         {item.isVideo ? (
@@ -108,7 +108,7 @@ class ReportViewer extends Component {
                 <h4>{report.species.toUpperCase()}</h4>
               </div>
               {media.length > 0 ? (
-                media.map((mediaItem) => this.renderGalleryItem(mediaItem))
+                media.map((mediaItem) => this.renderMediaItem(mediaItem))
               ) : (
                 <CardMedia
                   className="reportPlaceHolderImage"
