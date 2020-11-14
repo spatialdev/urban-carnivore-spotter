@@ -9,26 +9,31 @@ const styles = {
     fontWeight: "600",
     fontSize: "1.1em",
     fontFamily: "Raleway",
+    lineHeight: 1.4,
   },
   text: {
     fontFamily: "Raleway",
     fontSize: "0.85em",
+    lineHeight: 1.4,
   },
   italicText: {
     fontFamily: "Raleway",
     fontSize: "0.8em",
     fontStyle: "italic",
     color: "rgba(0,0,0,0.6)",
+    lineHeight: 1.4,
   },
   bulletedTitle: {
     fontWeight: "600",
     fontSize: "0.9em",
     fontFamily: "Raleway",
+    lineHeight: 1.4,
   },
   bulleted: {
     listStyleType: "disc",
     fontFamily: "Raleway",
     fontSize: "0.85em",
+    lineHeight: 1.4,
     "&::marker": {
       color: "#8DCA22",
       fontWeight: "bold",
