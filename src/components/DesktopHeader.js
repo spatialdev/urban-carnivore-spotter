@@ -52,6 +52,7 @@ class DesktopHeader extends Component {
               <h4
                 style={{
                   fontSize: "0.85em",
+                  letterSpacing: "2px",
                   paddingBottom: "1.5em",
                   borderBottom:
                     history.location.pathname === "/" ||
@@ -75,6 +76,7 @@ class DesktopHeader extends Component {
               <h4
                 style={{
                   fontSize: "0.85em",
+                  letterSpacing: "2px",
                   paddingBottom: "1.5em",
                   borderBottom:
                     history.location.pathname === "/resources" ||
@@ -96,6 +98,7 @@ class DesktopHeader extends Component {
               <h4
                 style={{
                   fontSize: "0.85em",
+                  letterSpacing: "2px",
                   paddingBottom: "1.5em",
                   borderBottom:
                     history.location.pathname === "/faq"

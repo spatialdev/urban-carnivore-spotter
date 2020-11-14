@@ -22,6 +22,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import * as ReactGA from "react-ga";
 import supported from "@mapbox/mapbox-gl-supported";
+import legendIcon from "../assets/Legend.svg";
 
 let Map2 = null;
 if (supported({})) {
@@ -59,18 +60,16 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
   },
-
   legendMobileContainer: {
     top: "24vh",
     left: "87%",
     position: "fixed",
-    backgroundColor: "#FFFFFF",
   },
   legendDesktopContainer: {
-    top: "24vh",
-    right: "3%",
-    position: "fixed",
-    backgroundColor: "#FFFFFF",
+    textAlign: "right",
+    margin: "2.5em",
+    marginTop: "0.5em",
+    marginRight: "3.5em",
   },
   legendButtonMobile: {
     "& svg": {
@@ -109,7 +108,8 @@ const styles = {
     backgroundColor: "#FFFFFF",
   },
   extendedIcon: {
-    marginRight: 1,
+    height: "0.8em",
+    width: "0.8em",
   },
   listViewMobileWrapper: {
     top: "15vh",
@@ -121,9 +121,10 @@ const styles = {
     },
   },
   listViewDesktopWrapper: {
-    top: "15vh",
-    right: "3%",
-    position: "fixed",
+    textAlign: "right",
+    margin: "2.5em",
+    marginTop: "0.5em",
+    marginRight: "3.5em",
 
     "& svg": {
       fontSize: 30,
@@ -142,6 +143,39 @@ const styles = {
     flexDirection: "column",
     overflow: "scroll",
     margin: 4,
+  },
+  addReportWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: "3em",
+  },
+  reportSightingButton: {
+    display: "flex",
+    flexDirection: "row",
+    textTransform: "capitalize",
+    fontFamily: "Raleway",
+    height: "40px",
+    borderRadius: "24px",
+  },
+  reportSightingText: {
+    marginRight: "10px",
+    marginLeft: "5px",
+    fontWeight: 600,
+    letterSpacing: "0.5px",
+  },
+  addReportIcon: {
+    height: "0.8em",
+    width: "0.8em",
+  },
+  buttonText: {
+    textTransform: "capitalize",
+    fontFamily: "Raleway",
+    marginRight: "10px",
+    marginLeft: "5px",
+    fontWeight: 600,
+    letterSpacing: "0.5px",
+    color: "rgba(2,2,30,0.7)",
   },
 };
 class MapView extends Component {
@@ -259,15 +293,15 @@ class MapView extends Component {
         <Button
           variant="contained"
           color="primary"
-          className="reportSightingButton"
+          className={classes.reportSightingButton}
           onClick={() =>
             history.location.pathname.indexOf("tacoma") !== -1
               ? history.push("/tacoma/reports/create")
               : history.push("/reports/create")
           }
         >
-          Report Sightings
-          <AddIcon />
+          <div className={classes.reportSightingText}>Report Sighting</div>
+          <AddIcon className={classes.addReportIcon} />
         </Button>
       );
     }
@@ -276,18 +310,16 @@ class MapView extends Component {
   showListViewButton = (isMobile, classes, history) => {
     let isTacoma = history.location.pathname.indexOf("tacoma") !== -1;
     return isMobile ? (
-      <div>
-        <Fab
-          className={classes.listViewMobileWrapper}
-          aria-label="Toggle"
-          size="small"
-          onClick={() =>
-            isTacoma ? history.push("/tacoma/list") : history.push("/list")
-          }
-        >
-          <List className={classes.listViewButton} />
-        </Fab>
-      </div>
+      <Fab
+        className={classes.listViewMobileWrapper}
+        aria-label="Toggle"
+        size="small"
+        onClick={() =>
+          isTacoma ? history.push("/tacoma/list") : history.push("/list")
+        }
+      >
+        <List className={classes.listViewButton} />
+      </Fab>
     ) : (
       <div className={classes.listViewDesktopWrapper}>
         <Fab
@@ -299,8 +331,34 @@ class MapView extends Component {
             isTacoma ? history.push("/tacoma/list") : history.push("/list")
           }
         >
+          <div className={classes.buttonText}>List View</div>
           <List className={classes.extendedIcon} />
-          List View
+        </Fab>
+      </div>
+    );
+  };
+
+  showLegendButton = (isMobile, classes) => {
+    return isMobile ? (
+      <Fab
+        className={classes.legendMobileContainer}
+        aria-label="Legend"
+        size="small"
+        onClick={() => this.setState({ legend: true })}
+      >
+        <img src={legendIcon} alt="Legend" />
+      </Fab>
+    ) : (
+      <div className={classes.legendDesktopContainer}>
+        <Fab
+          variant="extended"
+          className={classes.fab}
+          size="medium"
+          aria-label="Legend"
+          onClick={() => this.setState({ legend: true })}
+        >
+          <div className={classes.buttonText}>Legend</div>
+          <img src={legendIcon} alt="Legend" />
         </Fab>
       </div>
     );
@@ -369,19 +427,8 @@ class MapView extends Component {
                     ))
                 : null}
             </Layer>
-            {this.showReportSightings(isMobile, classes, history)}
-            <div>
-              <Fab
-                className={
-                  isMobile
-                    ? classes.legendMobileContainer
-                    : classes.legendDesktopContainer
-                }
-                aria-label="Legend"
-                size="small"
-              >
-                <Help onClick={() => this.setState({ legend: true })} />
-              </Fab>
+            <div className={classes.addReportWrapper}>
+              {this.showReportSightings(isMobile, classes, history)}
             </div>
             <div
               className={
@@ -416,14 +463,18 @@ class MapView extends Component {
                     top: "auto",
                     left: "auto",
                     margin: ".5rem",
+                    marginTop: "3rem",
                     display: "flex",
+                    boxShadow:
+                      "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12)",
                   }}
                 />
               </div>
             </div>
             {this.showListViewButton(isMobile, classes, history)}
-            <div>
-              <div className={legend ? "legend-open" : "legend-closed"}>
+            {this.showLegendButton(isMobile, classes)}
+            {legend && (
+              <div className={legend ? "legend-open" : "legend-close"}>
                 <CloseIcon
                   style={{ cursor: "pointer" }}
                   className="legend-close"
@@ -431,7 +482,7 @@ class MapView extends Component {
                 />
                 <div className="two-col-special">{this.showLegend()}</div>
               </div>
-            </div>
+            )}
           </Map2>
         )}
       </div>
