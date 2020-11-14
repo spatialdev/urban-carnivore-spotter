@@ -546,3 +546,8 @@ li {
 .image-gallery-image video {
   padding-bottom: 3rem;
 }
+
+.react-thumbnail-generator {
+  max-width: 200px;
+  width: 100%;
+}
