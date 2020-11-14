@@ -143,6 +143,30 @@ const styles = {
     overflow: "scroll",
     margin: 4,
   },
+  addReportWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: "3em",
+  },
+  reportSightingButton: {
+    display: "flex",
+    flexDirection: "row",
+    textTransform: "capitalize",
+    fontFamily: "Raleway",
+    letterSpacing: "0.5px",
+    height: "40px",
+    borderRadius: "24px",
+  },
+  reportSightingText: {
+    marginRight: "10px",
+    marginLeft: "5px",
+    fontWeight: 600,
+  },
+  addReportIcon: {
+    height: "0.8em",
+    width: "0.8em",
+  },
 };
 class MapView extends Component {
   state = {
@@ -259,15 +283,15 @@ class MapView extends Component {
         <Button
           variant="contained"
           color="primary"
-          className="reportSightingButton"
+          className={classes.reportSightingButton}
           onClick={() =>
             history.location.pathname.indexOf("tacoma") !== -1
               ? history.push("/tacoma/reports/create")
               : history.push("/reports/create")
           }
         >
-          Report Sightings
-          <AddIcon />
+          <div className={classes.reportSightingText}>Report Sighting</div>
+          <AddIcon className={classes.addReportIcon} />
         </Button>
       );
     }
@@ -369,7 +393,9 @@ class MapView extends Component {
                     ))
                 : null}
             </Layer>
-            {this.showReportSightings(isMobile, classes, history)}
+            <div className={classes.addReportWrapper}>
+              {this.showReportSightings(isMobile, classes, history)}
+            </div>
             <div>
               <Fab
                 className={
