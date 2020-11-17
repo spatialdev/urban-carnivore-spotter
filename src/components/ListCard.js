@@ -127,7 +127,13 @@ const ListCard = (props) => {
     <Card className="card">
       <CardContent className={classes.allContent}>
         {isVideo ? (
-          <ReactPlayer url={videoUrl} light={true} width={200} height={200} />
+          <ReactPlayer
+            url={videoUrl}
+            light={true}
+            width={200}
+            height={200}
+            playing
+          />
         ) : (
           <CardMedia className="cardPicture" image={imageUrl} />
         )}
