@@ -3,6 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Pagination from "@material-ui/lab/Pagination";
 import ListCard from "../components/ListCard";
 import { dataMatchesFilter } from "../services/FilterService";
 import { withRouter } from "react-router-dom";
@@ -56,29 +57,55 @@ const styles = {
       backgroundColor: "#FECA00",
     },
   },
+  paginator: {
+    justifyContent: "center",
+    padding: "1em",
+  },
 };
 
 class ListView extends Component {
   state = {
     reports: null,
+    pageNumber: 1,
+    itemsPerPage: 10,
+    numOfPages: 0,
   };
 
   componentDidMount() {
-    ReactGA.pageview(window.location.pathname);
-    axios
-      .get(getReports)
-      .then((reports) => {
-        this.setState({ reports: reports.data });
-      })
-      .catch((error) => error);
+    const { localStorage } = window;
+    const cachedReports = localStorage.getItem("reports");
+
+    if (cachedReports) {
+      this.setState({ reports: JSON.parse(cachedReports) });
+    } else {
+      const { itemsPerPage } = this.state;
+      ReactGA.pageview(window.location.pathname);
+      axios
+        .get(getReports)
+        .then((reports) => {
+          this.setState({
+            reports: reports.data,
+            numOfPages: Math.ceil(reports.data.length / itemsPerPage),
+          });
+          localStorage.setItem("reports", JSON.stringify(reports.data));
+        })
+        .catch((error) => error);
+    }
   }
 
   timeToNanos = (timestamp) =>
     timestamp._nanoseconds + timestamp._seconds * 1000000000;
 
+  handlePageNumber = (e, page) => {
+    this.setState({ pageNumber: page });
+  };
+
   render() {
-    const { reports } = this.state;
+    const { reports, pageNumber, itemsPerPage, numOfPages } = this.state;
     const { filter, isMobile, history, classes } = this.props;
+
+    console.log("REPORTS IN LIST VIEW", reports);
+
     if (!reports) {
       return <CircularProgress />;
     }
@@ -91,6 +118,10 @@ class ListView extends Component {
         )}
         <div className="cardContainer">
           {reports
+            .slice(
+              (pageNumber - 1) * itemsPerPage,
+              pageNumber * (itemsPerPage - 1)
+            )
             .filter((report) => dataMatchesFilter(report, filter))
             .sort((one, two) => {
               return (
@@ -126,6 +157,13 @@ class ListView extends Component {
             </Fab>
           </div>
         </div>
+        <Pagination
+          classes={{ ul: classes.paginator }}
+          onChange={this.handlePageNumber}
+          count={numOfPages}
+          page={pageNumber}
+          size="large"
+        />
       </div>
     );
   }

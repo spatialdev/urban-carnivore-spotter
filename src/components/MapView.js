@@ -331,7 +331,12 @@ class MapView extends Component {
             isTacoma ? history.push("/tacoma/list") : history.push("/list")
           }
         >
-          <div className={classes.buttonText}>List View</div>
+          <div
+            className={classes.buttonText}
+            onClick={() => window.localStorage.removeItem("reports")}
+          >
+            List View
+          </div>
           <List className={classes.extendedIcon} />
         </Fab>
       </div>

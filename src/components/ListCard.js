@@ -1,20 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
+import ReactPlayer from "react-player";
 import Card from "@material-ui/core/Card";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
 import Placeholder from "../assets/placeholder.svg";
 import { firebaseTimeToDateTimeString } from "../services/TimeService";
-import VideoThumbnail from "react-video-thumbnail";
+import dateIcon from "../assets/Calendar.svg";
+import locationIcon from "../assets/Location.svg";
 
 const styles = (theme) => ({
   info: {
+    display: "flex",
     flexDirection: "column",
+    justifyContent: "center",
     flexGrow: 1,
     flex: 1,
     textAlign: "left",
+    marginLeft: "1em",
   },
   allContent: {
     display: "flex",
@@ -30,12 +36,61 @@ const styles = (theme) => ({
     width: "1px",
     zIndex: -1,
   },
+  seeReport: {
+    display: "flex",
+    justifyContent: "center",
+    cursor: "pointer",
+    height: "25px",
+    width: "122px",
+    borderRadius: "4px",
+    backgroundColor: "#F6F4F3",
+    padding: "0.15em",
+    marginTop: "0.75rem",
+    "&:hover": {
+      backgroundColor: "#ebe7e4",
+    },
+  },
+  seeReportText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    paddingTop: "0.1em",
+  },
+  title: {
+    marginBottom: "0.75rem",
+    fontFamily: "Raleway",
+    color: "rgba(57,57,57,0.95)",
+    fontWeight: "bold",
+    fontSize: "1.25em",
+    letterSpacing: "0.56px",
+  },
+  date: {
+    display: "flex",
+    marginBottom: "0.5rem",
+    fontFamily: "Raleway",
+    color: "rgba(57,57,57,0.95)",
+    letterSpacing: "0.44px",
+    fontSize: "0.9em",
+    fontWeight: 600,
+  },
+  location: {
+    display: "flex",
+    marginBottom: "0.75rem",
+    fontFamily: "Raleway",
+    color: "#757575",
+    letterSpacing: "0.44px",
+    fontSize: "0.9em",
+    fontWeight: 500,
+  },
+  icon: {
+    marginRight: "0.5em",
+  },
 });
 
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
 const ListCard = (props) => {
   const { classes, report } = props;
+  const [showReport, setShowReport] = useState(false);
   const isInTacoma =
     report.data !== undefined && report.data.isTacoma !== undefined
       ? report.data.isTacoma
@@ -64,48 +119,45 @@ const ListCard = (props) => {
     }
   }
 
+  const handleReport = () => {
+    setShowReport(true);
+  };
+
   return (
     <Card className="card">
       <CardContent className={classes.allContent}>
-        {/* TODO: paginate/virtualize the list and video thumb will actually show without exceeding stack limit */}
         {isVideo ? (
-          // <VideoThumbnail
-          //   videoUrl={videoUrl}
-          //   width={200}
-          //   height={200}
-          //   renderThumbnail={true}
-          //   snapshotAtTime={5}
-          //   cors={true}
-          // />
-          <CardMedia className="cardPicture" image={imageUrl} />
+          <ReactPlayer url={videoUrl} light={true} width={200} height={200} />
         ) : (
-          // <video width="200px" height="200px" muted autoplay={false}>
-          //   <source src={videoUrl} />
-          // </video>
           <CardMedia className="cardPicture" image={imageUrl} />
         )}
-
         <CardContent className={classes.info}>
-          <Typography variant={"h5"}>
-            {report.data.species.toUpperCase()}
+          <Typography className={classes.title} variant={"h5"}>
+            {report.data.species}
           </Typography>
-          <Typography variant={"subtitle1"}>
+          <Typography variant={"subtitle1"} className={classes.date}>
+            <img className={classes.icon} src={dateIcon} alt="Date" />
             {firebaseTimeToDateTimeString(report.data.timestamp)}
           </Typography>
-          <Typography style={{ color: "grey" }}>
+          <Typography style={{ color: "grey" }} className={classes.location}>
+            <img className={classes.icon} src={locationIcon} alt="Location" />
             {report.data.neighborhood ? report.data.neighborhood : "Unknown"}
           </Typography>
-          <li>
-            <Link
-              to={
-                isInTacoma
+          {showReport ? (
+            <Redirect
+              to={{
+                pathname: isInTacoma
                   ? `${path}/tacoma/${report.id}`
-                  : `${path}/${report.id}`
-              }
-            >
-              See Report
-            </Link>
-          </li>
+                  : `${path}/${report.id}`,
+                state: { report: report },
+              }}
+            />
+          ) : (
+            <li className={classes.seeReport} onClick={handleReport}>
+              <div className={classes.seeReportText}>See Report</div>
+              <ChevronRightIcon />
+            </li>
+          )}
         </CardContent>
       </CardContent>
     </Card>

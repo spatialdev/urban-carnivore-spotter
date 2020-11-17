@@ -1,18 +1,14 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
-
+import ReactPlayer from "react-player";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { CircularProgress } from "@material-ui/core";
 import { KeyboardArrowLeft } from "@material-ui/icons";
-
 import { jsDateToTimeString } from "../services/TimeService";
-
 import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
 import { connect } from "react-redux";
-import * as ReactGA from "react-ga";
 
 const getReport =
   "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport";
@@ -26,30 +22,14 @@ class ReportViewer extends Component {
   };
 
   componentDidMount() {
-    ReactGA.pageview(window.location.pathname);
-    const {
-      match: {
-        params: { id },
-      },
-    } = this.props;
-    const path = window.location.pathname.includes("/reports/tacoma")
-      ? getTacomaReport
-      : getReport;
-    axios
-      .get(path + `?id=${id}`)
-      .then((report) => {
-        this.setState({ report: report.data });
-      })
-      .catch((error) => error);
+    this.setState({ report: this.props.location.state.report.data });
   }
 
   renderMediaItem(item) {
     return (
       <div className="image-gallery-image">
         {item.isVideo ? (
-          <video width="100%" controls autoPlay>
-            <source src={item.original} />
-          </video>
+          <ReactPlayer url={item.original} controls width={400} height={200} />
         ) : (
           <img
             src={item.original}
@@ -96,7 +76,13 @@ class ReportViewer extends Component {
       <div className={isMobile ? "reportViewerMobile" : "reportViewerDesktop"}>
         <div className="buttonAndCardContainer">
           <div className="backToExploreContainer">
-            <Button className="backToExplore" onClick={() => history.goBack()}>
+            <Button
+              className="backToExplore"
+              onClick={() => {
+                window.localStorage.removeItem("reports");
+                history.push("/list");
+              }}
+            >
               {" "}
               <KeyboardArrowLeft />
               Back
@@ -105,7 +91,9 @@ class ReportViewer extends Component {
           <div>
             <Card className="reportCard">
               <div className="reportViewerTitle">
-                <h4>{report.species.toUpperCase()}</h4>
+                <h4>
+                  {report && report.species ? report.species.toUpperCase() : ""}
+                </h4>
               </div>
               {media.length > 0 ? (
                 media.map((mediaItem) => this.renderMediaItem(mediaItem))
