@@ -73,19 +73,23 @@ class ListView extends Component {
 
   componentDidMount() {
     const { localStorage } = window;
+    const { itemsPerPage } = this.state;
     const cachedReports = localStorage.getItem("reports");
 
     if (cachedReports) {
-      this.setState({ reports: JSON.parse(cachedReports) });
+      const parsedReports = JSON.parse(cachedReports);
+      this.setState({
+        reports: parsedReports,
+        numOfPages: Math.floor(parsedReports.length / itemsPerPage),
+      });
     } else {
-      const { itemsPerPage } = this.state;
       ReactGA.pageview(window.location.pathname);
       axios
         .get(getReports)
         .then((reports) => {
           this.setState({
             reports: reports.data,
-            numOfPages: Math.ceil(reports.data.length / itemsPerPage),
+            numOfPages: Math.floor(reports.data.length / itemsPerPage),
           });
           localStorage.setItem("reports", JSON.stringify(reports.data));
         })
@@ -103,12 +107,10 @@ class ListView extends Component {
   render() {
     const { reports, pageNumber, itemsPerPage, numOfPages } = this.state;
     const { filter, isMobile, history, classes } = this.props;
-
-    console.log("REPORTS IN LIST VIEW", reports);
-
     if (!reports) {
       return <CircularProgress />;
     }
+
     return (
       <div className="backgroundCardContainer">
         {isMobile ? null : (
@@ -119,8 +121,8 @@ class ListView extends Component {
         <div className="cardContainer">
           {reports
             .slice(
-              (pageNumber - 1) * itemsPerPage,
-              pageNumber * (itemsPerPage - 1)
+              pageNumber * itemsPerPage,
+              pageNumber * itemsPerPage + itemsPerPage
             )
             .filter((report) => dataMatchesFilter(report, filter))
             .sort((one, two) => {

@@ -79,7 +79,6 @@ class ReportViewer extends Component {
             <Button
               className="backToExplore"
               onClick={() => {
-                window.localStorage.removeItem("reports");
                 history.push("/list");
               }}
             >

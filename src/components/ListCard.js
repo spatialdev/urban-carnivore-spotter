@@ -153,10 +153,10 @@ const ListCard = (props) => {
               }}
             />
           ) : (
-            <li className={classes.seeReport} onClick={handleReport}>
+            <div className={classes.seeReport} onClick={handleReport}>
               <div className={classes.seeReportText}>See Report</div>
               <ChevronRightIcon />
-            </li>
+            </div>
           )}
         </CardContent>
       </CardContent>
