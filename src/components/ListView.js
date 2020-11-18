@@ -3,6 +3,8 @@ import axios from "axios";
 import { connect } from "react-redux";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Skeleton from "@material-ui/lab/Skeleton";
+import Pagination from "@material-ui/lab/Pagination";
 import ListCard from "../components/ListCard";
 import { dataMatchesFilter } from "../services/FilterService";
 import { withRouter } from "react-router-dom";
@@ -56,32 +58,134 @@ const styles = {
       backgroundColor: "#FECA00",
     },
   },
+  paginator: {
+    justifyContent: "center",
+    padding: "1em",
+  },
+  skeleton: {
+    display: "flex",
+    flexDirection: "row",
+    paddingTop: "100px",
+    paddingBottom: "20px",
+    minHeight: "100vh",
+  },
+  filterSkeleton: {
+    display: "flex",
+    flexDirection: "column",
+    position: "fixed",
+    left: "5%",
+    bottom: "5%",
+    width: "250px",
+    zIndex: 1000,
+    height: "60%",
+  },
+  mainSkeleton: {
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: "5em",
+    top: "-100px",
+    marginBottom: "16px",
+    marginLeft: "25em",
+  },
+  mainRectangle: {
+    margin: "1em 0",
+  },
 };
 
 class ListView extends Component {
   state = {
     reports: null,
+    pageNumber: 1,
+    itemsPerPage: 10,
+    numOfPages: 0,
   };
 
   componentDidMount() {
-    ReactGA.pageview(window.location.pathname);
-    axios
-      .get(getReports)
-      .then((reports) => {
-        this.setState({ reports: reports.data });
-      })
-      .catch((error) => error);
+    const { localStorage } = window;
+    const { itemsPerPage } = this.state;
+    const cachedReports = localStorage.getItem("reports");
+
+    if (cachedReports) {
+      const parsedReports = JSON.parse(cachedReports);
+      this.setState({
+        reports: parsedReports,
+        numOfPages: Math.floor(parsedReports.length / itemsPerPage),
+      });
+    } else {
+      ReactGA.pageview(window.location.pathname);
+      axios
+        .get(getReports)
+        .then((reports) => {
+          this.setState({
+            reports: reports.data,
+            numOfPages: Math.floor(reports.data.length / itemsPerPage),
+          });
+          localStorage.setItem("reports", JSON.stringify(reports.data));
+        })
+        .catch((error) => error);
+    }
+
+    const cachedPageNum = localStorage.getItem("lastPageNum");
+    if (cachedPageNum) {
+      this.setState({ pageNumber: cachedPageNum });
+    }
   }
 
   timeToNanos = (timestamp) =>
     timestamp._nanoseconds + timestamp._seconds * 1000000000;
 
+  handlePageNumber = (e, page) => {
+    this.setState({ pageNumber: page });
+
+    const cachedPageNum = localStorage.getItem("lastPageNum");
+    if (cachedPageNum) {
+      window.localStorage.removeItem("lastPageNum");
+      localStorage.setItem("lastPageNum", page);
+    }
+  };
+
+  renderMainSkeleton = () => {
+    const { classes } = this.props;
+    const numOfSkeletons = 10;
+    const skeletons = [];
+
+    for (let i = 0; i < numOfSkeletons; i++) {
+      skeletons.push(
+        <Skeleton
+          className={classes.mainRectangle}
+          variant="rect"
+          width={800}
+          height={200}
+        />
+      );
+    }
+
+    return skeletons;
+  };
+
   render() {
-    const { reports } = this.state;
+    const { reports, pageNumber, itemsPerPage, numOfPages } = this.state;
     const { filter, isMobile, history, classes } = this.props;
     if (!reports) {
-      return <CircularProgress />;
+      if (isMobile) {
+        return <CircularProgress />;
+      }
+
+      return (
+        <div className={classes.skeleton}>
+          <div className={classes.filterSkeleton}>
+            <Skeleton variant="rect" width={247} height={493} />
+          </div>
+          <div className={classes.mainSkeleton}>
+            {this.renderMainSkeleton()}
+          </div>
+        </div>
+      );
     }
+
     return (
       <div className="backgroundCardContainer">
         {isMobile ? null : (
@@ -91,6 +195,10 @@ class ListView extends Component {
         )}
         <div className="cardContainer">
           {reports
+            .slice(
+              pageNumber * itemsPerPage,
+              pageNumber * itemsPerPage + itemsPerPage
+            )
             .filter((report) => dataMatchesFilter(report, filter))
             .sort((one, two) => {
               return (
@@ -126,6 +234,13 @@ class ListView extends Component {
             </Fab>
           </div>
         </div>
+        <Pagination
+          classes={{ ul: classes.paginator }}
+          onChange={this.handlePageNumber}
+          count={numOfPages}
+          page={Number(pageNumber)}
+          size="large"
+        />
       </div>
     );
   }

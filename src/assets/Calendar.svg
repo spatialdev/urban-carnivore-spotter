@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="16px" viewBox="0 0 15 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 63.1 (101010) - https://sketch.com -->
+    <title>7337B2AB-5CE7-472B-B19F-ABF459FD3106</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <path d="M12.25,2 L11.5,2 L11.5,1.25 C11.5,0.835786438 11.1642136,0.5 10.75,0.5 C10.3357864,0.5 10,0.835786438 10,1.25 L10,2 L10,2 L4,2 L4,1.25 C4,0.835786438 3.66421356,0.5 3.25,0.5 C2.83578644,0.5 2.5,0.835786438 2.5,1.25 L2.5,2 L2.5,2 L1.75,2 C0.925,2 0.25,2.675 0.25,3.5 L0.25,14 C0.25,14.825 0.925,15.5 1.75,15.5 L12.25,15.5 C13.075,15.5 13.75,14.825 13.75,14 L13.75,3.5 C13.75,2.675 13.075,2 12.25,2 Z M12.25,14 L1.75,14 L1.75,6.5 L12.25,6.5 L12.25,14 Z M1.75,5 L1.75,3.5 L12.25,3.5 L12.25,5 L1.75,5 Z M6.62710678,12.1378932 L9.97,8.795 C10.1895332,8.57546681 10.1895332,8.21953319 9.97,8 C9.75046681,7.78046681 9.39453319,7.78046681 9.175,8 L6.06142136,11.1135786 C5.9833165,11.1916835 5.8566835,11.1916835 5.77857864,11.1135786 L4.735,10.07 C4.51546681,9.85046681 4.15953319,9.85046681 3.94,10.07 C3.72046681,10.2895332 3.72046681,10.6454668 3.94,10.865 L5.21289322,12.1378932 C5.60341751,12.5284175 6.23658249,12.5284175 6.62710678,12.1378932 Z" id="path-1"></path>
+    </defs>
+    <g id="Explore---List-View" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Explore-List-View-1440-px" transform="translate(-487.000000, -127.000000)">
+            <g id="Card-1" transform="translate(297.000000, 80.000000)">
+                <g id="Group" transform="translate(188.000000, 46.000000)">
+                    <g id="Icon/Calendar" transform="translate(2.000000, 1.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="icon/notification/event_available_24px" fill="#8DCA22" xlink:href="#path-1"></use>
+                    </g>
+                    <circle id="Oval" fill-opacity="0.0682091346" fill="#757575" cx="10.5" cy="10.5" r="6.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
