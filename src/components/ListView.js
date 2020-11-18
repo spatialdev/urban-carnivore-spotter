@@ -238,10 +238,12 @@ class ListView extends Component {
         </div>
         <Pagination
           classes={{ ul: classes.paginator }}
+          color="primary"
           onChange={this.handlePageNumber}
           count={numOfPages}
           page={Number(pageNumber)}
-          size="large"
+          showFirstButton
+          showLastButton
         />
       </div>
     );
