@@ -144,6 +144,8 @@ class ListView extends Component {
     if (cachedPageNum) {
       window.localStorage.removeItem("lastPageNum");
       localStorage.setItem("lastPageNum", page);
+    } else {
+      localStorage.setItem("lastPageNum", page);
     }
   };
 
@@ -169,11 +171,11 @@ class ListView extends Component {
   render() {
     const { reports, pageNumber, itemsPerPage, numOfPages } = this.state;
     const { filter, isMobile, history, classes } = this.props;
+
     if (!reports) {
       if (isMobile) {
         return <CircularProgress />;
       }
-
       return (
         <div className={classes.skeleton}>
           <div className={classes.filterSkeleton}>
