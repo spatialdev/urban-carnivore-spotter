@@ -100,19 +100,16 @@ class ListView extends Component {
     reports: null,
     pageNumber: 1,
     itemsPerPage: 10,
-    numOfPages: 0,
   };
 
   componentDidMount() {
     const { localStorage } = window;
-    const { itemsPerPage } = this.state;
     const cachedReports = localStorage.getItem("reports");
 
     if (cachedReports) {
       const parsedReports = JSON.parse(cachedReports);
       this.setState({
         reports: parsedReports,
-        numOfPages: Math.floor(parsedReports.length / itemsPerPage),
       });
     } else {
       ReactGA.pageview(window.location.pathname);
@@ -121,7 +118,6 @@ class ListView extends Component {
         .then((reports) => {
           this.setState({
             reports: reports.data,
-            numOfPages: Math.floor(reports.data.length / itemsPerPage),
           });
           localStorage.setItem("reports", JSON.stringify(reports.data));
         })
@@ -169,7 +165,7 @@ class ListView extends Component {
   };
 
   render() {
-    const { reports, pageNumber, itemsPerPage, numOfPages } = this.state;
+    const { reports, pageNumber, itemsPerPage } = this.state;
     const { filter, isMobile, history, classes } = this.props;
 
     if (!reports) {
@@ -197,10 +193,6 @@ class ListView extends Component {
         )}
         <div className="cardContainer">
           {reports
-            .slice(
-              pageNumber * itemsPerPage,
-              pageNumber * itemsPerPage + itemsPerPage
-            )
             .filter((report) => dataMatchesFilter(report, filter))
             .sort((one, two) => {
               return (
@@ -208,8 +200,12 @@ class ListView extends Component {
                 this.timeToNanos(one.data.time_submitted)
               );
             })
+            .slice(
+              pageNumber * itemsPerPage,
+              pageNumber * itemsPerPage + itemsPerPage
+            )
             .map((report) => (
-              <ListCard report={report} key={report.id} />
+              <ListCard report={report} key={report.id} reports={reports} />
             ))}
           <div>
             <Fab
@@ -240,7 +236,16 @@ class ListView extends Component {
           classes={{ ul: classes.paginator }}
           color="primary"
           onChange={this.handlePageNumber}
-          count={numOfPages}
+          count={Math.floor(
+            reports
+              .filter((report) => dataMatchesFilter(report, filter))
+              .sort((one, two) => {
+                return (
+                  this.timeToNanos(two.data.time_submitted) -
+                  this.timeToNanos(one.data.time_submitted)
+                );
+              }).length / itemsPerPage
+          )}
           page={Number(pageNumber)}
           showFirstButton
           showLastButton

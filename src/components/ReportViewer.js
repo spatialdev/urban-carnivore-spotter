@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { CircularProgress } from "@material-ui/core";
-import { KeyboardArrowLeft } from "@material-ui/icons";
+import { KeyboardArrowLeft, NextWeekOutlined } from "@material-ui/icons";
 import { jsDateToTimeString } from "../services/TimeService";
 import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -19,10 +22,30 @@ const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 class ReportViewer extends Component {
   state = {
     report: null,
+    nextReport: false,
+    prevReport: false,
+    nextId: "",
+    prevId: "",
   };
 
   componentDidMount() {
-    this.setState({ report: this.props.location.state.report.data });
+    this.setState({
+      report: this.props.location.state.report.data,
+      nextReport: false,
+      prevReport: false,
+      nextId: this.props.location.state.nextReport.id,
+      prevId: this.props.location.state.prevReport.id,
+    });
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      report: this.props.location.state.report.data,
+      nextReport: false,
+      prevReport: false,
+      nextId: this.props.location.state.nextReport.id,
+      prevId: this.props.location.state.prevReport.id,
+    });
   }
 
   renderMediaItem(item) {
@@ -48,13 +71,43 @@ class ReportViewer extends Component {
     );
   }
 
+  handleNextReport = () => {
+    this.setState({ nextReport: true });
+  };
+
+  handlePrevReport = () => {
+    this.setState({ prevReport: true });
+  };
+
+  getReportIdx = (id, reports) => {
+    let position = 0;
+    reports.forEach((report, idx) => {
+      if (report.id === id) {
+        console.log("REPORT ID MATCH", report.id);
+        position = idx;
+      }
+    });
+    return position;
+  };
+
   render() {
     const { history, isMobile } = this.props;
-    const { report } = this.state;
+    const { report, nextReport, prevReport, nextId, prevId } = this.state;
 
     if (!report) {
       return <CircularProgress />;
     }
+
+    const isInTacoma =
+      report.data !== undefined && report.data.isTacoma !== undefined
+        ? report.data.isTacoma
+        : false;
+    const path =
+      window.location.pathname.indexOf("tacoma") === -1
+        ? "/reports"
+        : "/tacoma/reports";
+
+    console.log("this.props.location", this.props.location);
 
     let media = [];
 
@@ -134,6 +187,70 @@ class ReportViewer extends Component {
                 </p>
               </div>
             </Card>
+
+            {/* {prevReport ? (
+              <Redirect
+                to={{
+                  pathname: isInTacoma
+                    ? `${path}/tacoma/${prevId}`
+                    : `${path}/${prevId}`,
+                  state: {
+                    report: report,
+                    reports: this.props.location.state.reports,
+                    reportIdx: this.props.location.state.reportIdx,
+                    nextReport: this.props.location.state.reports[
+                      this.getReportIdx(
+                        nextId,
+                        this.props.location.state.reports
+                      ) + 1
+                    ],
+                    prevReport: this.props.location.state.reports[
+                      this.getReportIdx(
+                        prevId,
+                        this.props.location.state.reports
+                      ) - 1
+                    ],
+                  },
+                  getReportIdx: this.getReportIdx,
+                }}
+              />
+            ) : (
+              <div onClick={this.handlePrevReport}>
+                <ArrowBackIosIcon />
+              </div>
+            )} */}
+
+            {/* {nextReport ? (
+              <Redirect
+                to={{
+                  pathname: isInTacoma
+                    ? `${path}/tacoma/${nextId}`
+                    : `${path}/${nextId}`,
+                  state: {
+                    report: report,
+                    reports: this.props.location.state.reports,
+                    reportIdx: this.props.location.state.reportIdx,
+                    nextReport: this.props.location.state.reports[
+                      this.getReportIdx(
+                        nextId,
+                        this.props.location.state.reports
+                      ) + 1
+                    ],
+                    prevReport: this.props.location.state.reports[
+                      this.getReportIdx(
+                        prevId,
+                        this.props.location.state.reports
+                      ) - 1
+                    ],
+                  },
+                  getReportIdx: this.getReportIdx,
+                }}
+              />
+            ) : (
+              <div onClick={this.handleNextReport}>
+                <ArrowForwardIosIcon />
+              </div>
+            )} */}
           </div>
         </div>
       </div>

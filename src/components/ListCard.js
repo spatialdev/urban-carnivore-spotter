@@ -89,7 +89,7 @@ const styles = (theme) => ({
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
 const ListCard = (props) => {
-  const { classes, report } = props;
+  const { classes, report, reports } = props;
   const [showReport, setShowReport] = useState(false);
   const isInTacoma =
     report.data !== undefined && report.data.isTacoma !== undefined
@@ -121,6 +121,16 @@ const ListCard = (props) => {
 
   const handleReport = () => {
     setShowReport(true);
+  };
+
+  const getReportIdx = (id, reports) => {
+    let position = 0;
+    reports.forEach((report, idx) => {
+      if (report.id === id) {
+        position = idx;
+      }
+    });
+    return position;
   };
 
   return (
@@ -155,7 +165,14 @@ const ListCard = (props) => {
                 pathname: isInTacoma
                   ? `${path}/tacoma/${report.id}`
                   : `${path}/${report.id}`,
-                state: { report: report },
+                state: {
+                  report: report,
+                  reports: reports,
+                  reportIdx: getReportIdx(report.id, reports),
+                  nextReport: reports[getReportIdx(report.id, reports) + 1],
+                  prevReport: reports[getReportIdx(report.id, reports) - 1],
+                },
+                getReportIdx: getReportIdx,
               }}
             />
           ) : (
