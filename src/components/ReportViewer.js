@@ -22,30 +22,48 @@ const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 class ReportViewer extends Component {
   state = {
     report: null,
-    nextReport: false,
-    prevReport: false,
     nextId: "",
     prevId: "",
   };
 
   componentDidMount() {
+    const currIdx = this.getReportIdx(
+      this.props.location.state.report.data.id,
+      this.props.location.state.reports
+    );
+
+    const nextReportId = this.getNextId(
+      currIdx,
+      this.props.location.state.reports
+    );
+
+    console.log("NEXT REPORT ID", nextReportId);
+
     this.setState({
       report: this.props.location.state.report.data,
-      nextReport: false,
-      prevReport: false,
-      nextId: this.props.location.state.nextReport.id,
-      prevId: this.props.location.state.prevReport.id,
+      nextId: nextReportId,
+      // prevId: this.props.location.state.prevReport.id,
     });
   }
 
   componentWillReceiveProps() {
+    const currIdx = this.getReportIdx(
+      this.props.location.state.report.data.id,
+      this.props.location.state.reports
+    );
+
+    const nextReportId = this.getNextId(
+      currIdx,
+      this.props.location.state.reports
+    );
+
     this.setState({
       report: this.props.location.state.report.data,
-      nextReport: false,
-      prevReport: false,
-      nextId: this.props.location.state.nextReport.id,
-      prevId: this.props.location.state.prevReport.id,
+      nextId: nextReportId,
+      // prevId: this.props.location.state.prevReport.id,
     });
+
+    console.log("curr idx", currIdx);
   }
 
   renderMediaItem(item) {
@@ -71,14 +89,6 @@ class ReportViewer extends Component {
     );
   }
 
-  handleNextReport = () => {
-    this.setState({ nextReport: true });
-  };
-
-  handlePrevReport = () => {
-    this.setState({ prevReport: true });
-  };
-
   getReportIdx = (id, reports) => {
     let position = 0;
     reports.forEach((report, idx) => {
@@ -90,9 +100,17 @@ class ReportViewer extends Component {
     return position;
   };
 
+  getNextId = (idx, reports) => {
+    return reports[idx + 1].id;
+  };
+
+  getPrevId = (idx, reports) => {
+    return reports[idx - 1].id;
+  };
+
   render() {
     const { history, isMobile } = this.props;
-    const { report, nextReport, prevReport, nextId, prevId } = this.state;
+    const { report, nextId, prevId } = this.state;
 
     if (!report) {
       return <CircularProgress />;
@@ -188,69 +206,15 @@ class ReportViewer extends Component {
               </div>
             </Card>
 
-            {/* {prevReport ? (
-              <Redirect
-                to={{
-                  pathname: isInTacoma
-                    ? `${path}/tacoma/${prevId}`
-                    : `${path}/${prevId}`,
-                  state: {
-                    report: report,
-                    reports: this.props.location.state.reports,
-                    reportIdx: this.props.location.state.reportIdx,
-                    nextReport: this.props.location.state.reports[
-                      this.getReportIdx(
-                        nextId,
-                        this.props.location.state.reports
-                      ) + 1
-                    ],
-                    prevReport: this.props.location.state.reports[
-                      this.getReportIdx(
-                        prevId,
-                        this.props.location.state.reports
-                      ) - 1
-                    ],
-                  },
-                  getReportIdx: this.getReportIdx,
-                }}
-              />
-            ) : (
-              <div onClick={this.handlePrevReport}>
-                <ArrowBackIosIcon />
-              </div>
-            )} */}
+            {/* <ArrowBackIosIcon /> */}
 
-            {/* {nextReport ? (
-              <Redirect
-                to={{
-                  pathname: isInTacoma
-                    ? `${path}/tacoma/${nextId}`
-                    : `${path}/${nextId}`,
-                  state: {
-                    report: report,
-                    reports: this.props.location.state.reports,
-                    reportIdx: this.props.location.state.reportIdx,
-                    nextReport: this.props.location.state.reports[
-                      this.getReportIdx(
-                        nextId,
-                        this.props.location.state.reports
-                      ) + 1
-                    ],
-                    prevReport: this.props.location.state.reports[
-                      this.getReportIdx(
-                        prevId,
-                        this.props.location.state.reports
-                      ) - 1
-                    ],
-                  },
-                  getReportIdx: this.getReportIdx,
-                }}
-              />
-            ) : (
-              <div onClick={this.handleNextReport}>
-                <ArrowForwardIosIcon />
-              </div>
-            )} */}
+            {/* <ArrowForwardIosIcon
+              onClick={() =>
+                history.push(
+                  isInTacoma ? `${path}/tacoma/${nextId}` : `${path}/${nextId}`
+                )
+              }
+            /> */}
           </div>
         </div>
       </div>
