@@ -536,8 +536,22 @@ class Form extends Component {
     return (
       <ScrollLock>
         <div className={classes.interactiveMapContainer}>
-          <p> Drag the point on the map to mark your sighting</p>
+          <p>Drag the map to mark your sighting</p>
           <div className={classes.interactiveMapInnerContainer}>
+            <div
+              style={{
+                backgroundColor: "#ff5200",
+                borderRadius: "50%",
+                width: "25px",
+                height: "25px",
+                position: "absolute",
+                top: "50%",
+                left: 0,
+                right: 0,
+                margin: "0 auto",
+                zIndex: 10000,
+              }}
+            />
             <FormMap
               passMapCoordinates={this.getMapCoordinates}
               centerLng={mapLng}
@@ -597,7 +611,6 @@ class Form extends Component {
     ) : (
       <div className="formItem">
         <h4>Identify the location of your sighting</h4>
-        <p> Drag the point on the map to mark your sighting</p>
         <div
           className="constantHeightMapContainer"
           style={{
