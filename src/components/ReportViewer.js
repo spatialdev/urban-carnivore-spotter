@@ -13,10 +13,6 @@ import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
 import { connect } from "react-redux";
 
-const getReport =
-  "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReport";
-const getTacomaReport =
-  "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getTacomaReport";
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
 class ReportViewer extends Component {
@@ -26,45 +22,31 @@ class ReportViewer extends Component {
     prevId: "",
   };
 
-  componentDidMount() {
-    const currIdx = this.getReportIdx(
-      this.props.location.state.report.data.id,
-      this.props.location.state.reports
-    );
+  componentDidMount = async () => {
+    const { data } = this.props.report.report;
+    this.handleReports(data);
+  };
 
-    const nextReportId = this.getNextId(
-      currIdx,
-      this.props.location.state.reports
-    );
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      const report = this.props.reports.filter(
+        (report) => report.id === this.props.match.params.id
+      )[0].data;
+      this.handleReports(report);
+    }
+  };
 
-    console.log("NEXT REPORT ID", nextReportId);
-
-    this.setState({
-      report: this.props.location.state.report.data,
-      nextId: nextReportId,
-      // prevId: this.props.location.state.prevReport.id,
-    });
-  }
-
-  componentWillReceiveProps() {
-    const currIdx = this.getReportIdx(
-      this.props.location.state.report.data.id,
-      this.props.location.state.reports
-    );
-
-    const nextReportId = this.getNextId(
-      currIdx,
-      this.props.location.state.reports
-    );
+  handleReports = (data) => {
+    const { reports } = this.props;
+    const { id } = this.props.match.params;
+    const currIdx = this.getReportIdx(id, reports);
+    const nextReportId = this.getNextId(currIdx, reports);
 
     this.setState({
-      report: this.props.location.state.report.data,
+      report: data,
       nextId: nextReportId,
-      // prevId: this.props.location.state.prevReport.id,
     });
-
-    console.log("curr idx", currIdx);
-  }
+  };
 
   renderMediaItem(item) {
     return (
@@ -93,7 +75,6 @@ class ReportViewer extends Component {
     let position = 0;
     reports.forEach((report, idx) => {
       if (report.id === id) {
-        console.log("REPORT ID MATCH", report.id);
         position = idx;
       }
     });
@@ -108,9 +89,27 @@ class ReportViewer extends Component {
     return reports[idx - 1].id;
   };
 
+  handleNext = () => {
+    const { history } = this.props;
+    const { report, nextId } = this.state;
+
+    const isInTacoma =
+      report.data !== undefined && report.data.isTacoma !== undefined
+        ? report.data.isTacoma
+        : false;
+    const path =
+      window.location.pathname.indexOf("tacoma") === -1
+        ? "/reports"
+        : "/tacoma/reports";
+
+    history.push(isInTacoma ? `${path}/tacoma/${nextId}` : `${path}/${nextId}`);
+  };
+
   render() {
     const { history, isMobile } = this.props;
     const { report, nextId, prevId } = this.state;
+
+    console.log("NEXT ID", nextId);
 
     if (!report) {
       return <CircularProgress />;
@@ -124,8 +123,6 @@ class ReportViewer extends Component {
       window.location.pathname.indexOf("tacoma") === -1
         ? "/reports"
         : "/tacoma/reports";
-
-    console.log("this.props.location", this.props.location);
 
     let media = [];
 
@@ -208,13 +205,7 @@ class ReportViewer extends Component {
 
             {/* <ArrowBackIosIcon /> */}
 
-            {/* <ArrowForwardIosIcon
-              onClick={() =>
-                history.push(
-                  isInTacoma ? `${path}/tacoma/${nextId}` : `${path}/${nextId}`
-                )
-              }
-            /> */}
+            <ArrowForwardIosIcon onClick={this.handleNext} />
           </div>
         </div>
       </div>
@@ -225,6 +216,8 @@ class ReportViewer extends Component {
 const mapStateToProps = (state) => {
   return {
     isMobile: state.isMobile,
+    report: state.report,
+    reports: state.reports,
   };
 };
 export default withRouter(connect(mapStateToProps)(ReportViewer));
