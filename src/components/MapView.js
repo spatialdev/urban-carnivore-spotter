@@ -10,6 +10,7 @@ import PointTooltip from "../components/PointTooltip";
 import FilterDrawer from "./FilterDrawer";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { getReports } from "../services/ReportsService";
 import { dataMatchesFilter } from "../services/FilterService";
 import NavigationIcon from "@material-ui/icons/Navigation";
 import Fab from "@material-ui/core/Fab";
@@ -23,6 +24,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import * as ReactGA from "react-ga";
 import supported from "@mapbox/mapbox-gl-supported";
 import legendIcon from "../assets/Legend.svg";
+import { setReports } from "../store/actions";
 
 let Map2 = null;
 if (supported({})) {
@@ -31,7 +33,7 @@ if (supported({})) {
   });
 }
 
-const getReports =
+const getReportsUrl =
   "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports";
 const styles = {
   filterContainer: {
@@ -194,7 +196,7 @@ class MapView extends Component {
 
   componentDidMount() {
     ReactGA.pageview(window.location.pathname);
-    const url = getReports + "?mapLat=47.608013&mapLng=-122.335167";
+    const url = getReportsUrl + "?mapLat=47.608013&mapLng=-122.335167";
     axios
       .get(url)
       .then((reports) => {
@@ -209,7 +211,8 @@ class MapView extends Component {
     this.setState({
       viewport: { center: [center.lng, center.lat], zoom: [zoom] },
     });
-    const url = getReports + "?mapLat=" + center.lat + "&mapLng=" + center.lng;
+    const url =
+      getReportsUrl + "?mapLat=" + center.lat + "&mapLng=" + center.lng;
     axios
       .get(url)
       .then((reports) => {
@@ -331,16 +334,24 @@ class MapView extends Component {
             isTacoma ? history.push("/tacoma/list") : history.push("/list")
           }
         >
-          <div
-            className={classes.buttonText}
-            onClick={() => window.localStorage.removeItem("reports")}
-          >
+          <div className={classes.buttonText} onClick={this.getListViewReports}>
             List View
           </div>
           <List className={classes.extendedIcon} />
         </Fab>
       </div>
     );
+  };
+
+  getListViewReports = async () => {
+    const { localStorage } = window;
+    const cachedReports = localStorage.getItem("reports");
+    if (cachedReports) {
+      localStorage.removeItem("reports");
+    }
+    const reports = await getReports();
+    setReports(reports);
+    localStorage.setItem("reports", JSON.stringify(reports));
   };
 
   showLegendButton = (isMobile, classes) => {
