@@ -20,6 +20,7 @@ const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 const styles = {
   nav: {
     marginTop: "3.5em",
+    marginBottom: "0.5em",
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
