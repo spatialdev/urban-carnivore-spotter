@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { connect } from "react-redux";
-
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
 import ListCard from "../components/ListCard";
@@ -13,9 +12,9 @@ import FilterDrawer from "./FilterDrawer";
 import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import * as ReactGA from "react-ga";
-
-const getReports =
-  "https://us-central1-seattlecarnivores-edca2.cloudfunctions.net/getReports";
+import { setReports, setReport } from "../store/actions";
+import { getReports } from "../services/ReportsService";
+import { getReport } from "../services/ReportService";
 
 const styles = {
   mapViewButtonMobile: {
@@ -102,43 +101,37 @@ class ListView extends Component {
     itemsPerPage: 10,
   };
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    ReactGA.pageview(window.location.pathname);
     const { localStorage } = window;
-    const cachedReports = localStorage.getItem("reports");
 
+    const cachedReports = localStorage.getItem("reports");
     if (cachedReports) {
       const parsedReports = JSON.parse(cachedReports);
-      this.setState({
-        reports: parsedReports,
-      });
+      this.setState({ reports: parsedReports });
     } else {
-      ReactGA.pageview(window.location.pathname);
-      axios
-        .get(getReports)
-        .then((reports) => {
-          this.setState({
-            reports: reports.data,
-          });
-          localStorage.setItem("reports", JSON.stringify(reports.data));
-        })
-        .catch((error) => error);
+      const reports = await getReports();
+      setReports(reports);
+      this.setState({ reports });
+      localStorage.setItem("reports", JSON.stringify(reports));
     }
 
     const cachedPageNum = localStorage.getItem("lastPageNum");
     if (cachedPageNum) {
       this.setState({ pageNumber: cachedPageNum });
     }
-  }
+  };
 
   timeToNanos = (timestamp) =>
     timestamp._nanoseconds + timestamp._seconds * 1000000000;
 
   handlePageNumber = (e, page) => {
+    const { localStorage } = window;
     this.setState({ pageNumber: page });
 
     const cachedPageNum = localStorage.getItem("lastPageNum");
     if (cachedPageNum) {
-      window.localStorage.removeItem("lastPageNum");
+      localStorage.removeItem("lastPageNum");
       localStorage.setItem("lastPageNum", page);
     } else {
       localStorage.setItem("lastPageNum", page);
@@ -153,6 +146,7 @@ class ListView extends Component {
     for (let i = 0; i < numOfSkeletons; i++) {
       skeletons.push(
         <Skeleton
+          key={`${i}-rectangle`}
           className={classes.mainRectangle}
           variant="rect"
           width={800}
@@ -164,9 +158,82 @@ class ListView extends Component {
     return skeletons;
   };
 
+  filterReports = (reports) => {
+    const { filter } = this.props;
+    return reports
+      .filter((report) => dataMatchesFilter(report, filter))
+      .sort((one, two) => {
+        return (
+          this.timeToNanos(two.data.time_submitted) -
+          this.timeToNanos(one.data.time_submitted)
+        );
+      });
+  };
+
+  renderReportsPerPage = (reports) => {
+    const { pageNumber, itemsPerPage } = this.state;
+    const { classes } = this.props;
+    return reports
+      .slice(
+        pageNumber * itemsPerPage,
+        pageNumber * itemsPerPage + itemsPerPage
+      )
+      .map((report) => {
+        return (
+          <ListCard
+            key={report.id}
+            currReport={report}
+            handleReport={this.handleReport}
+          />
+        );
+      });
+  };
+
+  handleReport = async (id) => {
+    const { localStorage } = window;
+    const cachedReport = localStorage.getItem("report");
+
+    if (cachedReport) {
+      localStorage.removeItem("report");
+    }
+
+    const report = await getReport(id);
+    setReport({ report });
+    localStorage.setItem("report", JSON.stringify(report));
+    this.showReportPage(report, id);
+  };
+
+  showReportPage = (report, id) => {
+    const { history } = this.props;
+
+    const isInTacoma =
+      report.data !== undefined && report.data.isTacoma !== undefined
+        ? report.data.isTacoma
+        : false;
+    const path =
+      window.location.pathname.indexOf("tacoma") === -1
+        ? "/reports"
+        : "/tacoma/reports";
+
+    history.push(isInTacoma ? `${path}/tacoma/${id}` : `${path}/${id}`);
+  };
+
+  getCurrReport = async (id) => {
+    const { localStorage } = window;
+
+    const cachedReports = localStorage.getItem("report");
+    if (cachedReports) {
+      localStorage.removeItem("report");
+    } else {
+      const report = await getReport(id);
+      setReport(report);
+      localStorage.setItem("report", JSON.stringify(report));
+    }
+  };
+
   render() {
     const { reports, pageNumber, itemsPerPage } = this.state;
-    const { filter, isMobile, history, classes } = this.props;
+    const { isMobile, history, classes } = this.props;
 
     if (!reports) {
       if (isMobile) {
@@ -183,6 +250,7 @@ class ListView extends Component {
         </div>
       );
     }
+    const filteredReports = this.filterReports(reports);
 
     return (
       <div className="backgroundCardContainer">
@@ -192,21 +260,7 @@ class ListView extends Component {
           </div>
         )}
         <div className="cardContainer">
-          {reports
-            .filter((report) => dataMatchesFilter(report, filter))
-            .sort((one, two) => {
-              return (
-                this.timeToNanos(two.data.time_submitted) -
-                this.timeToNanos(one.data.time_submitted)
-              );
-            })
-            .slice(
-              pageNumber * itemsPerPage,
-              pageNumber * itemsPerPage + itemsPerPage
-            )
-            .map((report) => (
-              <ListCard report={report} key={report.id} reports={reports} />
-            ))}
+          {this.renderReportsPerPage(filteredReports)}
           <div>
             <Fab
               className={
@@ -236,16 +290,7 @@ class ListView extends Component {
           classes={{ ul: classes.paginator }}
           color="primary"
           onChange={this.handlePageNumber}
-          count={Math.floor(
-            reports
-              .filter((report) => dataMatchesFilter(report, filter))
-              .sort((one, two) => {
-                return (
-                  this.timeToNanos(two.data.time_submitted) -
-                  this.timeToNanos(one.data.time_submitted)
-                );
-              }).length / itemsPerPage
-          )}
+          count={Math.floor(filteredReports.length / itemsPerPage)}
           page={Number(pageNumber)}
           showFirstButton
           showLastButton
@@ -259,6 +304,7 @@ const mapStateToProps = (state) => {
   return {
     isMobile: state.isMobile,
     filter: state.filter,
+    reports: state.reports,
   };
 };
 export default withRouter(

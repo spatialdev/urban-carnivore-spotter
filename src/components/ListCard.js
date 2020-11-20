@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
 import Card from "@material-ui/core/Card";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -11,6 +11,9 @@ import Placeholder from "../assets/placeholder.svg";
 import { firebaseTimeToDateTimeString } from "../services/TimeService";
 import dateIcon from "../assets/Calendar.svg";
 import locationIcon from "../assets/Location.svg";
+import { setReport } from "../store/actions";
+import { getReport } from "../services/ReportService";
+import { render } from "react-dom";
 
 const styles = (theme) => ({
   info: {
@@ -88,42 +91,8 @@ const styles = (theme) => ({
 
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
-const ListCard = (props) => {
-  const { classes, report, reports } = props;
-  const [showReport, setShowReport] = useState(false);
-  const isInTacoma =
-    report.data !== undefined && report.data.isTacoma !== undefined
-      ? report.data.isTacoma
-      : false;
-  const path =
-    window.location.pathname.indexOf("tacoma") === -1
-      ? "/reports"
-      : "/tacoma/reports";
-
-  let videoUrl;
-  let imageUrl = Placeholder;
-  let isVideo = false;
-
-  if (report.data.mediaPaths && report.data.mediaPaths.length > 0) {
-    const media = report.data.mediaPaths[0];
-    const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gim;
-    const extension = media.match(fileExtensionPattern);
-    isVideo = videoFormats.includes(
-      extension ? extension[0].toLowerCase() : false
-    );
-
-    if (isVideo) {
-      videoUrl = media;
-    } else {
-      imageUrl = media;
-    }
-  }
-
-  const handleReport = () => {
-    setShowReport(true);
-  };
-
-  const getReportIdx = (id, reports) => {
+class ListCard extends Component {
+  getReportIdx = (id, reports) => {
     let position = 0;
     reports.forEach((report, idx) => {
       if (report.id === id) {
@@ -133,58 +102,66 @@ const ListCard = (props) => {
     return position;
   };
 
-  return (
-    <Card className="card">
-      <CardContent className={classes.allContent}>
-        {isVideo ? (
-          <ReactPlayer
-            url={videoUrl}
-            light={true}
-            width={200}
-            height={200}
-            playing
-          />
-        ) : (
-          <CardMedia className="cardPicture" image={imageUrl} />
-        )}
-        <CardContent className={classes.info}>
-          <Typography className={classes.title} variant={"h5"}>
-            {report.data.species}
-          </Typography>
-          <Typography variant={"subtitle1"} className={classes.date}>
-            <img className={classes.icon} src={dateIcon} alt="Date" />
-            {firebaseTimeToDateTimeString(report.data.timestamp)}
-          </Typography>
-          <Typography style={{ color: "grey" }} className={classes.location}>
-            <img className={classes.icon} src={locationIcon} alt="Location" />
-            {report.data.neighborhood ? report.data.neighborhood : "Unknown"}
-          </Typography>
-          {showReport ? (
-            <Redirect
-              to={{
-                pathname: isInTacoma
-                  ? `${path}/tacoma/${report.id}`
-                  : `${path}/${report.id}`,
-                state: {
-                  report: report,
-                  reports: reports,
-                  reportIdx: getReportIdx(report.id, reports),
-                  nextReport: reports[getReportIdx(report.id, reports) + 1],
-                  prevReport: reports[getReportIdx(report.id, reports) - 1],
-                },
-                getReportIdx: getReportIdx,
-              }}
+  render() {
+    const { classes, handleReport, currReport } = this.props;
+    let videoUrl;
+    let imageUrl = Placeholder;
+    let isVideo = false;
+
+    if (currReport.data.mediaPaths && currReport.data.mediaPaths.length > 0) {
+      const media = currReport.data.mediaPaths[0];
+      const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gim;
+      const extension = media.match(fileExtensionPattern);
+      isVideo = videoFormats.includes(
+        extension ? extension[0].toLowerCase() : false
+      );
+
+      if (isVideo) {
+        videoUrl = media;
+      } else {
+        imageUrl = media;
+      }
+    }
+    return (
+      <Card className="card">
+        <CardContent className={classes.allContent}>
+          {isVideo ? (
+            <ReactPlayer
+              url={videoUrl}
+              light={true}
+              width={200}
+              height={200}
+              playing
             />
           ) : (
-            <div className={classes.seeReport} onClick={handleReport}>
+            <CardMedia className="cardPicture" image={imageUrl} />
+          )}
+          <CardContent className={classes.info}>
+            <Typography className={classes.title} variant={"h5"}>
+              {currReport.data.species}
+            </Typography>
+            <Typography variant={"subtitle1"} className={classes.date}>
+              <img className={classes.icon} src={dateIcon} alt="Date" />
+              {firebaseTimeToDateTimeString(currReport.data.timestamp)}
+            </Typography>
+            <Typography style={{ color: "grey" }} className={classes.location}>
+              <img className={classes.icon} src={locationIcon} alt="Location" />
+              {currReport.data.neighborhood
+                ? currReport.data.neighborhood
+                : "Unknown"}
+            </Typography>
+            <div
+              className={classes.seeReport}
+              onClick={() => handleReport(currReport.id)}
+            >
               <div className={classes.seeReportText}>See Report</div>
               <ChevronRightIcon />
             </div>
-          )}
+          </CardContent>
         </CardContent>
-      </CardContent>
-    </Card>
-  );
-};
+      </Card>
+    );
+  }
+}
 
-export default withStyles(styles)(ListCard);
+export default withRouter(withStyles(styles)(ListCard));
