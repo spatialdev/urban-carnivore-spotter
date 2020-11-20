@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
+import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Button from "@material-ui/core/Button";
@@ -11,10 +13,39 @@ import { KeyboardArrowLeft, NextWeekOutlined } from "@material-ui/icons";
 import { jsDateToTimeString } from "../services/TimeService";
 import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
-import { connect } from "react-redux";
 import { dataMatchesFilter } from "../services/FilterService";
 
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
+
+const styles = {
+  nav: {
+    marginTop: "3.5em",
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+    cursor: "pointer",
+  },
+  prev: {
+    display: "flex",
+    alignItems: "center",
+  },
+  next: {
+    display: "flex",
+    alignItems: "center",
+  },
+  navText: {
+    textAlign: "center",
+    fontSize: "0.9em",
+    color: "black",
+  },
+  backNav: { width: "15px", height: "15px", color: "black" },
+  nextNav: {
+    marginLeft: "0.25em",
+    width: "15px",
+    height: "15px",
+    color: "black",
+  },
+};
 
 class ReportViewer extends Component {
   state = {
@@ -142,7 +173,7 @@ class ReportViewer extends Component {
   }
 
   render() {
-    const { history, isMobile } = this.props;
+    const { history, isMobile, classes } = this.props;
     const { report } = this.state;
 
     if (!report) {
@@ -174,10 +205,19 @@ class ReportViewer extends Component {
                 history.push("/list");
               }}
             >
-              {" "}
-              <KeyboardArrowLeft />
               Back to List
             </Button>
+          </div>
+          <div className={classes.nav}>
+            <div className={classes.prev} onClick={this.handlePrevious}>
+              <ArrowBackIosIcon className={classes.backNav} />
+              <div className={classes.navText}>Previous Report</div>
+            </div>
+
+            <div className={classes.next} onClick={this.handleNext}>
+              <div className={classes.navText}>Next Report</div>
+              <ArrowForwardIosIcon className={classes.nextNav} />
+            </div>
           </div>
           <div>
             <Card className="reportCard">
@@ -228,8 +268,6 @@ class ReportViewer extends Component {
             </Card>
           </div>
         </div>
-        <ArrowBackIosIcon onClick={this.handlePrevious} />
-        <ArrowForwardIosIcon onClick={this.handleNext} />
       </div>
     );
   }
@@ -243,4 +281,6 @@ const mapStateToProps = (state) => {
     filter: state.filter,
   };
 };
-export default withRouter(connect(mapStateToProps)(ReportViewer));
+export default withRouter(
+  connect(mapStateToProps)(withStyles(styles)(ReportViewer))
+);
