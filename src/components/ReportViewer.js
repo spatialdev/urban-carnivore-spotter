@@ -12,6 +12,7 @@ import { jsDateToTimeString } from "../services/TimeService";
 import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
 import { connect } from "react-redux";
+import { dataMatchesFilter } from "../services/FilterService";
 
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
@@ -39,37 +40,33 @@ class ReportViewer extends Component {
   handleReports = (data) => {
     const { reports } = this.props;
     const { id } = this.props.match.params;
-    const currIdx = this.getReportIdx(id, reports);
-    const nextReportId = this.getNextId(currIdx, reports);
+    const filteredReports = this.filterReports(reports);
+
+    const currIdx = this.getReportIdx(id, filteredReports);
+    const nextReportId = this.getNextId(currIdx, filteredReports);
+    const prevReportId = this.getPrevId(currIdx, filteredReports);
 
     this.setState({
       report: data,
       nextId: nextReportId,
+      prevId: prevReportId,
     });
   };
 
-  renderMediaItem(item) {
-    return (
-      <div className="image-gallery-image">
-        {item.isVideo ? (
-          <ReactPlayer url={item.original} controls width={400} height={200} />
-        ) : (
-          <img
-            src={item.original}
-            alt={item.originalAlt}
-            srcSet={item.srcSet}
-            sizes={item.sizes}
-            title={item.originalTitle}
-            style={{ width: "400px" }}
-          />
-        )}
+  filterReports = (reports) => {
+    const { filter } = this.props;
+    return reports
+      .filter((report) => dataMatchesFilter(report, filter))
+      .sort((one, two) => {
+        return (
+          this.timeToNanos(two.data.time_submitted) -
+          this.timeToNanos(one.data.time_submitted)
+        );
+      });
+  };
 
-        {item.description && (
-          <span className="image-gallery-description">{item.description}</span>
-        )}
-      </div>
-    );
-  }
+  timeToNanos = (timestamp) =>
+    timestamp._nanoseconds + timestamp._seconds * 1000000000;
 
   getReportIdx = (id, reports) => {
     let position = 0;
@@ -105,15 +102,9 @@ class ReportViewer extends Component {
     history.push(isInTacoma ? `${path}/tacoma/${nextId}` : `${path}/${nextId}`);
   };
 
-  render() {
-    const { history, isMobile } = this.props;
-    const { report, nextId, prevId } = this.state;
-
-    console.log("NEXT ID", nextId);
-
-    if (!report) {
-      return <CircularProgress />;
-    }
+  handlePrevious = () => {
+    const { history } = this.props;
+    const { report, prevId } = this.state;
 
     const isInTacoma =
       report.data !== undefined && report.data.isTacoma !== undefined
@@ -124,8 +115,41 @@ class ReportViewer extends Component {
         ? "/reports"
         : "/tacoma/reports";
 
-    let media = [];
+    history.push(isInTacoma ? `${path}/tacoma/${prevId}` : `${path}/${prevId}`);
+  };
 
+  renderMediaItem(item) {
+    return (
+      <div className="image-gallery-image">
+        {item.isVideo ? (
+          <ReactPlayer url={item.original} controls width={400} height={200} />
+        ) : (
+          <img
+            src={item.original}
+            alt={item.originalAlt}
+            srcSet={item.srcSet}
+            sizes={item.sizes}
+            title={item.originalTitle}
+            style={{ width: "400px" }}
+          />
+        )}
+
+        {item.description && (
+          <span className="image-gallery-description">{item.description}</span>
+        )}
+      </div>
+    );
+  }
+
+  render() {
+    const { history, isMobile } = this.props;
+    const { report } = this.state;
+
+    if (!report) {
+      return <CircularProgress />;
+    }
+
+    let media = [];
     if (report.mediaPaths !== undefined && report.mediaPaths.length > 0) {
       report.mediaPaths.map((med) => {
         const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gim;
@@ -152,7 +176,7 @@ class ReportViewer extends Component {
             >
               {" "}
               <KeyboardArrowLeft />
-              Back
+              Back to List
             </Button>
           </div>
           <div>
@@ -202,12 +226,10 @@ class ReportViewer extends Component {
                 </p>
               </div>
             </Card>
-
-            {/* <ArrowBackIosIcon /> */}
-
-            <ArrowForwardIosIcon onClick={this.handleNext} />
           </div>
         </div>
+        <ArrowBackIosIcon onClick={this.handlePrevious} />
+        <ArrowForwardIosIcon onClick={this.handleNext} />
       </div>
     );
   }
@@ -218,6 +240,7 @@ const mapStateToProps = (state) => {
     isMobile: state.isMobile,
     report: state.report,
     reports: state.reports,
+    filter: state.filter,
   };
 };
 export default withRouter(connect(mapStateToProps)(ReportViewer));

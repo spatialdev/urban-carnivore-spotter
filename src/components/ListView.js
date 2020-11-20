@@ -221,14 +221,13 @@ class ListView extends Component {
   getCurrReport = async (id) => {
     const { localStorage } = window;
 
-    const cachedReports = localStorage.getItem("report");
-    if (cachedReports) {
+    const cachedReport = localStorage.getItem("report");
+    if (cachedReport) {
       localStorage.removeItem("report");
-    } else {
-      const report = await getReport(id);
-      setReport(report);
-      localStorage.setItem("report", JSON.stringify(report));
     }
+    const report = await getReport(id);
+    setReport(report);
+    localStorage.setItem("report", JSON.stringify(report));
   };
 
   render() {
