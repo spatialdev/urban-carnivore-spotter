@@ -172,7 +172,6 @@ class ListView extends Component {
 
   renderReportsPerPage = (reports) => {
     const { pageNumber, itemsPerPage } = this.state;
-    const { classes } = this.props;
     return reports
       .slice(
         pageNumber * itemsPerPage,
