@@ -148,7 +148,7 @@ class ListCard extends Component {
               <img className={classes.icon} src={locationIcon} alt="Location" />
               {currReport.data.neighborhood
                 ? currReport.data.neighborhood
-                : "Unknown"}
+                : "Seattle"}
             </Typography>
             <div
               className={classes.seeReport}
