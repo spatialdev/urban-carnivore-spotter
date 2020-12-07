@@ -53,6 +53,8 @@ class ReportViewer extends Component {
     report: null,
     nextId: "",
     prevId: "",
+    isAtStartBoundary: false,
+    isAtEndBoundary: false,
   };
 
   componentDidMount = async () => {
@@ -116,16 +118,20 @@ class ReportViewer extends Component {
   };
 
   getNextId = (idx, reports) => {
-    if (reports.length > 0 && reports[idx + 1]) {
+    if (reports && reports.length > 0 && reports[idx + 1]) {
+      this.setState({ isAtEndBoundary: false });
       return reports[idx + 1].id;
     }
+    this.setState({ isAtEndBoundary: true });
     return reports[reports.length - 1].id;
   };
 
   getPrevId = (idx, reports) => {
-    if (reports.length > 0 && reports[idx - 1]) {
+    if (reports && reports.length > 0 && reports[idx - 1]) {
+      this.setState({ isAtStartBoundary: false });
       return reports[idx - 1].id;
     }
+    this.setState({ isAtStartBoundary: true });
     return reports[0].id;
   };
 
@@ -186,7 +192,7 @@ class ReportViewer extends Component {
 
   render() {
     const { history, isMobile, classes } = this.props;
-    const { report } = this.state;
+    const { report, isAtEndBoundary, isAtStartBoundary } = this.state;
 
     if (!report) {
       return <CircularProgress />;
@@ -222,14 +228,20 @@ class ReportViewer extends Component {
           </div>
           <div className={classes.nav}>
             <div className={classes.prev} onClick={this.handlePrevious}>
-              <ArrowBackIosIcon className={classes.backNav} />
-              <div className={classes.navText}>Previous Report</div>
+              {!isAtStartBoundary && (
+                <>
+                  <ArrowBackIosIcon className={classes.backNav} />
+                  <div className={classes.navText}>Previous Report</div>
+                </>
+              )}
             </div>
 
-            <div className={classes.next} onClick={this.handleNext}>
-              <div className={classes.navText}>Next Report</div>
-              <ArrowForwardIosIcon className={classes.nextNav} />
-            </div>
+            {!isAtEndBoundary && (
+              <div className={classes.next} onClick={this.handleNext}>
+                <div className={classes.navText}>Next Report</div>
+                <ArrowForwardIosIcon className={classes.nextNav} />
+              </div>
+            )}
           </div>
           <div>
             <Card className="reportCard">
