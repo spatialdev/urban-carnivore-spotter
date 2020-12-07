@@ -1,19 +1,21 @@
-const functions = require('firebase-functions');
-const cors = require('cors')({ origin: true });
-const admin = require('firebase-admin');
-const moment = require('moment');
-const turf = require('@turf/turf');
-const nodemailer = require('nodemailer');
+const functions = require("firebase-functions");
+const cors = require("cors")({ origin: true });
+const admin = require("firebase-admin");
+const moment = require("moment");
+const turf = require("@turf/turf");
+const nodemailer = require("nodemailer");
 
 admin.initializeApp(functions.config().firebase);
 const database = admin.firestore();
 
-const NEIGHBORHOOD = 'neighborhood';
-const UNIQUES = 'uniques';
-const REPORTS = 'reports';
-const REPORTS_TACOMA = 'reportsTacoma';
-const REPORT_URL_STUB = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2Freports~2F';
-const TACOMA_REPORTS_URL = 'https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2FreportsTacoma~2F';
+const NEIGHBORHOOD = "neighborhood";
+const UNIQUES = "uniques";
+const REPORTS = "reports";
+const REPORTS_TACOMA = "reportsTacoma";
+const REPORT_URL_STUB =
+  "https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2Freports~2F";
+const TACOMA_REPORTS_URL =
+  "https://console.firebase.google.com/project/seattlecarnivores-edca2/database/firestore/data~2FreportsTacoma~2F";
 
 // initialize username/password
 const username = functions.config().email.username;
@@ -30,27 +32,38 @@ const toTimestamp = (date) => {
 
 exports.addReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
-    if (req.method !== 'POST') {
+    if (req.method !== "POST") {
       return res.status(401).json({
-        message: 'Not allowed'
+        message: "Not allowed",
       });
     }
-    const reportWithTimestamp = Object.assign(req.body, {time_submitted: toTimestamp(new Date())});
+    const reportWithTimestamp = Object.assign(req.body, {
+      time_submitted: toTimestamp(new Date()),
+    });
     // Add neighborhood to the list of unique neighborhoods, if it's not already present
-    const updateNeighborhoodsPromise = database.collection(UNIQUES).doc(NEIGHBORHOOD)
+    const updateNeighborhoodsPromise = database
+      .collection(UNIQUES)
+      .doc(NEIGHBORHOOD)
       .update({
-        values: admin.firestore.FieldValue.arrayUnion(reportWithTimestamp[NEIGHBORHOOD])
+        values: admin.firestore.FieldValue.arrayUnion(
+          reportWithTimestamp[NEIGHBORHOOD]
+        ),
       });
     // Add the full report to the database.
-    let BUCKET = req.body.isTacoma!== undefined &&  req.body.isTacoma===true ? REPORTS_TACOMA : REPORTS;
-    const addReportPromise = database.collection(BUCKET).add(reportWithTimestamp);
+    let BUCKET =
+      req.body.isTacoma !== undefined && req.body.isTacoma === true
+        ? REPORTS_TACOMA
+        : REPORTS;
+    const addReportPromise = database
+      .collection(BUCKET)
+      .add(reportWithTimestamp);
     return Promise.all([updateNeighborhoodsPromise, addReportPromise])
-      .then(ref => {
-        return res.status(200).send('Success!');
+      .then((ref) => {
+        return res.status(200).send("Success!");
       })
-      .catch(error => {
+      .catch((error) => {
         return res.status(500).send(`Error adding document: ${error}`);
-    });
+      });
   });
 });
 /**
@@ -73,55 +86,59 @@ filterReport = (document) => {
     neighborhood: allData.neighborhood,
     confidence: allData.confidence,
     numberOfAdultSpecies: allData.numberOfAdultSpecies,
-    numberOfYoungSpecies: allData.numberOfYoungSpecies
-  }
+    numberOfYoungSpecies: allData.numberOfYoungSpecies,
+    mapLng: allData.mapLng,
+    mapLat: allData.mapLat,
+  };
 };
-
 
 exports.getReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
-    if (req.method !== 'GET') {
+    if (req.method !== "GET") {
       return res.status(404).json({
-        message: 'Not found'
+        message: "Not found",
       });
     }
-    return database.collection(REPORTS).doc(req.query.id)
+    return database
+      .collection(REPORTS)
+      .doc(req.query.id)
       .get()
-      .then(doc => {
+      .then((doc) => {
         if (doc.exists) {
           return res.status(200).send(filterReport(doc));
         } else {
           return res.status(200).send({});
         }
       })
-      .catch(error => {
+      .catch((error) => {
         return res.status(500).send(`Error getting documents: ${error}`);
-      })
+      });
   });
 });
 
 exports.getTacomaReport = functions.https.onRequest((req, res) => {
   return cors(req, res, () => {
-    if (req.method !== 'GET') {
+    if (req.method !== "GET") {
       return res.status(404).json({
-        message: 'Not found'
+        message: "Not found",
       });
     }
-    return database.collection(REPORTS_TACOMA).doc(req.query.id)
+    return database
+      .collection(REPORTS_TACOMA)
+      .doc(req.query.id)
       .get()
-      .then(doc => {
+      .then((doc) => {
         if (doc.exists) {
           return res.status(200).send(filterReport(doc));
         } else {
           return res.status(200).send({});
         }
       })
-      .catch(error => {
+      .catch((error) => {
         return res.status(500).send(`Error getting documents: ${error}`);
-      })
+      });
   });
 });
-
 
 /**
  * Internal helper method to build database queries given some parameters.
@@ -130,22 +147,30 @@ exports.getTacomaReport = functions.https.onRequest((req, res) => {
  */
 buildQuery = (queryParams, collection) => {
   // always filter by time_submitted
-  let week_ago = toTimestamp(moment().subtract(10, 'days').toDate());
-  let initialQuery = collection.where('time_submitted', '<=', week_ago);
+  let week_ago = toTimestamp(moment().subtract(10, "days").toDate());
+  let initialQuery = collection.where("time_submitted", "<=", week_ago);
   if (queryParams.species) {
-    initialQuery = initialQuery.where('species', '==', queryParams.species);
+    initialQuery = initialQuery.where("species", "==", queryParams.species);
   }
   if (queryParams.neighborhood) {
-    initialQuery = initialQuery.where(NEIGHBORHOOD, '==', queryParams.neighborhood);
+    initialQuery = initialQuery.where(
+      NEIGHBORHOOD,
+      "==",
+      queryParams.neighborhood
+    );
   }
   if (queryParams.season) {
-    initialQuery = initialQuery.where('season', '==', queryParams.season);
+    initialQuery = initialQuery.where("season", "==", queryParams.season);
   }
   if (queryParams.year) {
-    initialQuery = initialQuery.where('year', '==', queryParams.year);
+    initialQuery = initialQuery.where("year", "==", queryParams.year);
   }
   if (queryParams.timeOfDay) {
-    initialQuery = initialQuery.where('time_of_day', '==', queryParams.timeOfDay);
+    initialQuery = initialQuery.where(
+      "time_of_day",
+      "==",
+      queryParams.timeOfDay
+    );
   }
   return initialQuery;
 };
@@ -176,100 +201,120 @@ filterReports = (document) => {
     id: allData.id,
     mediaPaths: allData.mediaPaths,
     mapLng: allData.mapLng,
-    mapLat: allData.mapLat
-  }
+    mapLat: allData.mapLat,
+  };
 };
 
 exports.getReports = functions.https.onRequest((req, res) => {
-  return cors(req, res, () => {
-    if (req.method !== 'GET') {
-      return res.status(404).json({
-        message: `Not Allowed`
+  return cors(
+    req,
+    res,
+    () => {
+      if (req.method !== "GET") {
+        return res.status(404).json({
+          message: `Not Allowed`,
+        });
+      }
+      let reports = database.collection(REPORTS);
+      let reports_tacoma = database.collection(REPORTS_TACOMA);
+      let querySnapshotPromise = buildQuery(req.query, reports).get();
+      let querySnapshotPromiseTacoma = buildQuery(
+        req.query,
+        reports_tacoma
+      ).get();
+      return Promise.all([querySnapshotPromiseTacoma, querySnapshotPromise])
+        .then((values) => {
+          let items = [];
+          values.forEach((snapshot) => {
+            if (!snapshot.empty) {
+              if (
+                req.query.mapLat !== undefined &&
+                req.query.mapLng !== undefined
+              ) {
+                const queryLatitude = Number(req.query.mapLat);
+                const queryLongitude = Number(req.query.mapLng);
+                const from = turf.point([queryLongitude, queryLatitude]);
+                const options = { units: "miles" };
+                snapshot.forEach((doc) => {
+                  const data = doc.data();
+                  let dataLatitude = data["mapLat"];
+                  let dataLongitude = data["mapLng"];
+                  if (
+                    dataLatitude !== undefined &&
+                    dataLongitude !== undefined
+                  ) {
+                    const to = turf.point([dataLongitude, dataLatitude]);
+                    const distance = turf.distance(from, to, options);
+                    // If distance is within 500 miles from the query lat long
+                    if (distance <= 500) {
+                      items.push({ id: doc.id, data: filterReports(doc) });
+                    }
+                  }
+                });
+              } else {
+                snapshot.forEach((doc) => {
+                  items.push({ id: doc.id, data: filterReports(doc) });
+                });
+              }
+            }
+          });
+          return items.length === 0
+            ? res.status(200).send("No data!")
+            : res.status(200).send(items);
+        })
+        .catch((err) => {
+          res.status(500).send(`Error getting documents: ${err}`);
+        });
+    },
+    (error) => {
+      res.status(error.code).json({
+        message: `Something went wrong. ${error.message}`,
       });
     }
-    let reports = database.collection(REPORTS);
-    let reports_tacoma = database.collection(REPORTS_TACOMA);
-    let querySnapshotPromise = buildQuery(req.query, reports).get();
-    let querySnapshotPromiseTacoma = buildQuery(req.query, reports_tacoma).get();
-    return Promise.all([querySnapshotPromiseTacoma, querySnapshotPromise]).then(values => {
-        let items = [];
-        values.forEach(snapshot => {
-            if(!snapshot.empty)
-            {
-                if (req.query.mapLat !== undefined && req.query.mapLng !== undefined)
-                {
-                    const queryLatitude = Number(req.query.mapLat);
-                    const queryLongitude = Number(req.query.mapLng);
-                    const from = turf.point([queryLongitude, queryLatitude]);
-                    const options = { units: 'miles' };
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        let dataLatitude = data['mapLat'];
-                        let dataLongitude = data['mapLng'];
-                        if (dataLatitude !== undefined && dataLongitude !== undefined) {
-                            const to = turf.point([dataLongitude,dataLatitude]);
-                            const distance = turf.distance(from, to, options);
-                            // If distance is within 500 miles from the query lat long
-                            if (distance <= 500) {
-                                items.push({ id: doc.id, data: filterReports(doc) });
-                            }
-                        }
-                    });
-                } else {
-                    snapshot.forEach(doc => {
-                    items.push({ id: doc.id, data: filterReports(doc) });
-                    });
-                }
-            }
-        });
-        return items.length === 0 ? res.status(200).send('No data!') : res.status(200).send(items);})
-        .catch(err => {
-            res.status(500).send(`Error getting documents: ${err}`);
-        });
-    }, (error) => {
-            res.status(error.code).json({
-                message: `Something went wrong. ${error.message}`
-            });
-        });
+  );
 });
 
 exports.getNeighborhoods = functions.https.onRequest((req, res) => {
-  return cors(req, res, () => {
-    if (req.method !== 'GET') {
-      return res.status(401).json({
-        message: 'Not Allowed'
+  return cors(
+    req,
+    res,
+    () => {
+      if (req.method !== "GET") {
+        return res.status(401).json({
+          message: "Not Allowed",
+        });
+      }
+      return database
+        .collection(UNIQUES)
+        .doc(NEIGHBORHOOD)
+        .get()
+        .then((snapshot) => snapshot.get("values"))
+        .then((neighborhoods) => res.status(200).send(neighborhoods))
+        .catch((err) => {
+          res.status(500).send(`Error getting documents: ${err}`);
+        });
+    },
+    (error) => {
+      res.status(error.code).json({
+        message: `Error getting documents: ${error.message}`,
       });
     }
-    return database.collection(UNIQUES)
-      .doc(NEIGHBORHOOD)
-      .get()
-      .then(snapshot => snapshot.get('values'))
-      .then(neighborhoods => res.status(200).send(neighborhoods))
-      .catch(err => {
-        res.status(500).send(`Error getting documents: ${err}`);
-      });
-  },
-  (error) => {
-      res.status(error.code).json({
-      message: `Error getting documents: ${error.message}`
-    });
-  });
+  );
 });
 
 // Email helpers
 const sendEmail = (from, to, subject, html) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: username,
+      pass: password,
+    },
+  });
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: username,
-            pass: password
-        }
-    });
+  const mailOptions = { from, to, subject, html };
 
-    const mailOptions = { from, to, subject, html };
-
-    return transporter.sendMail(mailOptions);
+  return transporter.sendMail(mailOptions);
 };
 
 const formatMediaPathAsTableRow = (mediaPath, index, total) => {
@@ -279,10 +324,12 @@ const formatMediaPathAsTableRow = (mediaPath, index, total) => {
   const id = firstSplit[1].split(".")[0];
   const segments = firstSplit[0].split("/");
   const location = segments[segments.length - 1];
-  const thumbnail = mediaPath.includes("images") ? `<img src=${mediaPath} alt="image thumbnail" style="width: 100px;"/>`
-                                                 : "No thumbnail for non-image media.";
+  const thumbnail = mediaPath.includes("images")
+    ? `<img src=${mediaPath} alt="image thumbnail" style="width: 100px;"/>`
+    : "No thumbnail for non-image media.";
   // Don't style the bottom row, since we have a border around everything.
-  const trStyle = index === total - 1 ? '' : ' style="border-bottom: 1px solid black"';
+  const trStyle =
+    index === total - 1 ? "" : ' style="border-bottom: 1px solid black"';
   return `<tr${trStyle}>
         <td>${mediaPath}</td>
         <td>${thumbnail}</td>
@@ -297,14 +344,20 @@ const formatSubmissionAsTableRow = (reportSnapshot) => {
   const species = data.species;
   const mediaPaths = data.mediaPaths;
   const neighborhood = data.neighborhood;
-  const vocalizationDescription = data.vocalizationDesc ? data.vocalizationDesc : 'N/A';
-  const reactionDescription = data.reactionDescription ? data.reactionDescription : 'N/A';
-  const name = data.contactName ? data.contactName : 'N/A';
-  const email = data.contactEmail ? data.contactEmail : 'N/A';
-  const phone = data.contactPhone ? data.contactPhone : 'N/A';
-  const comments = data.generalComments ? data.generalComments : 'N/A';
-  const URL = data.isTacoma && data.isTacoma===true ? TACOMA_REPORTS_URL : REPORT_URL_STUB;
-
+  const vocalizationDescription = data.vocalizationDesc
+    ? data.vocalizationDesc
+    : "N/A";
+  const reactionDescription = data.reactionDescription
+    ? data.reactionDescription
+    : "N/A";
+  const name = data.contactName ? data.contactName : "N/A";
+  const email = data.contactEmail ? data.contactEmail : "N/A";
+  const phone = data.contactPhone ? data.contactPhone : "N/A";
+  const comments = data.generalComments ? data.generalComments : "N/A";
+  const URL =
+    data.isTacoma && data.isTacoma === true
+      ? TACOMA_REPORTS_URL
+      : REPORT_URL_STUB;
 
   return `<tr>
         <td>${id}</td>
@@ -317,7 +370,11 @@ const formatSubmissionAsTableRow = (reportSnapshot) => {
                   <th>Media Bucket</th>
                   <th>Media IDs</th>
                 </tr>
-                ${mediaPaths.map((path, index) => formatMediaPathAsTableRow(path, index, mediaPaths.length)).join("")}
+                ${mediaPaths
+                  .map((path, index) =>
+                    formatMediaPathAsTableRow(path, index, mediaPaths.length)
+                  )
+                  .join("")}
             </table>
         </td>
         <td>${neighborhood}</td>
@@ -334,7 +391,6 @@ const formatSubmissionAsTableRow = (reportSnapshot) => {
 };
 
 const formatSubmissionAsTable = (reportSnapshots) => {
-
   return `<table style="border: 1px solid black">
      <tr>
        <th>ID</th>
@@ -345,15 +401,17 @@ const formatSubmissionAsTable = (reportSnapshots) => {
        <th>Contact Information</th>
        <th>Link to Report</th>
      </tr>
-     ${reportSnapshots.map(snapshot => formatSubmissionAsTableRow(snapshot)).join('')}
+     ${reportSnapshots
+       .map((snapshot) => formatSubmissionAsTableRow(snapshot))
+       .join("")}
    </table>`;
 };
 
 const sendNewSubmissionEmail = (reportSnapshot) => {
-    const from = `"Test reporters" <${username}@gmail.com>`;
-    const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
-    const subject = "New report submitted";
-    const styles = `<style>
+  const from = `"Test reporters" <${username}@gmail.com>`;
+  const to = `"Seattle Carnivore Spotter" <seattlecarnivores@zoo.org>`;
+  const subject = "New report submitted";
+  const styles = `<style>
         table td + td { 
             border-left: 1px solid black;
         }
@@ -364,9 +422,9 @@ const sendNewSubmissionEmail = (reportSnapshot) => {
             border-bottom: 1px solid black;
         }
     </style>`;
-    const html = `<head>${styles}</head>A new report was submitted with the following characteristics:<br/>
+  const html = `<head>${styles}</head>A new report was submitted with the following characteristics:<br/>
         ${formatSubmissionAsTable([reportSnapshot])}`;
-    return sendEmail(from, to, subject, html);
+  return sendEmail(from, to, subject, html);
 };
 
 const sendWeeklyDigestEmail = (reportSnapshots) => {
@@ -395,44 +453,49 @@ const sendWeeklyDigestEmail = (reportSnapshots) => {
 /**
  * Whenever a new document is added to the reports collection, send a notification email.
  */
-exports.sendEmailOnReportCreation = functions.firestore.document(`${REPORTS}/{reportId}`)
-    .onCreate((snapshot, context) => {
-      sendNewSubmissionEmail(snapshot);
-    });
+exports.sendEmailOnReportCreation = functions.firestore
+  .document(`${REPORTS}/{reportId}`)
+  .onCreate((snapshot, context) => {
+    sendNewSubmissionEmail(snapshot);
+  });
 
 /**
  * Whenever a new document is added to the Tacoma reports collection, send a notification email.
  */
-exports.sendEmailOnReportTacomaCreation = functions.firestore.document(`${REPORTS_TACOMA}/{reportId}`)
-    .onCreate((snapshot, context) => {
-      sendNewSubmissionEmail(snapshot);
-    });
+exports.sendEmailOnReportTacomaCreation = functions.firestore
+  .document(`${REPORTS_TACOMA}/{reportId}`)
+  .onCreate((snapshot, context) => {
+    sendNewSubmissionEmail(snapshot);
+  });
 
 /**
  * Every week, send a digest containing all of the submissions from the last week.
  */
-exports.weeklyDigest = functions.pubsub.schedule('0 10 * * 2')
-  .onRun(context => {
-    const weekAgo = toTimestamp(moment().subtract(1, 'week').toDate());
-    return database.collection(REPORTS)
-      .where('time_submitted', '>=', weekAgo)
+exports.weeklyDigest = functions.pubsub
+  .schedule("0 10 * * 2")
+  .onRun((context) => {
+    const weekAgo = toTimestamp(moment().subtract(1, "week").toDate());
+    return database
+      .collection(REPORTS)
+      .where("time_submitted", ">=", weekAgo)
       .get()
-      .then(snapshot => {
+      .then((snapshot) => {
         return sendWeeklyDigestEmail(snapshot.docs);
       });
-});
-
+  });
 
 /**
  * Every week, send a digest containing all of the submissions from the Tacoma collection from last week.
  */
-exports.weeklyDigestTacoma = functions.pubsub.schedule('0 10 * * 2')
-  .onRun(context => {
-    const weekAgo = toTimestamp(moment().subtract(1, 'week').toDate());
-    return database.collection(REPORTS_TACOMA)
-      .where('time_submitted', '>=', weekAgo)
+exports.weeklyDigestTacoma = functions.pubsub
+  .schedule("0 10 * * 2")
+  .onRun((context) => {
+    const weekAgo = toTimestamp(moment().subtract(1, "week").toDate());
+    return database
+      .collection(REPORTS_TACOMA)
+      .where("time_submitted", ">=", weekAgo)
       .get()
-      .then(snapshot => {
+      .then((snapshot) => {
         return sendWeeklyDigestEmail(snapshot.docs);
       });
-});
+  });
