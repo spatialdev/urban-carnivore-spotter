@@ -69,6 +69,7 @@ const dogSizes = [
   "Large(60+lbs)",
   "Mixed group",
 ];
+const vantagePoints = ["Indoors", "Outdoors", "Vehicle", "Camera Footage"];
 const leashOptions = ["Leashed", "Unleashed", "Both"];
 const animalBehaviors = [
   "Was eating",
@@ -244,6 +245,7 @@ class Form extends Component {
     numberOfDogs: "",
     dogSize: "",
     onLeash: "",
+    vantagePoint: "",
     animalBehavior: "",
     animalEating: "",
     vocalization: "",
@@ -658,6 +660,7 @@ class Form extends Component {
       numberOfDogs,
       dogSize,
       onLeash,
+      vantagePoint,
       animalBehavior,
       animalEating,
       vocalization,
@@ -958,6 +961,18 @@ class Form extends Component {
                       />
                     </div>
                   ) : null}
+                </div>
+
+                <div className="formItem">
+                  <h4>Where did you observe the carnivore?</h4>
+                  <FormSelect
+                    selectedValue={vantagePoint}
+                    values={vantagePoints}
+                    handleChange={this.handleChange}
+                    required={false}
+                    label={"Vantage Point"}
+                    id={"vantagePoint"}
+                  />
                 </div>
               </div>
             )}
