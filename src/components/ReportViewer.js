@@ -87,14 +87,17 @@ class ReportViewer extends Component {
 
   filterReports = (reports) => {
     const { filter } = this.props;
-    return reports
-      .filter((report) => dataMatchesFilter(report, filter))
-      .sort((one, two) => {
-        return (
-          this.timeToNanos(two.data.time_submitted) -
-          this.timeToNanos(one.data.time_submitted)
-        );
-      });
+    if (reports && reports.length > 0) {
+      return reports
+        .filter((report) => dataMatchesFilter(report, filter))
+        .sort((one, two) => {
+          return (
+            this.timeToNanos(two.data.time_submitted) -
+            this.timeToNanos(one.data.time_submitted)
+          );
+        });
+    }
+    return reports;
   };
 
   timeToNanos = (timestamp) =>
@@ -102,20 +105,28 @@ class ReportViewer extends Component {
 
   getReportIdx = (id, reports) => {
     let position = 0;
-    reports.forEach((report, idx) => {
-      if (report.id === id) {
-        position = idx;
-      }
-    });
+    if (reports && reports.length > 0) {
+      reports.forEach((report, idx) => {
+        if (report.id === id) {
+          position = idx;
+        }
+      });
+    }
     return position;
   };
 
   getNextId = (idx, reports) => {
-    return reports[idx + 1].id;
+    if (reports.length > 0 && reports[idx + 1]) {
+      return reports[idx + 1].id;
+    }
+    return reports[reports.length - 1].id;
   };
 
   getPrevId = (idx, reports) => {
-    return reports[idx - 1].id;
+    if (reports.length > 0 && reports[idx - 1]) {
+      return reports[idx - 1].id;
+    }
+    return reports[0].id;
   };
 
   handleNext = () => {
@@ -242,29 +253,49 @@ class ReportViewer extends Component {
                   paddingLeft: "30px",
                 }}
               >
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {new Date(report.timestamp).toDateString()}
-                </p>
-                <p>
-                  <strong>Time of Sighting:</strong>{" "}
-                  {jsDateToTimeString(report.timestamp)}
-                </p>
-                <p>
-                  <strong>Neighborhood:</strong> {report.neighborhood}
-                </p>
-                <p>
-                  <strong>Confidence:</strong> {report.confidence}
-                </p>
-                <p style={{ lineHeight: ".5" }}>
-                  <strong>Number of Species:</strong>
-                </p>
-                <p style={{ lineHeight: ".5" }}>
-                  <strong>Adult: </strong> {report.numberOfAdultSpecies}
-                </p>
-                <p style={{ lineHeight: ".5" }}>
-                  <strong>Young: </strong> {report.numberOfYoungSpecies}
-                </p>
+                {report.timestamp && (
+                  <>
+                    <p>
+                      <strong>Date:</strong>{" "}
+                      {new Date(report.timestamp).toDateString()}
+                    </p>
+                    <p>
+                      <strong>Time of Sighting:</strong>{" "}
+                      {jsDateToTimeString(report.timestamp)}
+                    </p>
+                  </>
+                )}
+                {report.neighborhood && (
+                  <p>
+                    <strong>Neighborhood:</strong> {report.neighborhood}
+                  </p>
+                )}
+                {report.confidence && (
+                  <p>
+                    <strong>Confidence:</strong> {report.confidence}
+                  </p>
+                )}
+                {(report.numberOfAdultSpecies ||
+                  report.numberOfYoungSpecies) && (
+                  <p style={{ lineHeight: ".5" }}>
+                    <strong>Number of Species:</strong>
+                  </p>
+                )}
+                {report.numberOfAdultSpecies && (
+                  <p style={{ lineHeight: ".5", marginLeft: "1em" }}>
+                    <strong>Adult: </strong> {report.numberOfAdultSpecies}
+                  </p>
+                )}
+                {report.numberOfYoungSpecies && (
+                  <p style={{ lineHeight: ".5", marginLeft: "1em" }}>
+                    <strong>Young: </strong> {report.numberOfYoungSpecies}
+                  </p>
+                )}
+                {report.vantagePoint && (
+                  <p>
+                    <strong>Vantage Point:</strong> {report.vantagePoint}
+                  </p>
+                )}
               </div>
             </Card>
           </div>
