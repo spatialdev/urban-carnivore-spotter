@@ -84,6 +84,7 @@ class FilterDrawer extends React.Component {
     // Initialize state
     this.state = {
       showCarnivores: false,
+      showMedia: false,
       showNeighborhoods: false,
       showTime: false,
       showConfidence: false,
@@ -146,17 +147,20 @@ class FilterDrawer extends React.Component {
         endDate,
         confidenceFilterActive,
         carnivoreFilter,
+        mediaFilter,
         neighborhoodFilter,
         timeFilter,
       },
     } = this.props;
     const {
       showCarnivores,
+      showMedia,
       showNeighborhoods,
       showTime,
       showConfidence,
       dateRangeFocused,
     } = this.state;
+
     return (
       <div className={classes.allContent}>
         <Sticky>
@@ -179,6 +183,21 @@ class FilterDrawer extends React.Component {
               updateValues={this.updateFilterSubsection("carnivoreFilter")}
               briefNumber={Object.keys(carnivoreFilter).length - 1}
               keyColorFunction={getColorForSpecies}
+            />
+          )}
+          <hr className={classes.separator} />
+
+          {/* Media */}
+          {this.getCollapse(
+            classes,
+            "Media",
+            this.toggleShow("showMedia"),
+            showMedia,
+            <FilterCheckboxes
+              filter={mediaFilter}
+              allLabel="All Media"
+              updateValues={this.updateFilterSubsection("mediaFilter")}
+              briefNumber={Object.keys(mediaFilter).length - 1}
             />
           )}
           <hr className={classes.separator} />
@@ -272,6 +291,7 @@ const mapStateToProps = (state) => {
   return {
     filter: {
       carnivoreFilter: state.filter.carnivoreFilter,
+      mediaFilter: state.filter.mediaFilter,
       neighborhoodFilter: state.filter.neighborhoodFilter,
       timeFilter: state.filter.timeFilter,
       startDate: state.filter.startDate,
