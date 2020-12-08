@@ -11,11 +11,8 @@ import Placeholder from "../assets/placeholder.svg";
 import { firebaseTimeToDateTimeString } from "../services/TimeService";
 import dateIcon from "../assets/Calendar.svg";
 import locationIcon from "../assets/Location.svg";
-import { setReport } from "../store/actions";
-import { getReport } from "../services/ReportService";
-import { render } from "react-dom";
 
-const styles = (theme) => ({
+const styles = () => ({
   info: {
     display: "flex",
     flexDirection: "column",
