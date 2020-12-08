@@ -14,6 +14,7 @@ const allCarnivores = [
   "Red Fox",
   "Other",
 ];
+const allMedia = ["Photos", "Video", "No Media"];
 const allTimes = [
   "Early Morning (12:00am-4:59am)",
   "Morning (5:00am-11:59am)",
@@ -82,12 +83,57 @@ const matchesOtherCarnivore = (filter, species) => {
   );
 };
 
+const matchesMediaTypes = (filter, media) => {
+  const { mediaFilter } = filter;
+  const videoFormats = [
+    ".mov",
+    ".mp4",
+    ".webm",
+    ".ogg",
+    ".avi",
+    ".wmv",
+    ".mkv",
+  ];
+  let isVideo = false;
+  if (media && media.length > 0) {
+    const mediaTypes = media.map((mediaItem) => {
+      const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gim;
+      const extension = mediaItem.match(fileExtensionPattern);
+      isVideo = videoFormats.includes(
+        extension ? extension[0].toLowerCase() : false
+      );
+      if (isVideo) {
+        return mediaFilter["Video"].value && isVideo;
+      } else {
+        return mediaFilter["Photos"].value && !isVideo;
+      }
+    });
+    return mediaTypes.includes(false) ? false : true;
+  } else {
+    return false;
+  }
+};
+
+const matchesNoMediaType = (filter, media) => {
+  const { mediaFilter } = filter;
+  return (
+    mediaFilter["No Media"].value &&
+    media.length === 0 &&
+    !matchesMediaTypes(filter, media)
+  );
+};
+
 export const getInitialFilter = (allNeighborhoods) => {
-  // Carnivore, neighborhood, and times defaults
+  // Carnivore, media, neighborhood, and times defaults
   const defaultCarnivoreFilter = { all: { order: 0, value: true } };
   allCarnivores.forEach(
     (carnivore, ind) =>
       (defaultCarnivoreFilter[carnivore] = { order: ind + 1, value: true })
+  );
+  const defaultMediaFilter = { all: { order: 0, value: true } };
+  allMedia.forEach(
+    (media, ind) =>
+      (defaultMediaFilter[media] = { order: ind + 1, value: true })
   );
   const defaultNeighborhoodFilter = allNeighborhoods
     .filter((hood) => hood !== "all")
@@ -105,6 +151,7 @@ export const getInitialFilter = (allNeighborhoods) => {
 
   return {
     carnivoreFilter: { ...defaultCarnivoreFilter },
+    mediaFilter: { ...defaultMediaFilter },
     neighborhoodFilter: { ...defaultNeighborhoodFilter },
     startDate: null,
     endDate: null,
@@ -125,12 +172,18 @@ export const dataMatchesFilter = (report, filter) => {
   }
 
   try {
-    // ok with species
     return (
+      // ok with species
       (filter.carnivoreFilter.all.value ||
         (filter.carnivoreFilter[data.species] &&
           filter.carnivoreFilter[data.species].value) ||
         matchesOtherCarnivore(filter, data.species)) &&
+      // ok with media
+      (filter.mediaFilter.all.value ||
+        (filter.mediaFilter[data.mediaPaths] &&
+          filter.mediaFilter[data.mediaPaths].length > 0) ||
+        matchesMediaTypes(filter, data.mediaPaths) ||
+        matchesNoMediaType(filter, data.mediaPaths)) &&
       // ok with neighborhood
       (filter.neighborhoodFilter.all.value === true ||
         (data.hasOwnProperty("neighborhood") &&
