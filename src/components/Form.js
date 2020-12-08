@@ -143,11 +143,9 @@ const styles = {
   },
   expandButton: {
     boxShadow: "none",
-    position: "relative",
-    top: -8,
     backgroundColor: "#93C838",
     color: "white",
-    alignItems: "baseline",
+    margin: "1em 1em 1.5em 1em",
   },
   expandHeader: {
     margin: 16,
