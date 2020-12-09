@@ -21,6 +21,7 @@ const allTimes = [
   "Afternoon (12:00pm-5:59pm)",
   "Evening (6:00pm-11:59pm)",
 ];
+const allDates = ["Today", "Past 30 Days", "Date Range"];
 
 const DATE_BOUNDS = [
   {
@@ -123,6 +124,31 @@ const matchesNoMediaType = (filter, media) => {
   );
 };
 
+const matchesTodayDate = (filter, timestamp) => {
+  const { dateFilter } = filter;
+  const today = new Date().setHours(0, 0, 0, 0);
+  const day = new Date(timestamp).setHours(0, 0, 0, 0);
+
+  if (today === day && dateFilter["Today"].value) {
+    return true;
+  }
+  return false;
+};
+
+const matchesPast30Date = (filter, timestamp) => {
+  const { dateFilter } = filter;
+  const today = new Date().setHours(0, 0, 0, 0);
+  const day = new Date(timestamp).setHours(0, 0, 0, 0);
+
+  const diff = Math.abs(today - day);
+  const numOfDaysBetween = diff / (1000 * 60 * 60 * 24);
+
+  if (numOfDaysBetween <= 30 && dateFilter["Past 30 Days"].value) {
+    return true;
+  }
+  return false;
+};
+
 export const getInitialFilter = (allNeighborhoods) => {
   // Carnivore, media, neighborhood, and times defaults
   const defaultCarnivoreFilter = { all: { order: 0, value: true } };
@@ -148,6 +174,10 @@ export const getInitialFilter = (allNeighborhoods) => {
   allTimes.forEach(
     (time, ind) => (defaultTimeFilter[time] = { order: ind + 1, value: true })
   );
+  const defaultDateFilter = { all: { order: 0, value: true } };
+  allDates.forEach(
+    (date, ind) => (defaultDateFilter[date] = { order: ind + 1, value: true })
+  );
 
   return {
     carnivoreFilter: { ...defaultCarnivoreFilter },
@@ -156,6 +186,7 @@ export const getInitialFilter = (allNeighborhoods) => {
     startDate: null,
     endDate: null,
     timeFilter: { ...defaultTimeFilter },
+    dateFilter: { ...defaultDateFilter },
     confidenceFilterActive: false,
   };
 };
@@ -189,7 +220,15 @@ export const dataMatchesFilter = (report, filter) => {
         (data.hasOwnProperty("neighborhood") &&
           filter.neighborhoodFilter[data.neighborhood].value === true)) &&
       // ok with date
-      insideDateBounds(moment(parsedDate), filter.startDate, filter.endDate) &&
+      ((filter.dateFilter["Date Range"].value &&
+        insideDateBounds(
+          moment(parsedDate),
+          filter.startDate,
+          filter.endDate
+        )) ||
+        filter.dateFilter.all.value === true ||
+        matchesTodayDate(filter, data.timestamp) ||
+        matchesPast30Date(filter, data.timestamp)) &&
       // ok with time
       (filter.timeFilter.all.value ||
         insideAnyActiveTimeBounds(parsedDate, filter)) &&
