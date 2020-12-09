@@ -7,6 +7,7 @@ import {
   FormControlLabel,
   FormGroup,
   Checkbox,
+  Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -128,6 +129,12 @@ const styles = {
       backgroundColor: "#8DCA22",
       color: "white !important",
     },
+  },
+  formControlLabel: {
+    fontSize: "0.85em",
+    fontFamily: "Raleway",
+    color: "#767676",
+    fontWeight: 500,
   },
 };
 
@@ -350,7 +357,11 @@ class FilterDrawer extends React.Component {
                       style={{ margin: "0px 0px 0px 8px" }}
                     />
                   }
-                  label="Only show high-confidence sightings"
+                  label={
+                    <Typography className={classes.formControlLabel}>
+                      "Only show high-confidence sightings"
+                    </Typography>
+                  }
                 />
               </FormGroup>
             </FormControl>
