@@ -32,10 +32,10 @@ import "react-dates/lib/css/_datepicker.css";
 const styles = {
   allContent: {
     height: "100%",
-    overflow: "auto",
     position: "static",
     display: "flex",
     flexDirection: "column",
+    fontFamily: "Raleway",
   },
   header: {
     display: "flex",
@@ -46,17 +46,32 @@ const styles = {
     top: 0,
     backgroundColor: "white",
     zIndex: 1,
-    padding: "4px 24px 4px 24px",
+    margin: "0 1em",
+    padding: 0,
+    fontSize: "0.9em",
   },
   filterBox: {},
   mainContent: {
     flex: 1,
+    fontSize: "0.85em",
   },
   expandHeader: {
-    margin: "16px 16px 16px 24px",
+    margin: "1em",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    fontWeight: 600,
+    color: "rgba(57,57,57,0.9)",
+    letterSpacing: "0.58px",
+    "&:hover": {
+      color: "black !important",
+    },
+    "&:active": {
+      color: "black !important",
+    },
+    "&:focus": {
+      color: "black !important",
+    },
   },
   headerTitle: {
     alignText: "left",
@@ -65,16 +80,54 @@ const styles = {
     textAlign: "left",
   },
   separator: {
-    margin: 0,
+    margin: "0 1em",
+    borderColor: "rgba(242, 242, 242, 0.25)",
   },
-  datePicker: {
-    paddingLeft: "10px",
+  datePickerWrapper: {
+    textAlign: "center",
+    margin: "0 1.5em",
   },
   dateFilters: {
     margin: "0 1.5em",
   },
   timeFilters: {
     margin: "1.5em",
+  },
+  reset: {
+    fontSize: "0.85em",
+    borderRadius: "12.5px",
+    backgroundColor: "#F6F4F3",
+    color: "#757575",
+    "&:hover": {
+      backgroundColor: "#8DCA22",
+      color: "white !important",
+    },
+    "&:active": {
+      backgroundColor: "#8DCA22",
+      color: "white !important",
+    },
+    "&:focus": {
+      backgroundColor: "#8DCA22",
+      color: "white !important",
+    },
+  },
+  resizeButton: {
+    width: "0.25em",
+    height: "0.25em",
+    backgroundColor: "#F6F4F3",
+    color: "#757575 !important",
+    "&:hover": {
+      backgroundColor: "#8DCA22",
+      color: "white !important",
+    },
+    "&:active": {
+      backgroundColor: "#8DCA22",
+      color: "white !important",
+    },
+    "&:focus": {
+      backgroundColor: "#8DCA22",
+      color: "white !important",
+    },
   },
 };
 
@@ -118,7 +171,7 @@ class FilterDrawer extends React.Component {
           <ResizableIconButton
             onClick={onClick}
             disableRipple={true}
-            backgroundColor={"#93C838"}
+            className={classes.resizeButton}
             color={"white"}
           >
             {expand ? <RemoveIcon /> : <AddIcon />}
@@ -173,9 +226,12 @@ class FilterDrawer extends React.Component {
         <Sticky>
           <div className={classes.header}>
             {close && <Button onClick={close}>Close</Button>}
-            <h3>Filter</h3>
-            <Button onClick={resetFilter}>Reset</Button>
+            <h3>Filters</h3>
+            <Button className={classes.reset} onClick={resetFilter}>
+              Clear All x
+            </Button>
           </div>
+          <hr className={classes.separator} />
         </Sticky>
         <div className={classes.mainContent}>
           {/* Carnivores */}
@@ -239,7 +295,7 @@ class FilterDrawer extends React.Component {
                   updateValues={this.updateFilterSubsection("dateFilter")}
                   briefNumber={Object.keys(dateFilter).length - 1}
                 />
-                <div className={classes.datePicker}>
+                <div className={classes.datePickerWrapper}>
                   <DateRangePicker
                     startDate={startDate}
                     startDateId={"start_date"}
@@ -256,7 +312,7 @@ class FilterDrawer extends React.Component {
                     numberOfMonths={1}
                     isOutsideRange={this.isOutsideRange}
                     small={true}
-                    daySize={30}
+                    daySize={35}
                   />
                 </div>
               </div>
