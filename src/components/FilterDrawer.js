@@ -70,6 +70,12 @@ const styles = {
   datePicker: {
     paddingLeft: "10px",
   },
+  dateFilters: {
+    margin: "0 1.5em",
+  },
+  timeFilters: {
+    margin: "1.5em",
+  },
 };
 
 const briefNeighborhoodsCount = 5;
@@ -150,6 +156,7 @@ class FilterDrawer extends React.Component {
         mediaFilter,
         neighborhoodFilter,
         timeFilter,
+        dateFilter,
       },
     } = this.props;
     const {
@@ -220,37 +227,48 @@ class FilterDrawer extends React.Component {
           {/* Time and Day */}
           {this.getCollapse(
             classes,
-            "Time of Sighting",
+            "Date/Time of Sighting",
             this.toggleShow("showTime"),
             showTime,
             <>
-              <div className={classes.datePicker}>
-                Date:
-                <DateRangePicker
-                  startDate={startDate}
-                  startDateId={"some_id"}
-                  endDate={endDate}
-                  endDateId={"some_other_id"}
-                  onDatesChange={({ startDate: rawStart, endDate: rawEnd }) =>
-                    updateFilterDate(rawStart, rawEnd)
-                  }
-                  focusedInput={dateRangeFocused}
-                  onFocusChange={(focusedInput) =>
-                    this.setState({ dateRangeFocused: focusedInput })
-                  }
-                  showClearDates={true}
-                  numberOfMonths={1}
-                  isOutsideRange={this.isOutsideRange}
-                  small={true}
-                  daySize={30}
+              <div className={classes.dateFilters}>
+                Date Filters:
+                <FilterCheckboxes
+                  filter={dateFilter}
+                  allLabel="All"
+                  updateValues={this.updateFilterSubsection("dateFilter")}
+                  briefNumber={Object.keys(dateFilter).length - 1}
+                />
+                <div className={classes.datePicker}>
+                  <DateRangePicker
+                    startDate={startDate}
+                    startDateId={"start_date"}
+                    endDate={endDate}
+                    endDateId={"end_date"}
+                    onDatesChange={({ startDate: rawStart, endDate: rawEnd }) =>
+                      updateFilterDate(rawStart, rawEnd)
+                    }
+                    focusedInput={dateRangeFocused}
+                    onFocusChange={(focusedInput) =>
+                      this.setState({ dateRangeFocused: focusedInput })
+                    }
+                    showClearDates={true}
+                    numberOfMonths={1}
+                    isOutsideRange={this.isOutsideRange}
+                    small={true}
+                    daySize={30}
+                  />
+                </div>
+              </div>
+              <div className={classes.timeFilters}>
+                Time Filters:
+                <FilterCheckboxes
+                  filter={timeFilter}
+                  allLabel="Any time of day"
+                  updateValues={this.updateFilterSubsection("timeFilter")}
+                  briefNumber={Object.keys(timeFilter).length - 1}
                 />
               </div>
-              <FilterCheckboxes
-                filter={timeFilter}
-                allLabel="Any time of day"
-                updateValues={this.updateFilterSubsection("timeFilter")}
-                briefNumber={Object.keys(timeFilter).length - 1}
-              />
             </>
           )}
           <hr className={classes.separator} />
@@ -294,6 +312,7 @@ const mapStateToProps = (state) => {
       mediaFilter: state.filter.mediaFilter,
       neighborhoodFilter: state.filter.neighborhoodFilter,
       timeFilter: state.filter.timeFilter,
+      dateFilter: state.filter.dateFilter,
       startDate: state.filter.startDate,
       endDate: state.filter.endDate,
       confidenceFilterActive: state.filter.confidenceFilterActive,
