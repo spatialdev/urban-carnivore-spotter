@@ -44,7 +44,28 @@ const styles = {
     width: 250,
     zIndex: 1000,
     height: "60%",
-    boxShadow: "2px 2px 2px",
+    boxShadow: "2px 2px 2px rgba(117,117,117,0.5)",
+    borderRadius: "6px",
+    overflow: "auto",
+    "&::-webkit-scrollbar": {
+      width: "0.25em",
+      height: "0.25em",
+    },
+    "&::-webkit-scrollbar-track": {
+      width: "0.25em",
+      height: "0.25em",
+      backgroundColor: "#F1F1F1",
+    },
+    "&::-webkit-scrollbar-corner": {
+      width: "0.25em",
+      height: "0.25em",
+      backgroundColor: "#F1F1F1",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      width: "0.25em",
+      height: "0.25em",
+      backgroundColor: "#D8D8D8",
+    },
   },
   buttonContainerMobile: {
     left: "87%",
