@@ -37,7 +37,6 @@ const styles = {
     margin: "0 1em",
     borderColor: "rgba(242, 242, 242, 0.25)",
   },
-
   resizeButton: {
     width: "0.25em",
     height: "0.25em",
@@ -55,6 +54,18 @@ const styles = {
       backgroundColor: "#8DCA22",
       color: "white !important",
     },
+  },
+  search: {
+    display: "flex",
+    margin: "0.5em",
+    justifyContent: "center",
+  },
+  searchInput: {
+    margin: 0,
+    padding: 0,
+  },
+  inputContent: {
+    fontSize: "1em",
   },
 };
 
@@ -114,18 +125,32 @@ class NeighborhoodFilter extends React.Component {
           this.toggleShow("showNeighborhoods"),
           showNeighborhoods,
           <>
-            <TextField
-              label="Search Neighborhood"
-              margin="normal"
-              variant="outlined"
-              value={searchedNeighborhood}
-              onKeyDown={(e) => {
-                handleNeighborhoodSearch(e);
-              }}
-              onChange={(e) => {
-                setNeighborhoodSearch(e);
-              }}
-            />
+            <div className={classes.search}>
+              <TextField
+                size="small"
+                className={classes.searchInput}
+                InputProps={{
+                  classes: {
+                    input: classes.inputContent,
+                  },
+                }}
+                InputLabelProps={{
+                  classes: {
+                    root: classes.inputContent,
+                  },
+                }}
+                label="Neighborhood"
+                margin="normal"
+                variant="outlined"
+                value={searchedNeighborhood}
+                onKeyDown={(e) => {
+                  handleNeighborhoodSearch(e);
+                }}
+                onChange={(e) => {
+                  setNeighborhoodSearch(e);
+                }}
+              />
+            </div>
             <FilterCheckboxes
               filter={neighborhoodFilter}
               allLabel="All Neighborhoods"
