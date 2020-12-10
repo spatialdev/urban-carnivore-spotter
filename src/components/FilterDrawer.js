@@ -8,6 +8,7 @@ import {
   FormGroup,
   Checkbox,
   Typography,
+  TextField,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
@@ -155,10 +156,12 @@ class FilterDrawer extends React.Component {
       showTime: false,
       showConfidence: false,
       dateRangeFocused: null,
+      searchedNeighborhood: "",
     };
   }
 
   updateFilterSubsection = (subsectionName) => (key, newValue) => {
+    console.log("UPDATE", subsectionName, key, newValue);
     updateFilter(subsectionName, key, newValue);
   };
 
@@ -204,6 +207,35 @@ class FilterDrawer extends React.Component {
     );
   };
 
+  handleNeighborhoodSearch = (event) => {
+    if (event.keyCode === 13) {
+      const { value } = event.target;
+      const {
+        filter: { neighborhoodFilter },
+      } = this.props;
+      const autocompleteNeighborhoods = {};
+      let newOrder = 0;
+
+      for (let neighborhood in neighborhoodFilter) {
+        const lowercaseNeighborhood = neighborhood.toLowerCase();
+        const lowercaseSearched = value.toLowerCase().trim();
+
+        if (lowercaseNeighborhood.includes(lowercaseSearched)) {
+          autocompleteNeighborhoods[neighborhood] = false;
+          updateFilter("neighborhoodFilter", neighborhood, false, newOrder);
+          newOrder++;
+        }
+      }
+
+      for (let neighborhood in neighborhoodFilter) {
+        if (!autocompleteNeighborhoods.hasOwnProperty(neighborhood)) {
+          updateFilter("neighborhoodFilter", neighborhood, false, newOrder);
+          newOrder++;
+        }
+      }
+    }
+  };
+
   render = () => {
     const {
       classes,
@@ -226,15 +258,25 @@ class FilterDrawer extends React.Component {
       showTime,
       showConfidence,
       dateRangeFocused,
+      searchedNeighborhood,
     } = this.state;
 
     return (
       <div className={classes.allContent}>
-        <Sticky>
+        <Sticky style={{ backgroundColor: "white", zIndex: 2000 }}>
           <div className={classes.header}>
             {close && <Button onClick={close}>Close</Button>}
             <h3>Filters</h3>
-            <Button className={classes.reset} onClick={resetFilter}>
+            <Button
+              className={classes.reset}
+              onClick={() => {
+                resetFilter();
+                this.setState({
+                  searchedNeighborhoods: null,
+                  searchedNeighborhood: "",
+                });
+              }}
+            >
               Clear All x
             </Button>
           </div>
@@ -278,12 +320,28 @@ class FilterDrawer extends React.Component {
             "Neighborhood",
             this.toggleShow("showNeighborhoods"),
             showNeighborhoods,
-            <FilterCheckboxes
-              filter={neighborhoodFilter}
-              allLabel="All Neighborhoods"
-              updateValues={this.updateFilterSubsection("neighborhoodFilter")}
-              briefNumber={briefNeighborhoodsCount}
-            />
+            <>
+              <TextField
+                label="Search Neighborhood"
+                margin="normal"
+                variant="outlined"
+                value={searchedNeighborhood}
+                onKeyDown={(e) => {
+                  this.handleNeighborhoodSearch(e);
+                }}
+                onChange={(e) => {
+                  this.setState({
+                    searchedNeighborhood: e.target.value,
+                  });
+                }}
+              />
+              <FilterCheckboxes
+                filter={neighborhoodFilter}
+                allLabel="All Neighborhoods"
+                updateValues={this.updateFilterSubsection("neighborhoodFilter")}
+                briefNumber={briefNeighborhoodsCount}
+              />
+            </>
           )}
           <hr className={classes.separator} />
 
