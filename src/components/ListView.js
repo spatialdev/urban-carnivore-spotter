@@ -172,20 +172,30 @@ class ListView extends Component {
 
   renderReportsPerPage = (reports) => {
     const { pageNumber, itemsPerPage } = this.state;
-    return reports
-      .slice(
-        pageNumber * itemsPerPage,
-        pageNumber * itemsPerPage + itemsPerPage
-      )
-      .map((report) => {
-        return (
-          <ListCard
-            key={report.id}
-            currReport={report}
-            handleReport={this.handleReport}
-          />
-        );
-      });
+    return reports && reports.length > 10
+      ? reports
+          .slice(
+            pageNumber * itemsPerPage,
+            pageNumber * itemsPerPage + itemsPerPage
+          )
+          .map((report) => {
+            return (
+              <ListCard
+                key={report.id}
+                currReport={report}
+                handleReport={this.handleReport}
+              />
+            );
+          })
+      : reports.map((report) => {
+          return (
+            <ListCard
+              key={report.id}
+              currReport={report}
+              handleReport={this.handleReport}
+            />
+          );
+        });
   };
 
   handleReport = async (id) => {
