@@ -161,7 +161,6 @@ class FilterDrawer extends React.Component {
   }
 
   updateFilterSubsection = (subsectionName) => (key, newValue) => {
-    console.log("UPDATE", subsectionName, key, newValue);
     updateFilter(subsectionName, key, newValue);
   };
 
