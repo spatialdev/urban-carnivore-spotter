@@ -29,21 +29,36 @@ const initialState = {
  * @param value - the new value we want to set
  * @returns {{}} - a new filter with an appropriate value for 'all' and the new key/value pair.
  */
-const updateFilterReducer = (oldFilter, key, value) => {
+const updateFilterReducer = (oldFilter, key, value, order) => {
   // The all key has some special behavior
   if (key === "all") {
     // turning all on should also turn on all other values inside of this filter
     // similarly, turning all off should also turn off all other values inside of this filter
-    return Object.keys(oldFilter).reduce(
-      (object, newKey) => ({
-        ...object,
-        [newKey]: { ...oldFilter[newKey], value },
-      }),
-      {}
-    );
+    if (!order) {
+      return Object.keys(oldFilter).reduce(
+        (object, newKey) => ({
+          ...object,
+          [newKey]: { ...oldFilter[newKey], value },
+        }),
+        {}
+      );
+    } else {
+      return Object.keys(oldFilter).reduce(
+        (object, newKey) => ({
+          ...object,
+          [newKey]: { order, value },
+        }),
+        {}
+      );
+    }
   } else {
+    let newFilter;
     // update the value
-    const newFilter = { ...oldFilter, [key]: { ...oldFilter[key], value } };
+    if (!order) {
+      newFilter = { ...oldFilter, [key]: { ...oldFilter[key], value } };
+    } else {
+      newFilter = { ...oldFilter, [key]: { order, value } };
+    }
     // If all are now true, set 'all' to true. Otherwise set 'all' to false
     newFilter.all = {
       order: 0,
@@ -71,7 +86,8 @@ const reducer = (state, action) => {
           [action.filterName]: updateFilterReducer(
             state.filter[action.filterName],
             action.key,
-            action.newValue
+            action.newValue,
+            action.order
           ),
         },
       };

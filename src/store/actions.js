@@ -32,12 +32,13 @@ export const setReport = (value) => {
   });
 };
 
-export const updateFilter = (filterName, key, newValue) => {
+export const updateFilter = (filterName, key, newValue, order) => {
   store.dispatch({
     type: UPDATE_FILTER,
     filterName,
     key,
     newValue,
+    order,
   });
 };
 
