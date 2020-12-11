@@ -143,11 +143,9 @@ class NeighborhoodFilter extends React.Component {
                 margin="normal"
                 variant="outlined"
                 value={searchedNeighborhood}
-                onKeyDown={(e) => {
-                  handleNeighborhoodSearch(e);
-                }}
                 onChange={(e) => {
-                  setNeighborhoodSearch(e);
+                  setNeighborhoodSearch(e.target.value);
+                  handleNeighborhoodSearch(e.target.value);
                 }}
               />
             </div>
