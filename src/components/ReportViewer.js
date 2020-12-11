@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
 import { withStyles } from "@material-ui/core/styles";
@@ -9,11 +8,12 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { CircularProgress } from "@material-ui/core";
-import { KeyboardArrowLeft, NextWeekOutlined } from "@material-ui/icons";
 import { jsDateToTimeString } from "../services/TimeService";
 import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
 import { dataMatchesFilter } from "../services/FilterService";
+import { getReport } from "../services/ReportService";
+import { getReports } from "../services/ReportsService";
 
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
@@ -51,6 +51,7 @@ const styles = {
 class ReportViewer extends Component {
   state = {
     report: null,
+    reports: null,
     nextId: "",
     prevId: "",
     isAtStartBoundary: false,
@@ -58,21 +59,48 @@ class ReportViewer extends Component {
   };
 
   componentDidMount = async () => {
-    const { data } = this.props.report.report;
-    this.handleReports(data);
+    const id = this.props.match.params.id;
+    const currReport = await getReport(id);
+    this.handleReports(currReport.data);
   };
 
   componentDidUpdate = (prevProps) => {
     if (prevProps.match.params.id !== this.props.match.params.id) {
-      const report = this.props.reports.filter(
-        (report) => report.id === this.props.match.params.id
-      )[0].data;
+      let report;
+      const cachedReports = localStorage.getItem("reports");
+
+      if (cachedReports) {
+        const parsedReports = JSON.parse(cachedReports);
+        report = parsedReports.filter(
+          (report) => report.id === this.props.match.params.id
+        )[0].data;
+      } else if (this.props.reports) {
+        report = this.props.reports.filter(
+          (report) => report.id === this.props.match.params.id
+        )[0].data;
+      } else {
+        report = this.state.reports.filter(
+          (report) => report.id === this.props.match.params.id
+        )[0].data;
+      }
+
       this.handleReports(report);
     }
   };
 
-  handleReports = (data) => {
-    const { reports } = this.props;
+  handleReports = async (data) => {
+    let reports;
+    const cachedReports = localStorage.getItem("reports");
+
+    if (cachedReports) {
+      const parsedReports = JSON.parse(cachedReports);
+      reports = parsedReports;
+    } else if (this.props.reports) {
+      reports = this.props.reports;
+    } else {
+      reports = await getReports();
+    }
+
     const { id } = this.props.match.params;
     const filteredReports = this.filterReports(reports);
 
@@ -82,6 +110,7 @@ class ReportViewer extends Component {
 
     this.setState({
       report: data,
+      reports,
       nextId: nextReportId,
       prevId: prevReportId,
     });
