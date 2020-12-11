@@ -52,11 +52,13 @@ class PointTooltip extends Component {
 
     const cachedReports = localStorage.getItem("reports");
     if (cachedReports) {
-      localStorage.removeItem("reports");
+      const parsedReports = JSON.parse(cachedReports);
+      setReports(parsedReports);
+    } else {
+      const reports = await getReports();
+      setReports(reports);
+      localStorage.setItem("reports", JSON.stringify(reports));
     }
-    const reports = await getReports();
-    setReports(reports);
-    localStorage.setItem("reports", JSON.stringify(reports));
 
     this.setState({ isLoadingReport: false });
     return isInTacoma
