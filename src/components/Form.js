@@ -69,7 +69,14 @@ const dogSizes = [
   "Large(60+lbs)",
   "Mixed group",
 ];
-const vantagePoints = ["Indoors", "Outdoors", "Vehicle", "Camera Footage"];
+const vantagePoints = [
+  "From Indoors",
+  "Outdoors",
+  "Vehicle",
+  "Bicycle",
+  "Other Vehicle",
+  "Camera Footage",
+];
 const leashOptions = ["Leashed", "Unleashed", "Both"];
 const animalBehaviors = [
   "Was eating",
