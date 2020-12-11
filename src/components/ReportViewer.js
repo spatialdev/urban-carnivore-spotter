@@ -12,6 +12,7 @@ import { jsDateToTimeString } from "../services/TimeService";
 import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
 import { dataMatchesFilter } from "../services/FilterService";
+import { setReports } from "../store/actions";
 import { getReport } from "../services/ReportService";
 import { getReports } from "../services/ReportsService";
 
@@ -99,6 +100,7 @@ class ReportViewer extends Component {
       reports = this.props.reports;
     } else {
       reports = await getReports();
+      setReports(reports);
     }
 
     const { id } = this.props.match.params;
