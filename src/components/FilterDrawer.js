@@ -2,13 +2,14 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import { connect } from "react-redux";
-import { updateFilter, resetFilter } from "../store/actions";
+import { resetFilter, updateNeighborhoodFilters } from "../store/actions";
 import Sticky from "react-sticky-fill";
 import CarnivoreFilter from "./CarnivoreFilter";
 import MediaFilter from "./MediaFilter";
 import NeighborhoodFilter from "./NeighborhoodFilter";
 import DateTimeFilter from "./DateTimeFilter";
 import ConfidenceFilter from "./ConfidenceFilter";
+import { debounce } from "lodash";
 
 const styles = {
   allContent: {
@@ -72,34 +73,28 @@ class FilterDrawer extends React.Component {
     };
   }
 
-  handleNeighborhoodSearch = (event) => {
-    if (event.keyCode === 13) {
-      const { value } = event.target;
-      const {
-        filter: { neighborhoodFilter },
-      } = this.props;
-      const autocompleteNeighborhoods = {};
-      let newOrder = 0;
+  handleNeighborhoodSearch = debounce((value) => {
+    const {
+      filter: { neighborhoodFilter },
+    } = this.props;
 
-      for (let neighborhood in neighborhoodFilter) {
-        const lowercaseNeighborhood = neighborhood.toLowerCase();
-        const lowercaseSearched = value.toLowerCase().trim();
+    const matches = [];
+    const nonMatches = [];
 
-        if (lowercaseNeighborhood.includes(lowercaseSearched)) {
-          autocompleteNeighborhoods[neighborhood] = false;
-          updateFilter("neighborhoodFilter", neighborhood, false, newOrder);
-          newOrder++;
-        }
-      }
+    for (let neighborhood in neighborhoodFilter) {
+      const lowercaseNeighborhood = neighborhood.toLowerCase();
+      const lowercaseSearched = value.toLowerCase().trim();
 
-      for (let neighborhood in neighborhoodFilter) {
-        if (!autocompleteNeighborhoods.hasOwnProperty(neighborhood)) {
-          updateFilter("neighborhoodFilter", neighborhood, false, newOrder);
-          newOrder++;
-        }
+      if (lowercaseNeighborhood.includes(lowercaseSearched)) {
+        matches.push(neighborhood);
+      } else {
+        nonMatches.push(neighborhood);
       }
     }
-  };
+
+    const finalNeighborhoods = matches.concat(nonMatches);
+    updateNeighborhoodFilters(finalNeighborhoods);
+  }, 100);
 
   resetNeighborhoodSearch = () => {
     this.setState({
@@ -107,9 +102,9 @@ class FilterDrawer extends React.Component {
     });
   };
 
-  setNeighborhoodSearch = (e) => {
+  setNeighborhoodSearch = (value) => {
     this.setState({
-      searchedNeighborhood: e.target.value,
+      searchedNeighborhood: value,
     });
   };
 
