@@ -351,13 +351,9 @@ class MapView extends Component {
           aria-label="Toggle"
           className={classes.fab}
           size="medium"
-          onClick={() =>
-            isTacoma ? history.push("/tacoma/list") : history.push("/list")
-          }
+          onClick={this.getListViewReports}
         >
-          <div className={classes.buttonText} onClick={this.getListViewReports}>
-            List View
-          </div>
+          <div className={classes.buttonText}>List View</div>
           <List className={classes.extendedIcon} />
         </Fab>
       </div>
@@ -365,14 +361,20 @@ class MapView extends Component {
   };
 
   getListViewReports = async () => {
+    const { history } = this.props;
     const { localStorage } = window;
+
+    let isTacoma = history.location.pathname.indexOf("tacoma") !== -1;
     const cachedReports = localStorage.getItem("reports");
+
     if (cachedReports) {
       localStorage.removeItem("reports");
     }
     const reports = await getReports();
     setReports(reports);
     localStorage.setItem("reports", JSON.stringify(reports));
+
+    return isTacoma ? history.push("/tacoma/list") : history.push("/list");
   };
 
   showLegendButton = (isMobile, classes) => {

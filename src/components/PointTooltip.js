@@ -2,8 +2,12 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import { KeyboardArrowRight } from "@material-ui/icons";
+import { CircularProgress } from "@material-ui/core";
 import Placeholder from "../assets/placeholder.svg";
 import { firebaseTimeToDateTimeString } from "../services/TimeService";
+import { setReports } from "../store/actions";
+import { getReport } from "../services/ReportService";
+import { getReports } from "../services/ReportsService";
 
 const styles = {
   allContent: {
@@ -18,6 +22,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    margin: "1em",
   },
   image: {
     maxWidth: 40,
@@ -27,8 +32,15 @@ const styles = {
 };
 
 class PointTooltip extends Component {
-  render() {
-    const { report, classes, history } = this.props;
+  state = {
+    isLoadingReport: false,
+  };
+
+  getReportViewer = async () => {
+    this.setState({ isLoadingReport: true });
+    const { report, history } = this.props;
+    const { localStorage } = window;
+
     const isInTacoma =
       report.data !== undefined && report.data.isTacoma !== undefined
         ? report.data.isTacoma
@@ -37,6 +49,24 @@ class PointTooltip extends Component {
       window.location.pathname.indexOf("tacoma") === -1
         ? "/reports"
         : "/tacoma/reports";
+
+    const cachedReports = localStorage.getItem("reports");
+    if (cachedReports) {
+      localStorage.removeItem("reports");
+    }
+    const reports = await getReports();
+    setReports(reports);
+    localStorage.setItem("reports", JSON.stringify(reports));
+
+    this.setState({ isLoadingReport: false });
+    return isInTacoma
+      ? history.push(`${path}/tacoma/${report.id}`)
+      : history.push(`${path}/${report.id}`);
+  };
+
+  render() {
+    const { report, classes } = this.props;
+    const { isLoadingReport } = this.state;
 
     return (
       <div className={classes.allContent}>
@@ -64,13 +94,13 @@ class PointTooltip extends Component {
         <div
           className={classes.reportLink}
           style={{ cursor: "pointer" }}
-          onClick={() =>
-            isInTacoma
-              ? history.push(`${path}/tacoma/${report.id}`)
-              : history.push(`${path}/${report.id}`)
-          }
+          onClick={this.getReportViewer}
         >
-          <KeyboardArrowRight />
+          {isLoadingReport ? (
+            <CircularProgress size="1.5em" />
+          ) : (
+            <KeyboardArrowRight />
+          )}
         </div>
       </div>
     );
