@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
 import ListCard from "../components/ListCard";
@@ -13,8 +12,10 @@ import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import * as ReactGA from "react-ga";
 import { setReports, setReport } from "../store/actions";
-import { getReports } from "../services/ReportsService";
+import { getReports /* updateReports */ } from "../services/ReportsService";
 import { getReport } from "../services/ReportService";
+// import NeighborhoodService from "../services/NeighborhoodService";
+// const neighborhoodService = new NeighborhoodService();
 
 const styles = {
   mapViewButtonMobile: {
@@ -111,6 +112,20 @@ class ListView extends Component {
       this.setState({ reports: parsedReports });
     } else {
       const reports = await getReports();
+
+      // Temporary: updates all reports' neighborhoods in DB
+      // reports.forEach(async (report) => {
+      //   if (report.data.neighborhood === "Seattle") {
+      //     const newNeighborhood = await neighborhoodService.getNeighborhoodFor(
+      //       report.data.mapLat,
+      //       report.data.mapLng
+      //     );
+      //     await updateReports(report.id, {
+      //       neighborhood: newNeighborhood,
+      //     });
+      //   }
+      // });
+
       setReports(reports);
       this.setState({ reports });
       localStorage.setItem("reports", JSON.stringify(reports));
