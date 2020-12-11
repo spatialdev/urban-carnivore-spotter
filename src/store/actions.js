@@ -8,6 +8,7 @@ import {
   RESET_FILTER,
   UPDATE_ALL_NEIGHBORHOODS,
   UPDATE_MOBILE_RESOURCE_EXPANDS,
+  UPDATE_NEIGHBORHOOD_FILTERS,
 } from "./constants";
 import { store } from "./index";
 
@@ -32,13 +33,12 @@ export const setReport = (value) => {
   });
 };
 
-export const updateFilter = (filterName, key, newValue, order) => {
+export const updateFilter = (filterName, key, newValue) => {
   store.dispatch({
     type: UPDATE_FILTER,
     filterName,
     key,
     newValue,
-    order,
   });
 };
 
@@ -73,5 +73,12 @@ export const updateMobileResourceExpands = (newExpands) => {
   store.dispatch({
     type: UPDATE_MOBILE_RESOURCE_EXPANDS,
     expands: newExpands,
+  });
+};
+
+export const updateNeighborhoodFilters = (neighborhoods) => {
+  store.dispatch({
+    type: UPDATE_NEIGHBORHOOD_FILTERS,
+    neighborhoods,
   });
 };

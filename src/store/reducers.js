@@ -7,6 +7,7 @@ import {
   TOGGLE_FILTER_CONFIDENCE,
   RESET_FILTER,
   UPDATE_ALL_NEIGHBORHOODS,
+  UPDATE_NEIGHBORHOOD_FILTERS,
   UPDATE_MOBILE_RESOURCE_EXPANDS,
 } from "./constants";
 import { getInitialFilter } from "../services/FilterService";
@@ -29,36 +30,22 @@ const initialState = {
  * @param value - the new value we want to set
  * @returns {{}} - a new filter with an appropriate value for 'all' and the new key/value pair.
  */
-const updateFilterReducer = (oldFilter, key, value, order) => {
+const updateFilterReducer = (oldFilter, key, value) => {
   // The all key has some special behavior
   if (key === "all") {
     // turning all on should also turn on all other values inside of this filter
     // similarly, turning all off should also turn off all other values inside of this filter
-    if (!order) {
-      return Object.keys(oldFilter).reduce(
-        (object, newKey) => ({
-          ...object,
-          [newKey]: { ...oldFilter[newKey], value },
-        }),
-        {}
-      );
-    } else {
-      return Object.keys(oldFilter).reduce(
-        (object, newKey) => ({
-          ...object,
-          [newKey]: { order, value },
-        }),
-        {}
-      );
-    }
+    return Object.keys(oldFilter).reduce(
+      (object, newKey) => ({
+        ...object,
+        [newKey]: { ...oldFilter[newKey], value },
+      }),
+      {}
+    );
   } else {
     let newFilter;
     // update the value
-    if (!order) {
-      newFilter = { ...oldFilter, [key]: { ...oldFilter[key], value } };
-    } else {
-      newFilter = { ...oldFilter, [key]: { order, value } };
-    }
+    newFilter = { ...oldFilter, [key]: { ...oldFilter[key], value } };
     // If all are now true, set 'all' to true. Otherwise set 'all' to false
     newFilter.all = {
       order: 0,
@@ -68,6 +55,13 @@ const updateFilterReducer = (oldFilter, key, value, order) => {
     };
     return newFilter;
   }
+};
+
+const formatSearchedNeighborhoods = (neighborhoodsArray) => {
+  return neighborhoodsArray.reduce((accum, neighborhood, idx) => {
+    accum[neighborhood] = { order: idx, value: false };
+    return accum;
+  }, {});
 };
 
 const reducer = (state, action) => {
@@ -86,9 +80,16 @@ const reducer = (state, action) => {
           [action.filterName]: updateFilterReducer(
             state.filter[action.filterName],
             action.key,
-            action.newValue,
-            action.order
+            action.newValue
           ),
+        },
+      };
+    case UPDATE_NEIGHBORHOOD_FILTERS:
+      return {
+        ...state,
+        filter: {
+          ...state.filter,
+          neighborhoodFilter: formatSearchedNeighborhoods(action.neighborhoods),
         },
       };
     case RESET_FILTER:
