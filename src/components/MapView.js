@@ -9,6 +9,7 @@ import axios from "axios";
 import PointTooltip from "../components/PointTooltip";
 import FilterDrawer from "./FilterDrawer";
 import { withStyles } from "@material-ui/core/styles";
+import { CircularProgress } from "@material-ui/core";
 import { connect } from "react-redux";
 import { getReports } from "../services/ReportsService";
 import { dataMatchesFilter } from "../services/FilterService";
@@ -213,6 +214,7 @@ class MapView extends Component {
     popupInfo: null,
     reports: null,
     legend: false,
+    isLoadingReport: false,
   };
 
   componentDidMount() {
@@ -333,6 +335,7 @@ class MapView extends Component {
 
   showListViewButton = (isMobile, classes, history) => {
     let isTacoma = history.location.pathname.indexOf("tacoma") !== -1;
+    const { isLoadingReport } = this.state;
     return isMobile ? (
       <Fab
         className={classes.listViewMobileWrapper}
@@ -354,13 +357,18 @@ class MapView extends Component {
           onClick={this.getListViewReports}
         >
           <div className={classes.buttonText}>List View</div>
-          <List className={classes.extendedIcon} />
+          {isLoadingReport ? (
+            <CircularProgress size="1.5em" />
+          ) : (
+            <List className={classes.extendedIcon} />
+          )}
         </Fab>
       </div>
     );
   };
 
   getListViewReports = async () => {
+    this.setState({ isLoadingReport: true });
     const { history } = this.props;
     const { localStorage } = window;
 
@@ -374,6 +382,7 @@ class MapView extends Component {
     setReports(reports);
     localStorage.setItem("reports", JSON.stringify(reports));
 
+    this.setState({ isLoadingReport: false });
     return isTacoma ? history.push("/tacoma/list") : history.push("/list");
   };
 
