@@ -21,7 +21,7 @@ const allTimes = [
   "Afternoon (12:00pm-5:59pm)",
   "Evening (6:00pm-11:59pm)",
 ];
-const allDates = ["Today", "Past 30 Days", "Date Range"];
+const allDates = ["Past 2 Weeks", "Past 30 Days", "Date Range"];
 
 const DATE_BOUNDS = [
   {
@@ -124,18 +124,7 @@ const matchesNoMediaType = (filter, media) => {
   );
 };
 
-const matchesTodayDate = (filter, timestamp) => {
-  const { dateFilter } = filter;
-  const today = new Date().setHours(0, 0, 0, 0);
-  const day = new Date(timestamp).setHours(0, 0, 0, 0);
-
-  if (today === day && dateFilter["Today"].value) {
-    return true;
-  }
-  return false;
-};
-
-const matchesPast30Date = (filter, timestamp) => {
+const matchesPastNDays = (filter, timestamp, numOfDays, property) => {
   const { dateFilter } = filter;
   const today = new Date().setHours(0, 0, 0, 0);
   const day = new Date(timestamp).setHours(0, 0, 0, 0);
@@ -143,7 +132,7 @@ const matchesPast30Date = (filter, timestamp) => {
   const diff = Math.abs(today - day);
   const numOfDaysBetween = diff / (1000 * 60 * 60 * 24);
 
-  if (numOfDaysBetween <= 30 && dateFilter["Past 30 Days"].value) {
+  if (numOfDaysBetween <= numOfDays && dateFilter[property].value) {
     return true;
   }
   return false;
@@ -227,8 +216,8 @@ export const dataMatchesFilter = (report, filter) => {
           filter.endDate
         )) ||
         filter.dateFilter.all.value === true ||
-        matchesTodayDate(filter, data.timestamp) ||
-        matchesPast30Date(filter, data.timestamp)) &&
+        matchesPastNDays(filter, data.timestamp, 30, "Past 30 Days") ||
+        matchesPastNDays(filter, data.timestamp, 14, "Past 2 Weeks")) &&
       // ok with time
       (filter.timeFilter.all.value ||
         insideAnyActiveTimeBounds(parsedDate, filter)) &&
