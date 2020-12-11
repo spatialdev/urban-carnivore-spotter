@@ -16,7 +16,7 @@ export default class NeighborhoodService {
     return this.geocodingService
       .reverseGeocode({
         query: [lng, lat],
-        types: ["neighborhood", "place"],
+        types: ["neighborhood", "place", "region"],
       })
       .send()
       .then((response) => {
@@ -24,7 +24,6 @@ export default class NeighborhoodService {
         if (neighborhoods && neighborhoods.length > 0) {
           return neighborhoods[0].text;
         }
-        return "Seattle";
       });
   };
 
