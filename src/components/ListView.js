@@ -12,7 +12,7 @@ import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import * as ReactGA from "react-ga";
 import { setReports, setReport } from "../store/actions";
-import { getReports /* updateReports */ } from "../services/ReportsService";
+import { getReports } from "../services/ReportsService";
 import { getReport } from "../services/ReportService";
 // import NeighborhoodService from "../services/NeighborhoodService";
 // const neighborhoodService = new NeighborhoodService();
