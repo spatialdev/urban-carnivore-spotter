@@ -84,29 +84,27 @@ const styles = () => ({
   icon: {
     marginRight: "0.5em",
   },
+  staticMap: {
+    cursor: "pointer",
+  },
 });
 
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
 class ListCard extends Component {
-  getReportIdx = (id, reports) => {
-    let position = 0;
-    reports.forEach((report, idx) => {
-      if (report.id === id) {
-        position = idx;
-      }
-    });
-    return position;
+  handleMapView = () => {
+    const { history } = this.props;
+    history.push("/");
   };
 
   render() {
     const { classes, handleReport, currReport } = this.props;
-    let videoUrl;
-    let imageUrl = Placeholder;
-    let isVideo = false;
     const lat = currReport.data.mapLat;
     const lng = currReport.data.mapLng;
 
+    let videoUrl;
+    let imageUrl = Placeholder;
+    let isVideo = false;
     if (currReport.data.mediaPaths && currReport.data.mediaPaths.length > 0) {
       const media = currReport.data.mediaPaths[0];
       const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gim;
@@ -181,7 +179,7 @@ class ListCard extends Component {
               <ChevronRightIcon />
             </div>
           </CardContent>
-          <div className={classes.staticMap}>
+          <div className={classes.staticMap} onClick={this.handleMapView}>
             <img
               src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+${color}(${lng},${lat})/${lng},${lat},10,20/200x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`}
             />
