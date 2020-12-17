@@ -104,6 +104,8 @@ class ListCard extends Component {
     let videoUrl;
     let imageUrl = Placeholder;
     let isVideo = false;
+    const lat = currReport.data.mapLat;
+    const lng = currReport.data.mapLng;
 
     if (currReport.data.mediaPaths && currReport.data.mediaPaths.length > 0) {
       const media = currReport.data.mediaPaths[0];
@@ -119,6 +121,30 @@ class ListCard extends Component {
         imageUrl = media;
       }
     }
+
+    let color;
+    const currSpecies = currReport.data.species;
+    if (currSpecies === "Red Fox") {
+      color = "FE1513";
+    } else if (currSpecies === "Black Bear") {
+      color = "000000";
+    } else if (currSpecies === "Bobcat") {
+      color = "a30cfe";
+    } else if (currSpecies === "Coyote") {
+      color = "FECE17";
+    } else if (currSpecies === "Cougar/Mountain Lion") {
+      color = "2C9E0D";
+    } else if (currSpecies === "Raccoon") {
+      color = "FF1EC1";
+    } else if (currSpecies === "Opossum") {
+      color = "FE7901";
+    } else if (currSpecies === "River Otter") {
+      color = "171AB1";
+    } else {
+      color = "805b14";
+    }
+
+    console.log("curr rep", currReport);
     return (
       <Card className="card">
         <CardContent className={classes.allContent}>
@@ -155,6 +181,11 @@ class ListCard extends Component {
               <ChevronRightIcon />
             </div>
           </CardContent>
+          <div className={classes.staticMap}>
+            <img
+              src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+${color}(${lng},${lat})/${lng},${lat},10,20/200x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`}
+            />
+          </div>
         </CardContent>
       </Card>
     );
