@@ -12,10 +12,10 @@ import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import * as ReactGA from "react-ga";
 import { setReports, setReport } from "../store/actions";
-import { getReports } from "../services/ReportsService";
+import { getReports, updateReports } from "../services/ReportsService";
 import { getReport } from "../services/ReportService";
-// import NeighborhoodService from "../services/NeighborhoodService";
-// const neighborhoodService = new NeighborhoodService();
+import NeighborhoodService from "../services/NeighborhoodService";
+const neighborhoodService = new NeighborhoodService();
 
 const styles = {
   mapViewButtonMobile: {
@@ -112,24 +112,32 @@ class ListView extends Component {
       this.setState({ reports: parsedReports });
     } else {
       const reports = await getReports();
-
-      // Temporary: updates all reports' neighborhoods in DB
-      // reports.forEach(async (report) => {
-      //   if (report.data.neighborhood === "Seattle") {
-      //     const newNeighborhood = await neighborhoodService.getNeighborhoodFor(
-      //       report.data.mapLat,
-      //       report.data.mapLng
-      //     );
-      //     await updateReports(report.id, {
-      //       neighborhood: newNeighborhood,
-      //     });
-      //   }
-      // });
-
       setReports(reports);
       this.setState({ reports });
       localStorage.setItem("reports", JSON.stringify(reports));
     }
+
+    // Temporary: updates all reports' neighborhoods in DB
+    // JSON.parse(cachedReports).forEach(async (report) => {
+    //   if (
+    //     report.data.neighborhood === "Seattle" ||
+    //     report.data.neighborhood === "Unknown"
+    //   ) {
+    //     const newNeighborhood = await neighborhoodService.getNeighborhoodFor(
+    //       report.data.mapLat,
+    //       report.data.mapLng
+    //     );
+    //     if (newNeighborhood !== "Unknown") {
+    //       await updateReports(report.id, {
+    //         neighborhood: newNeighborhood,
+    //       });
+    //     } else {
+    //       await updateReports(report.id, {
+    //         neighborhood: "Washington",
+    //       });
+    //     }
+    //   }
+    // });
 
     const cachedPageNum = localStorage.getItem("lastPageNum");
     if (cachedPageNum) {

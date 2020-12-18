@@ -5,7 +5,6 @@ import { CircularProgress } from "@material-ui/core";
 import Placeholder from "../assets/placeholder.svg";
 import { firebaseTimeToDateTimeString } from "../services/TimeService";
 import { setReports } from "../store/actions";
-import { getReport } from "../services/ReportService";
 import { getReports } from "../services/ReportsService";
 import dateIcon from "../assets/Calendar.svg";
 import locationIcon from "../assets/Location.svg";
@@ -57,6 +56,9 @@ const styles = {
     marginLeft: "1em",
     marginBottom: "0.5em",
     marginTop: "0.25em",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
   },
   content: {
     display: "flex",
