@@ -93,8 +93,11 @@ const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
 class ListCard extends Component {
   handleMapView = () => {
-    const { history } = this.props;
-    history.push("/");
+    const { history, currReport } = this.props;
+    history.push({
+      pathname: "/",
+      state: { report: currReport },
+    });
   };
 
   render() {
