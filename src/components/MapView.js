@@ -157,16 +157,13 @@ const styles = {
   reportLinkCloseButtonWrapper: {
     height: "100%",
     display: "flex",
-    flexDirection: "column",
     justifyContent: "space-around",
+    borderRadius: "4px",
   },
   closeIcon: {
     height: "15px",
     width: "15px",
-    display: "flex",
-    flexDirection: "column",
-    overflow: "scroll",
-    margin: 4,
+    margin: "0.25em",
   },
   addReportWrapper: {
     display: "flex",
@@ -201,6 +198,11 @@ const styles = {
     letterSpacing: "0.5px",
     color: "rgba(2,2,30,0.7)",
   },
+  popup: {
+    display: "flex",
+    padding: 0,
+    margin: 0,
+  },
 };
 class MapView extends Component {
   state = {
@@ -226,7 +228,23 @@ class MapView extends Component {
         this.setState({ reports: reports.data });
       })
       .catch((error) => error);
+
+    this.handleListCardPopup();
   }
+
+  handleListCardPopup = () => {
+    const { action, location } = this.props.history;
+    if (
+      action &&
+      action === "PUSH" &&
+      location &&
+      location.state &&
+      location.state.report
+    ) {
+      this.handlePopUpInfo(location.state.report);
+      this.renderPopup();
+    }
+  };
 
   onMoveEnd = (map) => {
     const center = map.getCenter();
@@ -252,16 +270,17 @@ class MapView extends Component {
     if (popupInfo) {
       return (
         <Popup
+          className={classes.popup}
           coordinates={[popupInfo.data.mapLng, popupInfo.data.mapLat]}
           anchor={"bottom"}
         >
           <div className={classes.reportLinkCloseButtonWrapper}>
+            <PointTooltip report={popupInfo} />
             <CloseIcon
               style={{ cursor: "pointer" }}
               className={classes.closeIcon}
               onClick={() => this.setState({ popupInfo: false })}
             />
-            <PointTooltip report={popupInfo} />
           </div>
         </Popup>
       );
@@ -412,9 +431,22 @@ class MapView extends Component {
     );
   };
 
+  handlePopUpInfo = (report) => {
+    this.setState({ popupInfo: report });
+  };
+
   render() {
     const { classes, isMobile, filter, history } = this.props;
     const { reports, legend, viewport } = this.state;
+    let reportMapPoints;
+    const cachedReports = localStorage.getItem("reports");
+    if (cachedReports) {
+      const parsedReports = JSON.parse(cachedReports);
+      reportMapPoints = parsedReports;
+    } else {
+      reportMapPoints = reports;
+    }
+
     return (
       <div className="mapContainer">
         {!isMobile && (
@@ -433,6 +465,7 @@ class MapView extends Component {
             {this.renderPopup()}
             <Layer
               type="circle"
+              id="report-marker"
               paint={{
                 "circle-radius": 7,
                 "circle-stroke-width": 0.3,
@@ -462,15 +495,15 @@ class MapView extends Component {
                 ],
               }}
             >
-              {reports
-                ? reports
+              {reportMapPoints
+                ? reportMapPoints
                     .filter((report) => dataMatchesFilter(report, filter))
                     .map((report) => (
                       <Feature
                         key={report.id}
                         coordinates={[report.data.mapLng, report.data.mapLat]}
                         properties={report.data}
-                        onClick={() => this.setState({ popupInfo: report })}
+                        onClick={() => this.handlePopUpInfo(report)}
                       />
                     ))
                 : null}

@@ -1,33 +1,75 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
-import { KeyboardArrowRight } from "@material-ui/icons";
 import { CircularProgress } from "@material-ui/core";
 import Placeholder from "../assets/placeholder.svg";
 import { firebaseTimeToDateTimeString } from "../services/TimeService";
 import { setReports } from "../store/actions";
 import { getReport } from "../services/ReportService";
 import { getReports } from "../services/ReportsService";
+import dateIcon from "../assets/Calendar.svg";
+import locationIcon from "../assets/Location.svg";
 
 const styles = {
   allContent: {
     display: "flex",
-    height: 80,
+    width: "25em",
+    height: "10em",
+    fontFamily: "Raleway",
   },
   caption: {
     fontWeight: "bold",
   },
-  reportLink: {
-    height: "100%",
+  reportLinkWrapper: {
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    margin: "1em",
+    marginLeft: "1em",
+  },
+  viewReportButton: {
+    height: "25px",
+    width: "8em",
+    backgroundColor: "#0877C6",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontWeight: 500,
+    marginTop: "0.55em",
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "#2d9ded",
+      outline: "none",
+    },
+    "&:focus": {
+      border: "1px solid #2d9ded",
+      outline: "none",
+    },
+    "&:active": {
+      border: "1px solid #2d9ded",
+      outline: "none",
+    },
   },
   image: {
-    maxWidth: 40,
-    maxHeight: 40,
-    margin: 4,
+    width: "10em",
+    height: "10em",
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: "1.35em",
+    marginLeft: "1em",
+    marginBottom: "0.5em",
+    marginTop: "0.25em",
+  },
+  content: {
+    display: "flex",
+    fontSize: "1.1em",
+    marginLeft: "1em",
+    marginBottom: "0.3em",
+  },
+  contentText: {
+    marginLeft: "0.25em",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    width: "10em",
   },
 };
 
@@ -79,30 +121,33 @@ class PointTooltip extends Component {
               ? report.data.mediaPaths[0]
               : Placeholder
           }
-          alt=""
+          alt={report.data.species}
         />
         <div className={classes.info}>
-          <div>
-            <strong>{report.data.species}</strong>
+          <div className={classes.title}>{report.data.species}</div>
+          <div className={classes.content}>
+            <img className={classes.icon} src={dateIcon} alt="Date" />
+            <div className={classes.contentText}>
+              {firebaseTimeToDateTimeString(report.data.timestamp)}
+            </div>
           </div>
-          <div>
-            <strong>Date & Time:</strong>
+          <div className={classes.content}>
+            <img className={classes.icon} src={locationIcon} alt="Location" />
+            <div className={classes.contentText}>
+              {report.data.neighborhood}
+            </div>
           </div>
-          <div>{firebaseTimeToDateTimeString(report.data.timestamp)}</div>
-          <div>
-            <strong>Location:</strong> {report.data.neighborhood}
+          <div
+            className={classes.reportLinkWrapper}
+            style={{ cursor: "pointer" }}
+            onClick={this.getReportViewer}
+          >
+            {isLoadingReport ? (
+              <CircularProgress size="1.5em" />
+            ) : (
+              <button className={classes.viewReportButton}>View Report</button>
+            )}
           </div>
-        </div>
-        <div
-          className={classes.reportLink}
-          style={{ cursor: "pointer" }}
-          onClick={this.getReportViewer}
-        >
-          {isLoadingReport ? (
-            <CircularProgress size="1.5em" />
-          ) : (
-            <KeyboardArrowRight />
-          )}
         </div>
       </div>
     );
