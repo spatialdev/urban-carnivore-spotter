@@ -20,17 +20,29 @@ const Main = () => (
       <Route
         exact
         path="/(reports/create|tacoma/reports/create)"
-        component={Form}
+        render={() => <Form />}
       />
-      <Route exact path="/(list|tacoma/list)" component={ListView} />
-      <Route exact path="/reports/:id" component={ReportViewer} />
-      <Route exact path="/tacoma/reports/:id" component={ReportViewer} />
-      <Route exact path="/tacoma/reports/tacoma/:id" component={ReportViewer} />
-      <Route exact path="/(resources|tacoma/resources)" component={Resources} />
-      <Route exact path="/resources/:species" component={ResourceCard} />
-      <Route exact path="/tacoma/resources/:species" component={ResourceCard} />
-      <Route exact path="/faq" component={FAQ} />
-      <Route component={NotFound} />
+      <Route exact path="/(list|tacoma/list)" render={() => <ListView />} />
+      <Route exact path="/reports/:id" render={() => <ReportViewer />} />
+      <Route exact path="/tacoma/reports/:id" render={() => <ReportViewer />} />
+      <Route
+        exact
+        path="/tacoma/reports/tacoma/:id"
+        render={() => <ReportViewer />}
+      />
+      <Route
+        exact
+        path="/(resources|tacoma/resources)"
+        render={() => <Resources />}
+      />
+      <Route exact path="/resources/:species" render={() => <ResourceCard />} />
+      <Route
+        exact
+        path="/tacoma/resources/:species"
+        render={() => <ResourceCard />}
+      />
+      <Route exact path="/faq" render={() => <FAQ />} />
+      <Route render={() => <NotFound />} />
     </Switch>
     <SplashPage />
     <UnsupportedBrowserNotice />
