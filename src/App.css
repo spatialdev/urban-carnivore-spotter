@@ -83,7 +83,7 @@ Desktop Header
   color: black;
   font-weight: bold;
   height: 37px !important;
-  padding: 0 1em;
+  padding: 0.1em 1em;
   cursor: pointer;
 }
 
