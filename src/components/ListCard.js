@@ -50,6 +50,12 @@ const styles = () => ({
     "&:hover": {
       backgroundColor: "#ebe7e4",
     },
+    "&:active": {
+      backgroundColor: "#ebe7e4",
+    },
+    "&:focus": {
+      backgroundColor: "#ebe7e4",
+    },
   },
   seeReportMobile: {
     display: "flex",
@@ -62,6 +68,12 @@ const styles = () => ({
     padding: "0.1em",
     marginTop: "0.5rem",
     "&:hover": {
+      backgroundColor: "#ebe7e4",
+    },
+    "&:active": {
+      backgroundColor: "#ebe7e4",
+    },
+    "&:focus": {
       backgroundColor: "#ebe7e4",
     },
   },
