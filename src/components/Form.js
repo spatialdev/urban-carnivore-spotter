@@ -131,6 +131,16 @@ const TACOMA_LINE_FOR_BBOX = turf.lineString([
 const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
 
 const styles = {
+  addReportFormWrapper: {
+    backgroundColor: "white",
+    height: "100vh",
+    width: "100vw",
+  },
+  reportCarnivoreTitle: {
+    backgroundColor: "white",
+    padding: "1em",
+    margin: 0,
+  },
   overlay: {
     height: "100vh",
     width: "100vw",
@@ -693,7 +703,7 @@ class Form extends Component {
     } = this.state;
     const { classes, isMobile, history } = this.props;
     return (
-      <>
+      <div className={classes.addReportFormWrapper}>
         {submitting ? (
           <LoadingOverlay
             active={submitting}
@@ -718,7 +728,9 @@ class Form extends Component {
             />
           </Fab>
         ) : null}
-        <h2>Report a carnivore sighting</h2>
+        <h2 className={classes.reportCarnivoreTitle}>
+          Report a carnivore sighting
+        </h2>
         <ValidatorForm
           onError={() =>
             this.setState({ dialogMode: DIALOG_MODES.MISSING_FIELD })
@@ -1181,7 +1193,7 @@ class Form extends Component {
           </Button>
         </ValidatorForm>
         {this.getDialogFromMode(dialogMode)}
-      </>
+      </div>
     );
   }
 }

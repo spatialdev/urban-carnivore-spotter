@@ -30,7 +30,7 @@ const styles = {
     width: "auto",
     padding: "1em 2em",
     borderRadius: "6px",
-    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.25)",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
   },
   faqWrapper: {
     backgroundColor: "#F6F4F3",
@@ -47,7 +47,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     borderRadius: "6px",
-    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.25)",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
     marginBottom: "2em",
   },
   contactHeader: {
@@ -81,7 +81,7 @@ const styles = {
     padding: "1em 2em",
     overflow: "auto",
     marginBottom: "2em",
-    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.25)",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
     borderRadius: "6px",
   },
   faqCardBody: {

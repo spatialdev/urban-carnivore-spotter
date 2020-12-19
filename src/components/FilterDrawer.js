@@ -18,7 +18,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     fontFamily: "Raleway",
-    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.25)",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
   },
   header: {
     display: "flex",

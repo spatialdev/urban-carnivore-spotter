@@ -362,7 +362,7 @@ video {
 
 /* Native Material UI report card style override */
 .MuiPaper-elevation1 {
-  box-shadow: 0px 2px 10px 0px rgba(117, 117, 117, 0.25) !important;
+  box-shadow: 0px 2px 10px 0px rgba(117, 117, 117, 0.05) !important;
 }
 .MuiCardContent-root:last-child {
   padding: 0 !important;
@@ -574,5 +574,5 @@ li {
 
 /* Mapbox Popup */
 .mapboxgl-popup-content {
-  box-shadow: 0px 2px 10px 0px rgba(117, 117, 117, 0.25) !important;
+  box-shadow: 0px 2px 10px 0px rgba(117, 117, 117, 0.05) !important;
 }
