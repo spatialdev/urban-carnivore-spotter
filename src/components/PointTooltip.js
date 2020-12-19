@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import { CircularProgress } from "@material-ui/core";
@@ -8,6 +9,8 @@ import { setReports } from "../store/actions";
 import { getReports } from "../services/ReportsService";
 import dateIcon from "../assets/Calendar.svg";
 import locationIcon from "../assets/Location.svg";
+import ReactPlayer from "react-player";
+import CardMedia from "@material-ui/core/CardMedia";
 
 const styles = {
   allContent: {
@@ -75,6 +78,8 @@ const styles = {
   },
 };
 
+const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
+
 class PointTooltip extends Component {
   state = {
     isLoadingReport: false,
@@ -110,21 +115,55 @@ class PointTooltip extends Component {
       : history.push(`${path}/${report.id}`);
   };
 
+  renderMedia = () => {
+    const { classes, report, isMobile } = this.props;
+    let videoUrl;
+    let imageUrl = Placeholder;
+    let isVideo = false;
+
+    if (report.data.mediaPaths && report.data.mediaPaths.length > 0) {
+      const media = report.data.mediaPaths[0];
+      const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gim;
+      const extension = media.match(fileExtensionPattern);
+      isVideo = videoFormats.includes(
+        extension ? extension[0].toLowerCase() : false
+      );
+
+      if (isVideo) {
+        videoUrl = media;
+      } else {
+        imageUrl = media;
+      }
+    }
+
+    if (isVideo) {
+      let w = 120;
+      let h = 120;
+      return (
+        <ReactPlayer url={videoUrl} light={true} width={w} height={h} playing />
+      );
+    } else {
+      if (isMobile && imageUrl === Placeholder) {
+        return this.getStaticMap();
+      } else {
+        return (
+          <img
+            className={classes.image}
+            src={imageUrl}
+            alt={report.data.species}
+          />
+        );
+      }
+    }
+  };
+
   render() {
     const { report, classes } = this.props;
     const { isLoadingReport } = this.state;
 
     return (
       <div className={classes.allContent}>
-        <img
-          className={classes.image}
-          src={
-            report.data.mediaPaths && report.data.mediaPaths.length > 0
-              ? report.data.mediaPaths[0]
-              : Placeholder
-          }
-          alt={report.data.species}
-        />
+        {this.renderMedia()}
         <div className={classes.info}>
           <div className={classes.title}>{report.data.species}</div>
           <div className={classes.content}>
@@ -156,4 +195,11 @@ class PointTooltip extends Component {
   }
 }
 
-export default withStyles(styles)(withRouter(PointTooltip));
+const mapStateToProps = (state) => {
+  return {
+    isMobile: state.isMobile,
+  };
+};
+export default withRouter(
+  connect(mapStateToProps)(withStyles(styles)(PointTooltip))
+);
