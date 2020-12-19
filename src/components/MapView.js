@@ -45,7 +45,7 @@ const styles = {
     width: 250,
     zIndex: 1000,
     height: "60%",
-    boxShadow: "2px 2px 2px rgba(117,117,117,0.5)",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
     borderRadius: "6px",
     overflow: "auto",
     "&::-webkit-scrollbar": {

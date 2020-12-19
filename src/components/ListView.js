@@ -78,6 +78,7 @@ const styles = {
     width: "250px",
     zIndex: 1000,
     height: "60%",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
   },
   mainSkeleton: {
     display: "flex",
@@ -92,6 +93,37 @@ const styles = {
   },
   mainRectangle: {
     margin: "1em 0",
+  },
+  filterContainer: {
+    backgroundColor: "white",
+    position: "fixed",
+    left: "5%",
+    bottom: "5%",
+    width: 250,
+    zIndex: 1000,
+    height: "60%",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
+    borderRadius: "6px",
+    overflow: "auto",
+    "&::-webkit-scrollbar": {
+      width: "0.25em",
+      height: "0.25em",
+    },
+    "&::-webkit-scrollbar-track": {
+      width: "0.25em",
+      height: "0.25em",
+      backgroundColor: "#F1F1F1",
+    },
+    "&::-webkit-scrollbar-corner": {
+      width: "0.25em",
+      height: "0.25em",
+      backgroundColor: "#F1F1F1",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      width: "0.25em",
+      height: "0.25em",
+      backgroundColor: "#D8D8D8",
+    },
   },
 };
 
@@ -286,7 +318,7 @@ class ListView extends Component {
     return (
       <div className="backgroundCardContainer">
         {isMobile ? null : (
-          <div className="filterContainer">
+          <div className={classes.filterContainer}>
             <FilterDrawer />
           </div>
         )}
