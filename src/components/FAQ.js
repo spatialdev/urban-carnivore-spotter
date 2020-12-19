@@ -81,7 +81,7 @@ const styles = {
     padding: "1em 2em",
     overflow: "auto",
     marginBottom: "2em",
-    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.25)",
     borderRadius: "6px",
   },
   faqCardBody: {
