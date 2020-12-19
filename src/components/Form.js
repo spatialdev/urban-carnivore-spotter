@@ -223,6 +223,9 @@ const styles = {
   constantHeightMapContainer: {
     height: "100px",
   },
+  fab: {
+    backgroundColor: "#8acc25",
+  },
 };
 
 //https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975
@@ -704,20 +707,16 @@ class Form extends Component {
     const { classes, isMobile, history } = this.props;
     return (
       <div className={classes.addReportFormWrapper}>
-        {submitting ? (
+        {submitting && (
           <LoadingOverlay
             active={submitting}
             spinner
             text="Submitting..."
             className={classes.overlay}
           />
-        ) : null}
-        {isMobile ? (
-          <Fab
-            style={{ backgroundColor: "#8acc25" }}
-            aria-label="Add"
-            className={classes.fab}
-          >
+        )}
+        {isMobile && (
+          <Fab aria-label="Add" className={classes.fab}>
             <ClearIcon
               style={{ color: "#FFFFFF" }}
               onClick={() =>
@@ -727,7 +726,7 @@ class Form extends Component {
               }
             />
           </Fab>
-        ) : null}
+        )}
         <h2 className={classes.reportCarnivoreTitle}>
           Report a carnivore sighting
         </h2>

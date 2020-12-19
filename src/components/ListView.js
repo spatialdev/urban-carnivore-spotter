@@ -7,6 +7,7 @@ import ListCard from "../components/ListCard";
 import { dataMatchesFilter } from "../services/FilterService";
 import { withRouter } from "react-router-dom";
 import Map from "@material-ui/icons/Place";
+import mapViewIcon from "../assets/MapView.svg";
 import FilterDrawer from "./FilterDrawer";
 import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
@@ -18,45 +19,65 @@ import NeighborhoodService from "../services/NeighborhoodService";
 const neighborhoodService = new NeighborhoodService();
 
 const styles = {
-  mapViewButtonMobile: {
-    "& svg": {
-      fontSize: 20,
-      backgroundColor: "#FECA00",
-    },
-    width: 20,
-    height: 20,
-    backgroundColor: "#FECA00",
-  },
-  mapViewButtonDesktop: {
-    "& svg": {
-      fontSize: 20,
-      backgroundColor: "#FECA00",
-    },
-    width: 20,
-    height: 20,
-    backgroundColor: "#FECA00",
-    color: "#FFFFFF",
-  },
   mapViewButtonContainerMobile: {
-    bottom: "20%",
-    left: "80%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    bottom: "75%",
+    left: "88%",
     zIndex: 99,
-    position: "fixed",
-    backgroundColor: "#FECA00",
-    "&:hover": {
-      backgroundColor: "#FECA00",
-    },
+    position: "sticky",
+    backgroundColor: "#0877C6",
     color: "#FFFFFF",
+    cursor: "pointer",
+    border: 0,
+    outline: 0,
+    borderRadius: "100%",
+    padding: "1em",
+    "&:hover": {
+      backgroundColor: "#319ce8",
+    },
+    "&:active": {
+      backgroundColor: "#319ce8",
+    },
+    "&:focus": {
+      backgroundColor: "#319ce8",
+    },
   },
   mapViewButtonContainerDesktop: {
-    bottom: "20%",
-    left: "93%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    bottom: "75%",
+    left: "88%",
     zIndex: 99,
-    position: "fixed",
-    backgroundColor: "#FECA00",
+    position: "sticky",
+    backgroundColor: "#000",
+    color: "#FFFFFF",
+    cursor: "pointer",
+    border: 0,
+    outline: 0,
+    borderRadius: "19.5px",
+    width: "9em",
+    height: "40px",
     "&:hover": {
-      backgroundColor: "#FECA00",
+      backgroundColor: "rgba(25,1,1,0.7)",
     },
+    "&:active": {
+      backgroundColor: "rgba(25,1,1,0.7)",
+    },
+    "&:focus": {
+      backgroundColor: "rgba(25,1,1,0.7)",
+    },
+  },
+  mapViewText: {
+    marginRight: "0.5em",
+    marginLeft: "0.2em",
+    fontWeight: 600,
+    fontSize: "1em",
+  },
+  mapViewIcon: {
+    marginRight: "0.2em",
   },
   paginator: {
     justifyContent: "center",
@@ -89,7 +110,7 @@ const styles = {
     marginTop: "5em",
     top: "-100px",
     marginBottom: "16px",
-    marginLeft: "25em",
+    marginLeft: "20em",
   },
   mainRectangle: {
     margin: "1em 0",
@@ -324,30 +345,25 @@ class ListView extends Component {
         )}
         <div className="cardContainer">
           {this.renderReportsPerPage(filteredReports)}
-          <div>
-            <Fab
-              className={
-                isMobile
-                  ? classes.mapViewButtonContainerMobile
-                  : classes.mapViewButtonContainerDesktop
-              }
-              aria-label="Toggle"
-              size="small"
-            >
-              <Map
-                onClick={() =>
-                  history.location.pathname.indexOf("tacoma") === -1
-                    ? history.push("/")
-                    : history.push("/tacoma")
-                }
-                className={
-                  isMobile
-                    ? classes.mapViewButtonMobile
-                    : classes.mapViewButtonDesktop
-                }
-              />
-            </Fab>
-          </div>
+          <button
+            onClick={() =>
+              history.location.pathname.indexOf("tacoma") === -1
+                ? history.push("/")
+                : history.push("/tacoma")
+            }
+            className={
+              isMobile
+                ? classes.mapViewButtonContainerMobile
+                : classes.mapViewButtonContainerDesktop
+            }
+          >
+            {!isMobile && <div className={classes.mapViewText}>Map View</div>}
+            <img
+              className={classes.mapViewIcon}
+              src={mapViewIcon}
+              alt="Map View"
+            />
+          </button>
         </div>
         <Pagination
           classes={{ ul: classes.paginator }}

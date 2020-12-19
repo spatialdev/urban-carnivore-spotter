@@ -312,7 +312,7 @@ List + Card
   }
 
   .cardContainer {
-    margin-left: 20%;
+    margin-left: 15%;
   }
 }
 /*
@@ -356,6 +356,9 @@ video {
 }
 .MuiPaper-rounded {
   border-radius: 6px !important;
+}
+.MuiFab-root {
+  box-shadow: 0px 2px 10px 0px rgba(117, 117, 117, 0.05) !important;
 }
 /* End Native Material UI report card style override */
 
