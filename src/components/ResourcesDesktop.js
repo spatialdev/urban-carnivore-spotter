@@ -14,8 +14,9 @@ const styles = {
   allContent: {
     maxWidth: 1000,
     width: "100%",
-    backgroundColor: "#ececec",
+    backgroundColor: "#fff",
     padding: 32,
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.25)",
   },
   widthWrapper: {
     display: "flex",

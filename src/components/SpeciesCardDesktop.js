@@ -20,7 +20,7 @@ const styles = {
     borderRadius: "6px 6px 0px 0px",
   },
   allContent: {
-    backgroundColor: "#ececec",
+    backgroundColor: "#fff",
     maxWidth: 1100,
     display: "flex",
   },

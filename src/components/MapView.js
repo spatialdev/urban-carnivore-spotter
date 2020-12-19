@@ -88,6 +88,7 @@ const styles = {
     top: "24vh",
     left: "87%",
     position: "fixed",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
   },
   legendDesktopContainer: {
     textAlign: "right",
@@ -118,6 +119,7 @@ const styles = {
     "&:hover": {
       backgroundColor: "#FFFFFF",
     },
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
   },
   listViewButton: {
     "& svg": {
@@ -130,6 +132,7 @@ const styles = {
   fab: {
     margin: 1,
     backgroundColor: "#FFFFFF",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
   },
   extendedIcon: {
     height: "0.8em",
@@ -143,6 +146,7 @@ const styles = {
     "& svg": {
       fontSize: 20,
     },
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
   },
   listViewDesktopWrapper: {
     textAlign: "right",
@@ -178,6 +182,7 @@ const styles = {
     fontFamily: "Raleway",
     height: "40px",
     borderRadius: "24px",
+    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
   },
   reportSightingText: {
     marginRight: "10px",
@@ -197,11 +202,6 @@ const styles = {
     fontWeight: 600,
     letterSpacing: "0.5px",
     color: "rgba(2,2,30,0.7)",
-  },
-  popup: {
-    display: "flex",
-    padding: 0,
-    margin: 0,
   },
 };
 class MapView extends Component {
@@ -270,7 +270,6 @@ class MapView extends Component {
     if (popupInfo) {
       return (
         <Popup
-          className={classes.popup}
           coordinates={[popupInfo.data.mapLng, popupInfo.data.mapLat]}
           anchor={"bottom"}
         >
@@ -537,7 +536,7 @@ class MapView extends Component {
                     position: "relative",
                     zIndex: 10,
                     flexDirection: "column",
-                    boxShadow: "none",
+                    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
                     border: "none",
                     bottom: "0px",
                     right: "0px",
@@ -546,8 +545,6 @@ class MapView extends Component {
                     margin: ".5rem",
                     marginTop: "3rem",
                     display: "flex",
-                    boxShadow:
-                      "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12)",
                   }}
                 />
               </div>
