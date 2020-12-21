@@ -298,7 +298,7 @@ List + Card
 
 @media (min-width: 1024px) {
   .card {
-    width: 600px;
+    width: 620px;
   }
 
   .cardContainer {
@@ -308,7 +308,7 @@ List + Card
 
 @media (min-width: 1440px) {
   .card {
-    width: 800px;
+    width: 820px;
   }
 
   .cardContainer {

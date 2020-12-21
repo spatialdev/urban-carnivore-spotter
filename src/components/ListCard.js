@@ -101,6 +101,7 @@ const styles = () => ({
     padding: 0,
     margin: 0,
     marginBottom: "0.5rem",
+    marginTop: "1em",
   },
   date: {
     display: "flex",
@@ -129,6 +130,7 @@ const styles = () => ({
     fontSize: "0.75em",
     padding: 0,
     margin: 0,
+    marginBottom: "1em",
   },
   icon: {
     marginRight: "0.5em",
