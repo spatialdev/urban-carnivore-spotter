@@ -116,7 +116,7 @@ class PointTooltip extends Component {
   };
 
   renderMedia = () => {
-    const { classes, report, isMobile } = this.props;
+    const { classes, report } = this.props;
     let videoUrl;
     let imageUrl = Placeholder;
     let isVideo = false;
@@ -143,17 +143,13 @@ class PointTooltip extends Component {
         <ReactPlayer url={videoUrl} light={true} width={w} height={h} playing />
       );
     } else {
-      if (isMobile && imageUrl === Placeholder) {
-        return this.getStaticMap();
-      } else {
-        return (
-          <img
-            className={classes.image}
-            src={imageUrl}
-            alt={report.data.species}
-          />
-        );
-      }
+      return (
+        <img
+          className={classes.image}
+          src={imageUrl}
+          alt={report.data.species}
+        />
+      );
     }
   };
 
