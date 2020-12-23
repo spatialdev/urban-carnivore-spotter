@@ -494,8 +494,8 @@ class MapView extends Component {
                 ],
               }}
             >
-              {reportMapPoints
-                ? reportMapPoints
+              {reports
+                ? reports
                     .filter((report) => dataMatchesFilter(report, filter))
                     .map((report) => (
                       <Feature
