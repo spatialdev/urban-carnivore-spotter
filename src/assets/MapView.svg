@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon/Map 2</title>
+    <g id="Explore---List-View" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Explore-List-View-1440-px" transform="translate(-1364.000000, -88.000000)" fill="#FFFFFF">
+            <g id="Group-3" transform="translate(1272.000000, 80.000000)">
+                <g id="Icon/Map" transform="translate(92.000000, 8.000000)">
+                    <path d="M20.5,3 C20.78,3 21,3.22 21,3.5 L21,3.5 L21,18.62 C21,18.85 20.85,19.03 20.64,19.1 L20.64,19.1 L15,21 L9,18.9 L3.66,20.97 L3.5,21 C3.22,21 3,20.78 3,20.5 L3,20.5 L3,5.38 C3,5.15 3.15,4.97 3.36,4.9 L3.36,4.9 L9,3 L15,5.1 L20.34,3.03 Z M19,5.7 L16,6.86 L16,18.55 L19,17.54 L19,5.7 Z M10,5.47 L10,17.13 L14,18.53 L14,6.87 L10,5.47 Z M8,5.45 L5,6.46 L5,18.31 L8,17.15 L8,5.45 Z" id="Combined-Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
