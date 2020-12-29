@@ -351,19 +351,20 @@ class MapView extends Component {
     }
   };
 
-  showListViewButton = (isMobile, classes, history) => {
-    let isTacoma = history.location.pathname.indexOf("tacoma") !== -1;
+  showListViewButton = (isMobile, classes) => {
     const { isLoadingReport } = this.state;
     return isMobile ? (
       <Fab
         className={classes.listViewMobileWrapper}
         aria-label="Toggle"
         size="small"
-        onClick={() =>
-          isTacoma ? history.push("/tacoma/list") : history.push("/list")
-        }
+        onClick={this.getListViewReports}
       >
-        <List className={classes.listViewButton} />
+        {isLoadingReport ? (
+          <CircularProgress size="1.5em" />
+        ) : (
+          <List className={classes.listViewButton} />
+        )}
       </Fab>
     ) : (
       <div className={classes.listViewDesktopWrapper}>
@@ -437,14 +438,14 @@ class MapView extends Component {
   render() {
     const { classes, isMobile, filter, history } = this.props;
     const { reports, legend, viewport } = this.state;
-    let reportMapPoints;
-    const cachedReports = localStorage.getItem("reports");
-    if (cachedReports) {
-      const parsedReports = JSON.parse(cachedReports);
-      reportMapPoints = parsedReports;
-    } else {
-      reportMapPoints = reports;
-    }
+    // let reportMapPoints;
+    // const cachedReports = localStorage.getItem("reports");
+    // if (cachedReports) {
+    //   const parsedReports = JSON.parse(cachedReports);
+    //   reportMapPoints = parsedReports;
+    // } else {
+    //   reportMapPoints = reports;
+    // }
 
     return (
       <div className="mapContainer">
@@ -549,7 +550,7 @@ class MapView extends Component {
                 />
               </div>
             </div>
-            {this.showListViewButton(isMobile, classes, history)}
+            {this.showListViewButton(isMobile, classes)}
             {this.showLegendButton(isMobile, classes)}
             {legend && (
               <div className={legend ? "legend-open" : "legend-close"}>
