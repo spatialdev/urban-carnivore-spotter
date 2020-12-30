@@ -706,6 +706,7 @@ class Form extends Component {
       species,
     } = this.state;
     const { classes, isMobile, history } = this.props;
+
     return (
       <div className={classes.addReportFormWrapper}>
         {submitting && (
