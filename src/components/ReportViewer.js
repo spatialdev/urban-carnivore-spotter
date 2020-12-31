@@ -123,18 +123,13 @@ class ReportViewer extends Component {
     if (reports && reports.length > 0) {
       return reports
         .filter((report) => dataMatchesFilter(report, filter))
-        .sort((one, two) => {
-          return (
-            this.timeToNanos(two.data.time_submitted) -
-            this.timeToNanos(one.data.time_submitted)
-          );
-        });
+        .sort(
+          (one, two) =>
+            Date.parse(two.data.timestamp) - Date.parse(one.data.timestamp)
+        );
     }
     return reports;
   };
-
-  timeToNanos = (timestamp) =>
-    timestamp._nanoseconds + timestamp._seconds * 1000000000;
 
   getReportIdx = (id, reports) => {
     let position = 0;

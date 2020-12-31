@@ -198,9 +198,6 @@ class ListView extends Component {
     }
   };
 
-  timeToNanos = (timestamp) =>
-    timestamp._nanoseconds + timestamp._seconds * 1000000000;
-
   handlePageNumber = (e, page) => {
     const { localStorage } = window;
     this.setState({ pageNumber: page });
@@ -238,22 +235,18 @@ class ListView extends Component {
     const { filter } = this.props;
     return reports
       .filter((report) => dataMatchesFilter(report, filter))
-      .sort((one, two) => {
-        return (
-          this.timeToNanos(two.data.time_submitted) -
-          this.timeToNanos(one.data.time_submitted)
-        );
-      });
+      .sort(
+        (one, two) =>
+          Date.parse(two.data.timestamp) - Date.parse(one.data.timestamp)
+      );
   };
 
   renderReportsPerPage = (reports) => {
     const { pageNumber, itemsPerPage } = this.state;
+    const start = pageNumber - 1;
     return reports && reports.length > 10
       ? reports
-          .slice(
-            pageNumber * itemsPerPage,
-            pageNumber * itemsPerPage + itemsPerPage
-          )
+          .slice(start * itemsPerPage, start * itemsPerPage + itemsPerPage)
           .map((report) => {
             return (
               <ListCard
