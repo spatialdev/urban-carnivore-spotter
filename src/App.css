@@ -286,7 +286,7 @@ List + Card
   }
 
   .card {
-    width: 500px;
+    width: 95%;
     height: 200px;
   }
 
@@ -296,19 +296,29 @@ List + Card
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   .card {
-    width: 620px;
+    width: 500px;
   }
 
   .cardContainer {
-    margin-left: 30%;
+    margin-left: 27%;
   }
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1030px) {
   .card {
-    width: 820px;
+    width: 600px;
+  }
+
+  .cardContainer {
+    margin-left: 20%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card {
+    width: 700px;
   }
 
   .cardContainer {
