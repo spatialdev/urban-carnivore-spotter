@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Skeleton from "@material-ui/lab/Skeleton";
 import Pagination from "@material-ui/lab/Pagination";
 import ListCard from "../components/ListCard";
 import { dataMatchesFilter } from "../services/FilterService";
@@ -82,35 +81,6 @@ const styles = {
   paginator: {
     justifyContent: "center",
     padding: "1em",
-  },
-  skeleton: {
-    display: "flex",
-    flexDirection: "row",
-    paddingTop: "100px",
-    paddingBottom: "20px",
-    minHeight: "100vh",
-  },
-  filterSkeleton: {
-    display: "flex",
-    flexDirection: "column",
-    position: "fixed",
-    left: "5%",
-    bottom: "5%",
-    width: "250px",
-    zIndex: 1000,
-    height: "60%",
-    boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.05)",
-  },
-  mainSkeleton: {
-    display: "flex",
-    flexDirection: "column",
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: "5em",
-    top: "-100px",
-    marginBottom: "16px",
-    marginLeft: "20em",
   },
   mainRectangle: {
     margin: "1em 0",
@@ -211,26 +181,6 @@ class ListView extends Component {
     }
   };
 
-  renderMainSkeleton = () => {
-    const { classes } = this.props;
-    const numOfSkeletons = 10;
-    const skeletons = [];
-
-    for (let i = 0; i < numOfSkeletons; i++) {
-      skeletons.push(
-        <Skeleton
-          key={`${i}-rectangle`}
-          className={classes.mainRectangle}
-          variant="rect"
-          width={800}
-          height={200}
-        />
-      );
-    }
-
-    return skeletons;
-  };
-
   filterReports = (reports) => {
     const { filter } = this.props;
     return reports
@@ -313,19 +263,7 @@ class ListView extends Component {
     const { isMobile, history, classes } = this.props;
 
     if (!reports) {
-      if (isMobile) {
-        return <CircularProgress />;
-      }
-      return (
-        <div className={classes.skeleton}>
-          <div className={classes.filterSkeleton}>
-            <Skeleton variant="rect" width={247} height={493} />
-          </div>
-          <div className={classes.mainSkeleton}>
-            {this.renderMainSkeleton()}
-          </div>
-        </div>
-      );
+      return <CircularProgress />;
     }
     const filteredReports = this.filterReports(reports);
 
