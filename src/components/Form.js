@@ -123,6 +123,7 @@ const DIALOG_MODES = {
   PERMISSION: "permission",
   CLOSED: "closed",
   MISSING_FIELD: "missing field",
+  NOT_WA: "notWA",
 };
 const TACOMA_LINE_FOR_BBOX = turf.lineString([
   [-122.670442006814, 47.0600919913851],
@@ -225,6 +226,9 @@ const styles = {
   },
   fab: {
     backgroundColor: "#8acc25",
+  },
+  notWA: {
+    color: "red",
   },
 };
 
@@ -353,6 +357,46 @@ class Form extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  validateInWA = (lng, lat) => {
+    const currLocationPoint = [lng, lat];
+    const WAPolygon = turf.polygon(
+      [
+        [
+          [-116.917743, 45.995573],
+          [-118.966114, 46.005403],
+          [-121.163807, 45.609812],
+          [-121.215295, 45.674068],
+          [-121.360283, 45.70703],
+          [-121.897875, 45.690659],
+          [-122.330837, 45.56107],
+          [-122.759213, 45.666266],
+          [-122.915931, 46.092278],
+          [-123.115501, 46.187866],
+          [-123.165341, 46.192934],
+          [-123.279738, 46.151596],
+          [-123.37092, 46.147066],
+          [-123.429264, 46.182269],
+          [-123.425675, 46.23004],
+          [-123.492101, 46.27357],
+          [-123.876566, 46.240521],
+          [-124.029415, 46.301199],
+          [-124.035945, 46.265801],
+          [-124.031756, 46.312027],
+          [-124.08125, 46.269956],
+          [-124.864301, 48.469223],
+          [-123.136963, 48.135124],
+          [-123.207582, 48.678376],
+          [-122.757723, 49.001997],
+          [-117.040038, 48.993724],
+          [-116.917743, 45.995573],
+        ],
+      ],
+      { name: "Washington State" }
+    );
+    // Returns a boolean if location is within WA boundaries
+    return turf.inside(currLocationPoint, WAPolygon);
+  };
+
   getMapCoordinates = (dataFromMap) => {
     this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
     this.updateNeighborhood(dataFromMap.lat, dataFromMap.lng);
@@ -360,6 +404,16 @@ class Form extends Component {
   };
 
   handleSubmit = () => {
+    const { mapLat, mapLng } = this.state;
+    const isWA = this.validateInWA(mapLng, mapLat);
+    if (isWA) {
+      this.submitData();
+    } else {
+      this.setState({ dialogMode: DIALOG_MODES.NOT_WA });
+    }
+  };
+
+  submitData = () => {
     // Pull out all of the fields we don't want to submit. Everything left in report will be submitted.
     let {
       dialogMode,
@@ -392,7 +446,7 @@ class Form extends Component {
           this.setState({ dialogMode: DIALOG_MODES.ERROR });
         }
       })
-      .catch((err) => {
+      .catch(() => {
         this.setState({ submitting: false, dialogMode: DIALOG_MODES.ERROR });
       });
   };
@@ -547,6 +601,16 @@ class Form extends Component {
             }
           />
         );
+      case DIALOG_MODES.NOT_WA:
+        return (
+          <FormInfoDialog
+            open={true}
+            onClose={() => this.setState({ dialogMode: DIALOG_MODES.CLOSED })}
+            message={
+              "Your report is not located in Washington State. We are currently only accepting submissions within WA."
+            }
+          />
+        );
       default:
         return null;
     }
@@ -659,7 +723,10 @@ class Form extends Component {
             centerLat={mapLat}
           />
         </div>
-        {neighborhood ? <p>{neighborhood}</p> : null}
+        {neighborhood && <p>{neighborhood}</p>}
+        {!this.validateInWA(mapLng, mapLat) && (
+          <div className={classes.notWA}>Not located in Washington State</div>
+        )}
       </div>
     );
   };
@@ -694,7 +761,6 @@ class Form extends Component {
       media,
       submitting,
       neighborhood,
-      dialogMode,
       showObserverDetails,
       showAnimalBehavior,
       showContactInformation,
@@ -704,6 +770,7 @@ class Form extends Component {
       audioPaths,
       videoPaths,
       species,
+      dialogMode,
     } = this.state;
     const { classes, isMobile, history } = this.props;
 
