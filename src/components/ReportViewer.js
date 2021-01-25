@@ -47,6 +47,13 @@ const styles = {
     height: "15px",
     color: "black",
   },
+  staticMapWrapper: {
+    display: 'flex',
+    cursor: 'pointer',
+  },
+  staticMap: {
+    flex: 1,
+  }
 };
 
 class ReportViewer extends Component {
@@ -193,21 +200,72 @@ class ReportViewer extends Component {
     history.push(isInTacoma ? `${path}/tacoma/${prevId}` : `${path}/${prevId}`);
   };
 
+  handleMapView = () => {
+    const { history, match } = this.props;
+    const { report } = this.state;
+    const id = match.params.id;
+    history.push({
+      pathname: "/",
+      state: { report: { id, data: report } },
+    });
+  };
+
+  getStaticMap = () => {
+    const { classes } = this.props;
+    const { report } = this.state;
+    const lat = report.mapLat;
+    const lng = report.mapLng;
+
+    let color;
+    const currSpecies = report.species;
+    if (currSpecies === "Red Fox") {
+      color = "FE1513";
+    } else if (currSpecies === "Black Bear") {
+      color = "000000";
+    } else if (currSpecies === "Bobcat") {
+      color = "a30cfe";
+    } else if (currSpecies === "Coyote") {
+      color = "FECE17";
+    } else if (currSpecies === "Cougar/Mountain Lion") {
+      color = "2C9E0D";
+    } else if (currSpecies === "Raccoon") {
+      color = "FF1EC1";
+    } else if (currSpecies === "Opossum") {
+      color = "FE7901";
+    } else if (currSpecies === "River Otter") {
+      color = "171AB1";
+    } else {
+      color = "805b14";
+    }
+
+    let w = 350;
+    let h = 200;
+    const staticReportMap = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+${color}(${lng},${lat})/${lng},${lat},10,20/${w}x${h}?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`;
+    return (
+      <div
+        className={classes.staticMapWrapper}
+        onClick={this.handleMapView}
+      >
+        <img src={staticReportMap} className={classes.staticMap} />
+      </div>
+    );
+  };
+
   renderMediaItem(item) {
     return (
       <div className="image-gallery-image">
         {item.isVideo ? (
           <ReactPlayer url={item.original} controls width={400} height={200} />
         ) : (
-          <img
-            src={item.original}
-            alt={item.originalAlt}
-            srcSet={item.srcSet}
-            sizes={item.sizes}
-            title={item.originalTitle}
-            style={{ width: "400px" }}
-          />
-        )}
+            <img
+              src={item.original}
+              alt={item.originalAlt}
+              srcSet={item.srcSet}
+              sizes={item.sizes}
+              title={item.originalTitle}
+              style={{ width: "400px" }}
+            />
+          )}
 
         {item.description && (
           <span className="image-gallery-description">{item.description}</span>
@@ -279,11 +337,11 @@ class ReportViewer extends Component {
               {media.length > 0 ? (
                 media.map((mediaItem) => this.renderMediaItem(mediaItem))
               ) : (
-                <CardMedia
-                  className="reportPlaceHolderImage"
-                  image={Placeholder}
-                />
-              )}
+                  <CardMedia
+                    className="reportPlaceHolderImage"
+                    image={Placeholder}
+                  />
+                )}
               <div
                 style={{
                   backgroundColor: "white",
@@ -315,10 +373,10 @@ class ReportViewer extends Component {
                 )}
                 {(report.numberOfAdultSpecies ||
                   report.numberOfYoungSpecies) && (
-                  <p style={{ lineHeight: ".5" }}>
-                    <strong>Number of Species:</strong>
-                  </p>
-                )}
+                    <p style={{ lineHeight: ".5" }}>
+                      <strong>Number of Species:</strong>
+                    </p>
+                  )}
                 {report.numberOfAdultSpecies && (
                   <p style={{ lineHeight: ".5", marginLeft: "1em" }}>
                     <strong>Adult: </strong> {report.numberOfAdultSpecies}
@@ -335,6 +393,7 @@ class ReportViewer extends Component {
                   </p>
                 )}
               </div>
+              {report.mapLat && report.mapLng && this.getStaticMap()}
             </Card>
           </div>
         </div>
