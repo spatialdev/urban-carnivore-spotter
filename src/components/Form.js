@@ -404,13 +404,14 @@ class Form extends Component {
   };
 
   handleSubmit = () => {
-    const { mapLat, mapLng } = this.state;
-    const isWA = this.validateInWA(mapLng, mapLat);
-    if (isWA) {
-      this.submitData();
-    } else {
-      this.setState({ dialogMode: DIALOG_MODES.NOT_WA });
-    }
+    this.submitData();
+    // const { mapLat, mapLng } = this.state;
+    // const isWA = this.validateInWA(mapLng, mapLat);
+    // if (isWA) {
+    // this.submitData();
+    // } else {
+    // this.setState({ dialogMode: DIALOG_MODES.NOT_WA });
+    // }
   };
 
   submitData = () => {
@@ -601,16 +602,16 @@ class Form extends Component {
             }
           />
         );
-      case DIALOG_MODES.NOT_WA:
-        return (
-          <FormInfoDialog
-            open={true}
-            onClose={() => this.setState({ dialogMode: DIALOG_MODES.CLOSED })}
-            message={
-              "Your report is not located in Washington State. We are currently only accepting submissions within WA."
-            }
-          />
-        );
+      // case DIALOG_MODES.NOT_WA:
+      //   return (
+      //     <FormInfoDialog
+      //       open={true}
+      //       onClose={() => this.setState({ dialogMode: DIALOG_MODES.CLOSED })}
+      //       message={
+      //         "Your report is not located in Washington State. We are currently only accepting submissions within WA."
+      //       }
+      //     />
+      //   );
       default:
         return null;
     }
@@ -694,41 +695,41 @@ class Form extends Component {
         </div>
       </div>
     ) : (
-      <div className="formItem">
-        <h4>Identify the location of your sighting</h4>
-        <div
-          className="constantHeightMapContainer"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
+        <div className="formItem">
+          <h4>Identify the location of your sighting</h4>
           <div
+            className="constantHeightMapContainer"
             style={{
-              backgroundColor: "#ff5200",
-              borderRadius: "50%",
-              width: "25px",
-              height: "25px",
-              position: "absolute",
-              left: 0,
-              right: 0,
-              margin: "0 auto",
-              zIndex: 10000,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
             }}
-          />
-          <FormMap
-            passMapCoordinates={this.getMapCoordinates}
-            centerLng={mapLng}
-            centerLat={mapLat}
-          />
+          >
+            <div
+              style={{
+                backgroundColor: "#ff5200",
+                borderRadius: "50%",
+                width: "25px",
+                height: "25px",
+                position: "absolute",
+                left: 0,
+                right: 0,
+                margin: "0 auto",
+                zIndex: 10000,
+              }}
+            />
+            <FormMap
+              passMapCoordinates={this.getMapCoordinates}
+              centerLng={mapLng}
+              centerLat={mapLat}
+            />
+          </div>
+          {neighborhood && <p>{neighborhood}</p>}
+          {/* {!this.validateInWA(mapLng, mapLat) && (
+            <div className={classes.notWA}>Not located in Washington State</div>
+          )} */}
         </div>
-        {neighborhood && <p>{neighborhood}</p>}
-        {!this.validateInWA(mapLng, mapLat) && (
-          <div className={classes.notWA}>Not located in Washington State</div>
-        )}
-      </div>
-    );
+      );
   };
 
   render() {
@@ -1157,23 +1158,23 @@ class Form extends Component {
                     id={"carnivoreConflict"}
                   />
                   {conflictOptions.indexOf(carnivoreConflict) === 0 ||
-                  conflictOptions.indexOf(carnivoreConflict) === 2 ? (
-                    <TextValidator
-                      label="Describe (limit 80 char)"
-                      multiline
-                      style={{ minWidth: "300px" }}
-                      rows="4"
-                      value={conflictDesc}
-                      inputProps={{
-                        name: "conflictDesc",
-                        id: "conflictDesc",
-                        maxLength: 80,
-                      }}
-                      onChange={this.handleChange}
-                      margin="normal"
-                      variant="outlined"
-                    />
-                  ) : null}
+                    conflictOptions.indexOf(carnivoreConflict) === 2 ? (
+                      <TextValidator
+                        label="Describe (limit 80 char)"
+                        multiline
+                        style={{ minWidth: "300px" }}
+                        rows="4"
+                        value={conflictDesc}
+                        inputProps={{
+                          name: "conflictDesc",
+                          id: "conflictDesc",
+                          maxLength: 80,
+                        }}
+                        onChange={this.handleChange}
+                        margin="normal"
+                        variant="outlined"
+                      />
+                    ) : null}
                 </div>
               </div>
             )}
