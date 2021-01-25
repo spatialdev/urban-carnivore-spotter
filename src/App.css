@@ -325,6 +325,46 @@ List + Card
     margin-left: 15%;
   }
 }
+
+@media (min-width: 1300px) {
+  .card {
+    width: 800px;
+  }
+
+  .cardContainer {
+    margin-left: 15%;
+  }
+}
+
+@media (min-width: 1400px) {
+  .card {
+    width: 900px;
+  }
+
+  .cardContainer {
+    margin-left: 15%;
+  }
+}
+
+@media (min-width: 1600px) {
+  .card {
+    width: 1000px;
+  }
+
+  .cardContainer {
+    margin-left: 10%;
+  }
+}
+
+@media (min-width: 2000px) {
+  .card {
+    width: 1200px;
+  }
+
+  .cardContainer {
+    margin-left: 10%;
+  }
+}
 /*
 Report Viewer
  */
