@@ -224,33 +224,16 @@ class ListView extends Component {
   };
 
   handleReport = async (id) => {
-    const { localStorage } = window;
-    const cachedReport = localStorage.getItem("report");
+    const tacomaReport = await getTacomaReport(id);
+    const report = await getReport(id);
 
-    if (cachedReport) {
-      localStorage.removeItem("report");
-    }
-
-    const isInTacoma = await neighborhoodService.isInTacoma(report.mapLat, report.mapLng).then((place) => {
-      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
-      if (JSON.stringify(place) === "{}") {
-        const point = turf.point([report.mapLng, report.mapLat]);
-        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
-      } else {
-        return place.toString().toLowerCase() === "tacoma";
-      }
-    });
-
-    let report;
-    if (isInTacoma) {
-      report = await getTacomaReport(id);
+    if (Object.keys(tacomaReport).length > 0) {
+      setReport({ tacomaReport });
+      this.showReportPage(tacomaReport, id);
     } else {
-      report = await getReport(id);
+      setReport({ report });
+      this.showReportPage(report, id);
     }
-
-    setReport({ report });
-    localStorage.setItem("report", JSON.stringify(report));
-    this.showReportPage(report, id);
   };
 
   showReportPage = async (report, id) => {
@@ -267,38 +250,7 @@ class ListView extends Component {
     });
 
     const path = isInTacoma ? "/tacoma/reports" : "/reports";
-
     history.push(isInTacoma ? `${path}/tacoma/${id}` : `${path}/${id}`);
-  };
-
-  getCurrReport = async (id) => {
-    const { localStorage } = window;
-
-    const cachedReport = localStorage.getItem("report");
-    if (cachedReport) {
-      localStorage.removeItem("report");
-    }
-
-    const isInTacoma = await neighborhoodService.isInTacoma(report.mapLat, report.mapLng).then((place) => {
-      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
-      if (JSON.stringify(place) === "{}") {
-        const point = turf.point([report.mapLng, report.mapLat]);
-        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
-      } else {
-        return place.toString().toLowerCase() === "tacoma";
-      }
-    });
-
-    let report;
-    if (isInTacoma) {
-      report = await getTacomaReport(id);
-    } else {
-      report = await getReport(id);
-    }
-
-
-    setReport(report);
-    localStorage.setItem("report", JSON.stringify(report));
   };
 
   render() {

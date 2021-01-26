@@ -453,6 +453,7 @@ class MapView extends Component {
     ) {
       flyToPopup = true;
       popupCenter = [location.state.report.data.mapLng, location.state.report.data.mapLat];
+      flyToPopup = false;
     }
 
     return (
