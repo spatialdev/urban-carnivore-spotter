@@ -197,10 +197,7 @@ class ReportViewer extends Component {
       }
     });
 
-    const path =
-      !isInTacoma
-        ? "/reports"
-        : "/tacoma/reports";
+    const path = isInTacoma ? "/tacoma/reports" : "/reports";
 
     history.push(isInTacoma ? `${path}/tacoma/${nextId}` : `${path}/${nextId}`);
   };
@@ -219,10 +216,7 @@ class ReportViewer extends Component {
       }
     });
 
-    const path =
-      !isInTacoma
-        ? "/reports"
-        : "/tacoma/reports";
+    const path = isInTacoma ? "/tacoma/reports" : "/reports";
 
     history.push(isInTacoma ? `${path}/tacoma/${prevId}` : `${path}/${prevId}`);
   };

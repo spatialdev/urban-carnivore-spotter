@@ -441,14 +441,18 @@ class MapView extends Component {
   render() {
     const { classes, isMobile, filter, history } = this.props;
     const { reports, legend, viewport } = this.state;
-    // let reportMapPoints;
-    // const cachedReports = localStorage.getItem("reports");
-    // if (cachedReports) {
-    //   const parsedReports = JSON.parse(cachedReports);
-    //   reportMapPoints = parsedReports;
-    // } else {
-    //   reportMapPoints = reports;
-    // }
+    const { action, location } = history;
+    let flyToPopup = false;
+    if (
+      action &&
+      action === "PUSH" &&
+      location &&
+      location.state &&
+      location.state.report
+    ) {
+      flyToPopup = true;
+    }
+    const popupCenter = [location.state.report.data.mapLng, location.state.report.data.mapLat];
 
     return (
       <div className="mapContainer">
@@ -461,9 +465,10 @@ class MapView extends Component {
           <Map2
             style="mapbox://styles/mapbox/streets-v9"
             className="map"
-            center={viewport.center}
+            center={flyToPopup ? popupCenter : viewport.center}
             zoom={viewport.zoom}
             onMoveEnd={(e) => this.onMoveEnd(e)}
+            ref={(e) => { this.map = e; }}
           >
             {this.renderPopup()}
             <Layer

@@ -250,10 +250,7 @@ class ListView extends Component {
       }
     });
 
-    const path =
-      !isInTacoma
-        ? "/reports"
-        : "/tacoma/reports";
+    const path = isInTacoma ? "/tacoma/reports" : "/reports";
 
     history.push(isInTacoma ? `${path}/tacoma/${id}` : `${path}/${id}`);
   };

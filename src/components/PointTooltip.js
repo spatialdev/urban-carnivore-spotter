@@ -108,10 +108,7 @@ class PointTooltip extends Component {
       }
     });
 
-    const path =
-      !isInTacoma
-        ? "/reports"
-        : "/tacoma/reports";
+    const path = isInTacoma ? "/tacoma/reports" : "/reports";
 
     const cachedReports = localStorage.getItem("reports");
     if (cachedReports) {
