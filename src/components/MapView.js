@@ -205,13 +205,21 @@ const styles = {
     color: "rgba(2,2,30,0.7)",
   },
 };
+
 class MapView extends Component {
   state = {
     viewport: {
       center:
-        window.location.pathname.indexOf("tacoma") === -1
-          ? [-122.335167, 47.608013]
-          : [-122.522997, 47.3049119],
+        window.location.pathname.indexOf("tacoma") !== -1
+          ? [-122.522997, 47.3049119] :
+          this.props.history.action &&
+            this.props.history.action === "PUSH" &&
+            this.props.history.location &&
+            this.props.history.location.state &&
+            this.props.history.location.state.report
+            ?
+            [this.props.history.location.state.report.data.mapLng, this.props.history.location.state.report.data.mapLat]
+            : [-122.335167, 47.608013],
       zoom: [10],
     },
     popupInfo: null,
@@ -324,10 +332,16 @@ class MapView extends Component {
     } else {
       this.setState({
         viewport: {
-          center:
-            window.location.pathname.indexOf("tacoma") === -1
-              ? [-122.354291, 47.668733]
-              : [-122.522997, 47.3049119],
+          center: window.location.pathname.indexOf("tacoma") !== -1
+            ? [-122.522997, 47.3049119] :
+            this.props.history.action &&
+              this.props.history.action === "PUSH" &&
+              this.props.history.location &&
+              this.props.history.location.state &&
+              this.props.history.location.state.report
+              ?
+              [this.props.history.location.state.report.data.mapLng, this.props.history.location.state.report.data.mapLat]
+              : [-122.335167, 47.608013],
           zoom: [10],
         },
       });
@@ -441,20 +455,6 @@ class MapView extends Component {
   render() {
     const { classes, isMobile, filter, history } = this.props;
     const { reports, legend, viewport } = this.state;
-    const { action, location } = history;
-    let flyToPopup = false;
-    let popupCenter;
-    if (
-      action &&
-      action === "PUSH" &&
-      location &&
-      location.state &&
-      location.state.report
-    ) {
-      flyToPopup = true;
-      popupCenter = [location.state.report.data.mapLng, location.state.report.data.mapLat];
-      flyToPopup = false;
-    }
 
     return (
       <div className="mapContainer">
@@ -467,7 +467,7 @@ class MapView extends Component {
           <Map2
             style="mapbox://styles/mapbox/streets-v9"
             className="map"
-            center={flyToPopup ? popupCenter : viewport.center}
+            center={viewport.center}
             zoom={viewport.zoom}
             onMoveEnd={(e) => this.onMoveEnd(e)}
             ref={(e) => { this.map = e; }}
