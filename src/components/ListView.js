@@ -231,11 +231,21 @@ class ListView extends Component {
       localStorage.removeItem("report");
     }
 
+    const isInTacoma = await neighborhoodService.isInTacoma(report.mapLat, report.mapLng).then((place) => {
+      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+      if (JSON.stringify(place) === "{}") {
+        const point = turf.point([report.mapLng, report.mapLat]);
+        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
+      } else {
+        return place.toString().toLowerCase() === "tacoma";
+      }
+    });
+
     let report;
-    if (window.location.pathname.indexOf("tacoma") === -1) {
-      report = await getReport(id);
-    } else {
+    if (isInTacoma) {
       report = await getTacomaReport(id);
+    } else {
+      report = await getReport(id);
     }
 
     setReport({ report });
@@ -269,12 +279,23 @@ class ListView extends Component {
       localStorage.removeItem("report");
     }
 
+    const isInTacoma = await neighborhoodService.isInTacoma(report.mapLat, report.mapLng).then((place) => {
+      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+      if (JSON.stringify(place) === "{}") {
+        const point = turf.point([report.mapLng, report.mapLat]);
+        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
+      } else {
+        return place.toString().toLowerCase() === "tacoma";
+      }
+    });
+
     let report;
-    if (window.location.pathname.indexOf("tacoma") === -1) {
-      report = await getReport(id);
-    } else {
+    if (isInTacoma) {
       report = await getTacomaReport(id);
+    } else {
+      report = await getReport(id);
     }
+
 
     setReport(report);
     localStorage.setItem("report", JSON.stringify(report));
