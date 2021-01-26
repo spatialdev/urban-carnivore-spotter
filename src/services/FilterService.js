@@ -6,14 +6,14 @@ const MEDIUM_CONFIDENCE = "More than 75% confident";
 const allCarnivores = [
   "Black Bear",
   "Bobcat",
-  "Coyote",
   "Cougar/Mountain Lion",
-  "Raccoon",
+  "Coyote",
   "Opossum",
-  "River Otter",
+  "Raccoon",
   "Red Fox",
+  "River Otter",
   "Other",
-];
+].sort();
 const allMedia = ["Photos", "Video", "No Media"];
 const allTimes = [
   "Early Morning (12:00am-4:59am)",

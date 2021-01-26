@@ -183,6 +183,7 @@ const styles = {
     height: "40px",
     borderRadius: "24px",
     boxShadow: "0px 2px 10px 0px rgba(117,117,117,0.3)",
+    margin: '1.5em',
   },
   reportSightingText: {
     marginRight: "10px",
@@ -294,15 +295,17 @@ class MapView extends Component {
   };
 
   showLegend = () => {
-    return speciesColorMap.entrySeq().map(([key, value]) => (
-      <div key={key}>
-        <span style={{ background: value }} className="dot"></span>
-        <label key={key} className="label">
-          {" "}
-          {key}{" "}
-        </label>
-      </div>
-    ));
+    return speciesColorMap.entrySeq()
+      .sortBy(
+        (k, v) => k
+      ).map(([key, value]) => (
+        <div key={key}>
+          <span style={{ background: value }} className="dot"></span>
+          <label key={key} className="label">
+            {key}
+          </label>
+        </div>
+      ));
   };
 
   updateLocation = () => {
@@ -363,27 +366,27 @@ class MapView extends Component {
         {isLoadingReport ? (
           <CircularProgress size="1.5em" />
         ) : (
-          <List className={classes.listViewButton} />
-        )}
+            <List className={classes.listViewButton} />
+          )}
       </Fab>
     ) : (
-      <div className={classes.listViewDesktopWrapper}>
-        <Fab
-          variant="extended"
-          aria-label="Toggle"
-          className={classes.fab}
-          size="medium"
-          onClick={this.getListViewReports}
-        >
-          <div className={classes.buttonText}>List View</div>
-          {isLoadingReport ? (
-            <CircularProgress size="1.5em" />
-          ) : (
-            <List className={classes.extendedIcon} />
-          )}
-        </Fab>
-      </div>
-    );
+        <div className={classes.listViewDesktopWrapper}>
+          <Fab
+            variant="extended"
+            aria-label="Toggle"
+            className={classes.fab}
+            size="medium"
+            onClick={this.getListViewReports}
+          >
+            <div className={classes.buttonText}>List View</div>
+            {isLoadingReport ? (
+              <CircularProgress size="1.5em" />
+            ) : (
+                <List className={classes.extendedIcon} />
+              )}
+          </Fab>
+        </div>
+      );
   };
 
   getListViewReports = async () => {
@@ -416,19 +419,19 @@ class MapView extends Component {
         <img src={legendIcon} alt="Legend" />
       </Fab>
     ) : (
-      <div className={classes.legendDesktopContainer}>
-        <Fab
-          variant="extended"
-          className={classes.fab}
-          size="medium"
-          aria-label="Legend"
-          onClick={() => this.setState({ legend: true })}
-        >
-          <div className={classes.buttonText}>Legend</div>
-          <img src={legendIcon} alt="Legend" />
-        </Fab>
-      </div>
-    );
+        <div className={classes.legendDesktopContainer}>
+          <Fab
+            variant="extended"
+            className={classes.fab}
+            size="medium"
+            aria-label="Legend"
+            onClick={() => this.setState({ legend: true })}
+          >
+            <div className={classes.buttonText}>Legend</div>
+            <img src={legendIcon} alt="Legend" />
+          </Fab>
+        </div>
+      );
   };
 
   handlePopUpInfo = (report) => {
@@ -497,15 +500,15 @@ class MapView extends Component {
             >
               {reports
                 ? reports
-                    .filter((report) => dataMatchesFilter(report, filter))
-                    .map((report) => (
-                      <Feature
-                        key={report.id}
-                        coordinates={[report.data.mapLng, report.data.mapLat]}
-                        properties={report.data}
-                        onClick={() => this.handlePopUpInfo(report)}
-                      />
-                    ))
+                  .filter((report) => dataMatchesFilter(report, filter))
+                  .map((report) => (
+                    <Feature
+                      key={report.id}
+                      coordinates={[report.data.mapLng, report.data.mapLat]}
+                      properties={report.data}
+                      onClick={() => this.handlePopUpInfo(report)}
+                    />
+                  ))
                 : null}
             </Layer>
             <div className={classes.addReportWrapper}>

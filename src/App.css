@@ -508,7 +508,7 @@ Footer Styles
 
 .legend-open {
   display: block;
-  top: 24vh;
+  top: 27vh;
   right: 3%;
   position: fixed;
   height: auto;
@@ -524,6 +524,24 @@ Footer Styles
 @media (max-width: 768px) {
   .legend-open {
     right: 10px;
+  }
+}
+
+@media (min-height: 700px) {
+  .legend-open {
+    top: 24vh;
+  }
+}
+
+@media (min-height: 900px) {
+  .legend-open {
+    top: 20vh;
+  }
+}
+
+@media (min-height: 1100px) {
+  .legend-open {
+    top: 18vh;
   }
 }
 
@@ -569,6 +587,7 @@ li {
 
 .label {
   text-transform: capitalize;
+  margin: 0.5em;
 }
 
 .interactiveMap {
