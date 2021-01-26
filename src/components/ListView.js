@@ -14,7 +14,7 @@ import Fab from "@material-ui/core/Fab";
 import * as ReactGA from "react-ga";
 import { setReports, setReport } from "../store/actions";
 import { getReports, updateReports } from "../services/ReportsService";
-import { getReport } from "../services/ReportService";
+import { getReport, getTacomaReport } from "../services/ReportService";
 import NeighborhoodService from "../services/NeighborhoodService";
 const neighborhoodService = new NeighborhoodService();
 const TACOMA_LINE_FOR_BBOX = turf.lineString([
@@ -231,7 +231,13 @@ class ListView extends Component {
       localStorage.removeItem("report");
     }
 
-    const report = await getReport(id);
+    let report;
+    if (window.location.pathname.indexOf("tacoma") === -1) {
+      report = await getReport(id);
+    } else {
+      report = await getTacomaReport(id);
+    }
+
     setReport({ report });
     localStorage.setItem("report", JSON.stringify(report));
     this.showReportPage(report, id);
@@ -262,7 +268,14 @@ class ListView extends Component {
     if (cachedReport) {
       localStorage.removeItem("report");
     }
-    const report = await getReport(id);
+
+    let report;
+    if (window.location.pathname.indexOf("tacoma") === -1) {
+      report = await getReport(id);
+    } else {
+      report = await getTacomaReport(id);
+    }
+
     setReport(report);
     localStorage.setItem("report", JSON.stringify(report));
   };
