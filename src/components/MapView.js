@@ -443,6 +443,7 @@ class MapView extends Component {
     const { reports, legend, viewport } = this.state;
     const { action, location } = history;
     let flyToPopup = false;
+    let popupCenter;
     if (
       action &&
       action === "PUSH" &&
@@ -451,8 +452,8 @@ class MapView extends Component {
       location.state.report
     ) {
       flyToPopup = true;
+      popupCenter = [location.state.report.data.mapLng, location.state.report.data.mapLat];
     }
-    const popupCenter = [location.state.report.data.mapLng, location.state.report.data.mapLat];
 
     return (
       <div className="mapContainer">
