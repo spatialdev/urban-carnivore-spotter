@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as turf from "@turf/turf";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
@@ -10,7 +11,13 @@ import { getReports } from "../services/ReportsService";
 import dateIcon from "../assets/Calendar.svg";
 import locationIcon from "../assets/Location.svg";
 import ReactPlayer from "react-player";
-import CardMedia from "@material-ui/core/CardMedia";
+import NeighborhoodService from "../services/NeighborhoodService";
+const neighborhoodService = new NeighborhoodService();
+const TACOMA_LINE_FOR_BBOX = turf.lineString([
+  [-122.670442006814, 47.0600919913851],
+  [-122.320456134032, 47.3206338868513],
+]);
+const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
 
 const styles = {
   allContent: {
@@ -90,12 +97,19 @@ class PointTooltip extends Component {
     const { report, history } = this.props;
     const { localStorage } = window;
 
-    const isInTacoma =
-      report.data !== undefined && report.data.isTacoma !== undefined
-        ? report.data.isTacoma
-        : false;
+
+    const isInTacoma = await neighborhoodService.isInTacoma(report.data.mapLat, report.data.mapLng).then((place) => {
+      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+      if (JSON.stringify(place) === "{}") {
+        const point = turf.point([report.data.mapLng, report.data.mapLat]);
+        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
+      } else {
+        return place.toString().toLowerCase() === "tacoma";
+      }
+    });
+
     const path =
-      window.location.pathname.indexOf("tacoma") === -1
+      !isInTacoma
         ? "/reports"
         : "/tacoma/reports";
 
@@ -182,8 +196,8 @@ class PointTooltip extends Component {
             {isLoadingReport ? (
               <CircularProgress size="1.5em" />
             ) : (
-              <button className={classes.viewReportButton}>View Report</button>
-            )}
+                <button className={classes.viewReportButton}>View Report</button>
+              )}
           </div>
         </div>
       </div>

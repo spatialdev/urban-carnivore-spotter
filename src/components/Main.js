@@ -24,7 +24,6 @@ const Main = () => (
       />
       <Route exact path="/(list|tacoma/list)" render={() => <ListView />} />
       <Route exact path="/reports/:id" render={() => <ReportViewer />} />
-      <Route exact path="/tacoma/reports/:id" render={() => <ReportViewer />} />
       <Route
         exact
         path="/tacoma/reports/tacoma/:id"

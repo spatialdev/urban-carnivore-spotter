@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as turf from "@turf/turf";
 import { withRouter } from "react-router-dom";
 import ReactPlayer from "react-player";
 import { withStyles } from "@material-ui/core/styles";
@@ -13,8 +14,15 @@ import Placeholder from "../assets/placeholder.svg";
 import CardMedia from "@material-ui/core/CardMedia";
 import { dataMatchesFilter } from "../services/FilterService";
 import { setReports } from "../store/actions";
-import { getReport } from "../services/ReportService";
+import { getReport, getTacomaReport } from "../services/ReportService";
 import { getReports } from "../services/ReportsService";
+import NeighborhoodService from "../services/NeighborhoodService";
+const neighborhoodService = new NeighborhoodService();
+const TACOMA_LINE_FOR_BBOX = turf.lineString([
+  [-122.670442006814, 47.0600919913851],
+  [-122.320456134032, 47.3206338868513],
+]);
+const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
 
 const videoFormats = [".mov", ".mp4", ".webm", ".ogg", ".avi", ".wmv", ".mkv"];
 
@@ -68,7 +76,14 @@ class ReportViewer extends Component {
 
   componentDidMount = async () => {
     const id = this.props.match.params.id;
-    const currReport = await getReport(id);
+    const pathName = this.props.match.path;
+    let currReport;
+    if (!pathName.includes('tacoma')) {
+      currReport = await getReport(id);
+    } else {
+      currReport = await getTacomaReport(id);
+    }
+
     this.handleReports(currReport.data);
   };
 
@@ -168,32 +183,44 @@ class ReportViewer extends Component {
     return reports[0].id;
   };
 
-  handleNext = () => {
+  handleNext = async () => {
     const { history } = this.props;
     const { report, nextId } = this.state;
 
-    const isInTacoma =
-      report.data !== undefined && report.data.isTacoma !== undefined
-        ? report.data.isTacoma
-        : false;
+    const isInTacoma = await neighborhoodService.isInTacoma(report.mapLat, report.mapLng).then((place) => {
+      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+      if (JSON.stringify(place) === "{}") {
+        const point = turf.point([report.mapLng, report.mapLat]);
+        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
+      } else {
+        return place.toString().toLowerCase() === "tacoma";
+      }
+    });
+
     const path =
-      window.location.pathname.indexOf("tacoma") === -1
+      !isInTacoma
         ? "/reports"
         : "/tacoma/reports";
 
     history.push(isInTacoma ? `${path}/tacoma/${nextId}` : `${path}/${nextId}`);
   };
 
-  handlePrevious = () => {
+  handlePrevious = async () => {
     const { history } = this.props;
     const { report, prevId } = this.state;
 
-    const isInTacoma =
-      report.data !== undefined && report.data.isTacoma !== undefined
-        ? report.data.isTacoma
-        : false;
+    const isInTacoma = await neighborhoodService.isInTacoma(report.mapLat, report.mapLng).then((place) => {
+      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+      if (JSON.stringify(place) === "{}") {
+        const point = turf.point([report.mapLng, report.mapLat]);
+        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
+      } else {
+        return place.toString().toLowerCase() === "tacoma";
+      }
+    });
+
     const path =
-      window.location.pathname.indexOf("tacoma") === -1
+      !isInTacoma
         ? "/reports"
         : "/tacoma/reports";
 

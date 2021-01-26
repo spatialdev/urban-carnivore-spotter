@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as turf from "@turf/turf";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Pagination from "@material-ui/lab/Pagination";
@@ -16,6 +17,11 @@ import { getReports, updateReports } from "../services/ReportsService";
 import { getReport } from "../services/ReportService";
 import NeighborhoodService from "../services/NeighborhoodService";
 const neighborhoodService = new NeighborhoodService();
+const TACOMA_LINE_FOR_BBOX = turf.lineString([
+  [-122.670442006814, 47.0600919913851],
+  [-122.320456134032, 47.3206338868513],
+]);
+const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
 
 const styles = {
   mapViewButtonContainerMobile: {
@@ -196,17 +202,8 @@ class ListView extends Component {
     const start = pageNumber - 1;
     return reports && reports.length > 10
       ? reports
-          .slice(start * itemsPerPage, start * itemsPerPage + itemsPerPage)
-          .map((report) => {
-            return (
-              <ListCard
-                key={report.id}
-                currReport={report}
-                handleReport={this.handleReport}
-              />
-            );
-          })
-      : reports.map((report) => {
+        .slice(start * itemsPerPage, start * itemsPerPage + itemsPerPage)
+        .map((report) => {
           return (
             <ListCard
               key={report.id}
@@ -214,7 +211,16 @@ class ListView extends Component {
               handleReport={this.handleReport}
             />
           );
-        });
+        })
+      : reports.map((report) => {
+        return (
+          <ListCard
+            key={report.id}
+            currReport={report}
+            handleReport={this.handleReport}
+          />
+        );
+      });
   };
 
   handleReport = async (id) => {
@@ -231,15 +237,21 @@ class ListView extends Component {
     this.showReportPage(report, id);
   };
 
-  showReportPage = (report, id) => {
+  showReportPage = async (report, id) => {
     const { history } = this.props;
 
-    const isInTacoma =
-      report.data !== undefined && report.data.isTacoma !== undefined
-        ? report.data.isTacoma
-        : false;
+    const isInTacoma = await neighborhoodService.isInTacoma(report.data.mapLat, report.data.mapLng).then((place) => {
+      // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
+      if (JSON.stringify(place) === "{}") {
+        const point = turf.point([report.data.mapLng, report.data.mapLat]);
+        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
+      } else {
+        return place.toString().toLowerCase() === "tacoma";
+      }
+    });
+
     const path =
-      window.location.pathname.indexOf("tacoma") === -1
+      !isInTacoma
         ? "/reports"
         : "/tacoma/reports";
 
