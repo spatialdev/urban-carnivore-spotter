@@ -43,6 +43,10 @@ const styles = {
   collapsible: {
     textAlign: "left",
   },
+  filterWrapper: {
+    height: '250px',
+    overflow: 'auto',
+  },
   separator: {
     margin: "0 1em",
     borderColor: "rgba(242, 242, 242, 0.25)",
@@ -57,7 +61,6 @@ const styles = {
   timeFilters: {
     margin: "1.5em",
   },
-
   resizeButton: {
     width: "0.25em",
     height: "0.25em",
@@ -148,7 +151,7 @@ class DateTimeFilter extends React.Component {
           "Date/Time of Sighting",
           this.toggleShow("showTime"),
           showTime,
-          <>
+          <div className={classes.filterWrapper}>
             <div className={classes.dateFilters}>
               Date Filters:
               <FilterCheckboxes
@@ -187,7 +190,7 @@ class DateTimeFilter extends React.Component {
                 briefNumber={Object.keys(timeFilter).length - 1}
               />
             </div>
-          </>
+          </div>
         )}
         <hr className={classes.separator} />
       </>

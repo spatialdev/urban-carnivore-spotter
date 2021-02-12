@@ -33,11 +33,14 @@ const styles = {
   collapsible: {
     textAlign: "left",
   },
+  filterWrapper: {
+    height: '250px',
+    overflow: 'auto',
+  },
   separator: {
     margin: "0 1em",
     borderColor: "rgba(242, 242, 242, 0.25)",
   },
-
   resizeButton: {
     width: "0.25em",
     height: "0.25em",
@@ -109,12 +112,14 @@ class MediaFilter extends React.Component {
           "Media",
           this.toggleShow("showMedia"),
           showMedia,
-          <FilterCheckboxes
-            filter={mediaFilter}
-            allLabel="All Media"
-            updateValues={this.updateFilterSubsection("mediaFilter")}
-            briefNumber={Object.keys(mediaFilter).length - 1}
-          />
+          <div className={classes.filterWrapper}>
+            <FilterCheckboxes
+              filter={mediaFilter}
+              allLabel="All Media"
+              updateValues={this.updateFilterSubsection("mediaFilter")}
+              briefNumber={Object.keys(mediaFilter).length - 1}
+            />
+          </div>
         )}
         <hr className={classes.separator} />
       </>

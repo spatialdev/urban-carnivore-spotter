@@ -34,6 +34,10 @@ const styles = {
   collapsible: {
     textAlign: "left",
   },
+  filterWrapper: {
+    height: '250px',
+    overflow: 'auto',
+  },
   separator: {
     margin: "0 1em",
     borderColor: "rgba(242, 242, 242, 0.25)",
@@ -109,13 +113,15 @@ class CarnivoreFilter extends React.Component {
           "Type of Carnivore",
           this.toggleShow("showCarnivores"),
           showCarnivores,
-          <FilterCheckboxes
-            filter={carnivoreFilter}
-            allLabel="All Carnivores"
-            updateValues={this.updateFilterSubsection("carnivoreFilter")}
-            briefNumber={Object.keys(carnivoreFilter).length - 1}
-            keyColorFunction={getColorForSpecies}
-          />
+          <div className={classes.filterWrapper}>
+            <FilterCheckboxes
+              filter={carnivoreFilter}
+              allLabel="All Carnivores"
+              updateValues={this.updateFilterSubsection("carnivoreFilter")}
+              briefNumber={Object.keys(carnivoreFilter).length - 1}
+              keyColorFunction={getColorForSpecies}
+            />
+          </div>
         )}
         <hr className={classes.separator} />
       </>

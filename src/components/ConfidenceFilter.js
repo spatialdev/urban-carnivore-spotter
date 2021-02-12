@@ -40,6 +40,10 @@ const styles = {
   collapsible: {
     textAlign: "left",
   },
+  filterWrapper: {
+    height: '250px',
+    overflow: 'auto',
+  },
   resizeButton: {
     width: "0.25em",
     height: "0.25em",
@@ -121,27 +125,29 @@ class ConfidenceFilter extends React.Component {
           "Confidence of Sighting",
           this.toggleShow("showConfidence"),
           showConfidence,
-          <FormControl component="fieldset">
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={confidenceFilterActive}
-                    onChange={this.toggleConfidence}
-                    checkedIcon={
-                      <CheckBoxIntermediateIcon style={{ color: "#93C838" }} />
-                    }
-                    style={{ margin: "0px 0px 0px 8px" }}
-                  />
-                }
-                label={
-                  <Typography className={classes.formControlLabel}>
-                    "Only show high-confidence sightings"
+          <div className={classes.filterWrapper}>
+            <FormControl component="fieldset">
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={confidenceFilterActive}
+                      onChange={this.toggleConfidence}
+                      checkedIcon={
+                        <CheckBoxIntermediateIcon style={{ color: "#93C838" }} />
+                      }
+                      style={{ margin: "0px 0px 0px 8px" }}
+                    />
+                  }
+                  label={
+                    <Typography className={classes.formControlLabel}>
+                      "Only show high-confidence sightings"
                   </Typography>
-                }
-              />
-            </FormGroup>
-          </FormControl>
+                  }
+                />
+              </FormGroup>
+            </FormControl>
+          </div>
         )}
       </>
     );

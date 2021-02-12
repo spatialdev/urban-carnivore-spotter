@@ -33,6 +33,10 @@ const styles = {
   collapsible: {
     textAlign: "left",
   },
+  filterWrapper: {
+    height: '250px',
+    overflow: 'auto',
+  },
   separator: {
     margin: "0 1em",
     borderColor: "rgba(242, 242, 242, 0.25)",
@@ -124,7 +128,7 @@ class NeighborhoodFilter extends React.Component {
           "Neighborhood",
           this.toggleShow("showNeighborhoods"),
           showNeighborhoods,
-          <>
+          <div className={classes.filterWrapper}>
             <div className={classes.search}>
               <TextField
                 size="small"
@@ -155,7 +159,7 @@ class NeighborhoodFilter extends React.Component {
               updateValues={this.updateFilterSubsection("neighborhoodFilter")}
               briefNumber={briefNeighborhoodsCount}
             />
-          </>
+          </div>
         )}
         <hr className={classes.separator} />
       </>
