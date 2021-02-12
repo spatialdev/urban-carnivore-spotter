@@ -21,7 +21,7 @@ const allTimes = [
   "Afternoon (12:00pm-5:59pm)",
   "Evening (6:00pm-11:59pm)",
 ];
-const allDates = ["Past 2 Weeks", "Past 30 Days", "Date Range"];
+const allDates = ["Past 2 Weeks", "Past 30 Days", "Past Year", "Date Range"];
 
 const DATE_BOUNDS = [
   {
@@ -163,9 +163,15 @@ export const getInitialFilter = (allNeighborhoods) => {
   allTimes.forEach(
     (time, ind) => (defaultTimeFilter[time] = { order: ind + 1, value: true })
   );
-  const defaultDateFilter = { all: { order: 0, value: true } };
+  const defaultDateFilter = { all: { order: 0, value: false } };
   allDates.forEach(
-    (date, ind) => (defaultDateFilter[date] = { order: ind + 1, value: true })
+    (date, ind) => {
+      if (date === 'Past Year') {
+        return defaultDateFilter[date] = { order: ind + 1, value: true }
+      } else {
+        return defaultDateFilter[date] = { order: ind + 1, value: false }
+      }
+    }
   );
 
   return {
@@ -217,7 +223,8 @@ export const dataMatchesFilter = (report, filter) => {
         )) ||
         filter.dateFilter.all.value === true ||
         matchesPastNDays(filter, data.timestamp, 30, "Past 30 Days") ||
-        matchesPastNDays(filter, data.timestamp, 14, "Past 2 Weeks")) &&
+        matchesPastNDays(filter, data.timestamp, 14, "Past 2 Weeks") ||
+        matchesPastNDays(filter, data.timestamp, 365, "Past Year")) &&
       // ok with time
       (filter.timeFilter.all.value ||
         insideAnyActiveTimeBounds(parsedDate, filter)) &&

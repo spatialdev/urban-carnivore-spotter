@@ -83,7 +83,7 @@ class DateTimeFilter extends React.Component {
     super(props);
 
     this.state = {
-      showTime: false,
+      showTime: true,
       dateRangeFocused: null,
     };
   }

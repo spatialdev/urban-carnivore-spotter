@@ -31,6 +31,8 @@ let Map2 = null;
 if (supported({})) {
   Map2 = ReactMapboxGl({
     accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
+    minZoom: 7,
+    maxZoom: 15,
   });
 }
 
