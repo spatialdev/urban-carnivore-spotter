@@ -72,9 +72,9 @@ const dogSizes = [
 const vantagePoints = [
   "From Indoors",
   "Outdoors",
-  "Vehicle",
-  "Bicycle",
-  "Other Vehicle",
+  "From Vehicle",
+  "From Bicycle",
+  "From Other Vehicle",
   "Camera Footage",
 ];
 const leashOptions = ["Leashed", "Unleashed", "Both"];
@@ -125,11 +125,11 @@ const DIALOG_MODES = {
   MISSING_FIELD: "missing field",
   NOT_WA: "notWA",
 };
-const TACOMA_LINE_FOR_BBOX = turf.lineString([
+const TACOMA_LINE_FOR_BBOX = turf.lineString( [
   [-122.670442006814, 47.0600919913851],
   [-122.320456134032, 47.3206338868513],
-]);
-const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
+] );
+const TACOMA_BBOX = turf.bboxPolygon( turf.bbox( TACOMA_LINE_FOR_BBOX ) );
 
 const styles = {
   addReportFormWrapper: {
@@ -236,10 +236,10 @@ const styles = {
 class CustomDatePickerInput extends Component {
   render = () => (
     <input
-      onClick={this.props.onClick}
-      value={this.props.value}
+      onClick={ this.props.onClick }
+      value={ this.props.value }
       type="text"
-      readOnly={true}
+      readOnly={ true }
     />
   );
 }
@@ -249,11 +249,11 @@ class Form extends Component {
     species: "",
     timestamp: new Date(),
     mapLat:
-      window.location.pathname.indexOf("tacoma") === -1
+      window.location.pathname.indexOf( "tacoma" ) === -1
         ? 47.668733
         : 47.3049119,
     mapLng:
-      window.location.pathname.indexOf("tacoma") === -1
+      window.location.pathname.indexOf( "tacoma" ) === -1
         ? -122.354291
         : -122.522997,
     confidence: "",
@@ -299,65 +299,65 @@ class Form extends Component {
     isTacoma: false,
   };
 
-  constructor(props) {
-    super(props);
+  constructor ( props ) {
+    super( props );
     this.fileUploader = React.createRef();
   }
 
-  updateNeighborhood = (lat, lng) => {
-    neighborhoodService.getNeighborhoodFor(lat, lng).then((neighborhood) =>
-      this.setState((state) => {
+  updateNeighborhood = ( lat, lng ) => {
+    neighborhoodService.getNeighborhoodFor( lat, lng ).then( ( neighborhood ) =>
+      this.setState( ( state ) => {
         // If the map coordinates have changed, we don't want to update the neighborhood with outdated info!
-        if (state.mapLat === lat && state.mapLng === lng) {
+        if ( state.mapLat === lat && state.mapLng === lng ) {
           return { neighborhood };
         }
         return {};
-      })
+      } )
     );
   };
 
-  updatePlace = (lat, lng) => {
-    neighborhoodService.isInTacoma(lat, lng).then((place) => {
+  updatePlace = ( lat, lng ) => {
+    neighborhoodService.isInTacoma( lat, lng ).then( ( place ) => {
       // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
-      if (JSON.stringify(place) === "{}") {
-        const point = turf.point([lng, lat]);
-        this.setState({
-          isTacoma: turf.booleanPointInPolygon(point, TACOMA_BBOX),
-        });
+      if ( JSON.stringify( place ) === "{}" ) {
+        const point = turf.point( [lng, lat] );
+        this.setState( {
+          isTacoma: turf.booleanPointInPolygon( point, TACOMA_BBOX ),
+        } );
       } else {
-        this.setState({
+        this.setState( {
           isTacoma: place.toString().toLowerCase() === "tacoma",
-        });
+        } );
       }
-    });
+    } );
   };
 
   componentDidMount = () => {
-    ReactGA.pageview(window.location.pathname);
+    ReactGA.pageview( window.location.pathname );
     // The neighborhood is initialized to the empty string, but we want to have a neighborhood for our
     // initial location!
-    this.updateNeighborhood(this.state.mapLat, this.state.mapLng);
-    this.updatePlace(this.state.mapLat, this.state.mapLng);
+    this.updateNeighborhood( this.state.mapLat, this.state.mapLng );
+    this.updatePlace( this.state.mapLat, this.state.mapLng );
     // Request the user's geolocation and default to there
     // See https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API for more information
-    if (navigator.geolocation) {
+    if ( navigator.geolocation ) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.getMapCoordinates({
+        ( position ) => {
+          this.getMapCoordinates( {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
+          } );
         },
-        (err) => console.log(err)
+        ( err ) => console.log( err )
       );
     }
   };
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+  handleChange = ( event ) => {
+    this.setState( { [event.target.name]: event.target.value } );
   };
 
-  validateInWA = (lng, lat) => {
+  validateInWA = ( lng, lat ) => {
     const currLocationPoint = [lng, lat];
     const WAPolygon = turf.polygon(
       [
@@ -394,13 +394,13 @@ class Form extends Component {
       { name: "Washington State" }
     );
     // Returns a boolean if location is within WA boundaries
-    return turf.inside(currLocationPoint, WAPolygon);
+    return turf.inside( currLocationPoint, WAPolygon );
   };
 
-  getMapCoordinates = (dataFromMap) => {
-    this.setState({ mapLat: dataFromMap.lat, mapLng: dataFromMap.lng });
-    this.updateNeighborhood(dataFromMap.lat, dataFromMap.lng);
-    this.updatePlace(dataFromMap.lat, dataFromMap.lng);
+  getMapCoordinates = ( dataFromMap ) => {
+    this.setState( { mapLat: dataFromMap.lat, mapLng: dataFromMap.lng } );
+    this.updateNeighborhood( dataFromMap.lat, dataFromMap.lng );
+    this.updatePlace( dataFromMap.lat, dataFromMap.lng );
   };
 
   handleSubmit = () => {
@@ -436,167 +436,167 @@ class Form extends Component {
     } = this.state;
     delete report["media"];
     report.mediaPaths = [...audioPaths, ...videoPaths, ...imagePaths];
-    this.setState({ submitting: true });
+    this.setState( { submitting: true } );
     return axios
-      .post(addReportUrl, report)
-      .then((response) => {
-        this.setState({ submitting: false });
-        if (response.status === 200) {
-          this.setState({ dialogMode: DIALOG_MODES.THANKS }); // Open the submission received dialog
+      .post( addReportUrl, report )
+      .then( ( response ) => {
+        this.setState( { submitting: false } );
+        if ( response.status === 200 ) {
+          this.setState( { dialogMode: DIALOG_MODES.THANKS } ); // Open the submission received dialog
         } else {
-          this.setState({ dialogMode: DIALOG_MODES.ERROR });
+          this.setState( { dialogMode: DIALOG_MODES.ERROR } );
         }
-      })
-      .catch(() => {
-        this.setState({ submitting: false, dialogMode: DIALOG_MODES.ERROR });
-      });
+      } )
+      .catch( () => {
+        this.setState( { submitting: false, dialogMode: DIALOG_MODES.ERROR } );
+      } );
   };
 
-  handleUploadSuccess = (mediaType) => (files) => {
-    const pathsToUpdate = `${mediaType}Paths`;
-    this.setState({
+  handleUploadSuccess = ( mediaType ) => ( files ) => {
+    const pathsToUpdate = `${ mediaType }Paths`;
+    this.setState( {
       [pathsToUpdate]: files,
       media: null,
       spinnerActive: false,
-    });
+    } );
   };
 
-  handleTimestampChange = (timestamp) => {
-    this.setState({
-      timestamp: new Date(timestamp),
-    });
+  handleTimestampChange = ( timestamp ) => {
+    this.setState( {
+      timestamp: new Date( timestamp ),
+    } );
   };
 
-  setMedia = (dataFromChild, uploader) => {
+  setMedia = ( dataFromChild, uploader ) => {
     this.fileUploader = uploader;
-    this.setState({ media: dataFromChild });
+    this.setState( { media: dataFromChild } );
   };
 
   uploadMedia = () => {
     const { media } = this.state;
-    if (media) {
-      const totalSize = media.reduce((sum, file) => sum + file.size, 0);
-      if (totalSize >= MAX_FILE_SIZE) {
+    if ( media ) {
+      const totalSize = media.reduce( ( sum, file ) => sum + file.size, 0 );
+      if ( totalSize >= MAX_FILE_SIZE ) {
         // Remove files and ask user to upload smaller files
-        this.setState({ dialogMode: DIALOG_MODES.LARGE_FILES });
+        this.setState( { dialogMode: DIALOG_MODES.LARGE_FILES } );
       } else {
-        this.setState({ spinnerActive: true });
+        this.setState( { spinnerActive: true } );
         // Upload the files
-        media.forEach((file) => this.fileUploader.startUpload(file));
+        media.forEach( ( file ) => this.fileUploader.startUpload( file ) );
       }
     }
   };
 
-  handlePermissionResponse = (agree) => {
-    this.setState({ dialogMode: DIALOG_MODES.CLOSED });
-    if (agree) {
+  handlePermissionResponse = ( agree ) => {
+    this.setState( { dialogMode: DIALOG_MODES.CLOSED } );
+    if ( agree ) {
       this.uploadMedia();
     }
   };
 
   handleClose = () => {
     const { history, handleDrawerState, fromDrawer } = this.props;
-    this.setState({ dialogMode: DIALOG_MODES.CLOSED }, () => {
-      history.location.pathname.includes("tacoma")
-        ? history.push("/tacoma")
-        : history.push("/");
-      if (fromDrawer) {
-        handleDrawerState(false);
+    this.setState( { dialogMode: DIALOG_MODES.CLOSED }, () => {
+      history.location.pathname.includes( "tacoma" )
+        ? history.push( "/tacoma" )
+        : history.push( "/" );
+      if ( fromDrawer ) {
+        handleDrawerState( false );
       }
-    });
+    } );
   };
 
-  getCollapse = (classes, headerTitle, onClick, expand, child) => {
+  getCollapse = ( classes, headerTitle, onClick, expand, child ) => {
     return (
       <>
-        <div className={classes.expandHeader}>
-          <span className={classes.headerTitle}>{headerTitle}</span>
+        <div className={ classes.expandHeader }>
+          <span className={ classes.headerTitle }>{ headerTitle }</span>
           <Fab
-            className={classes.expandButton}
-            onClick={onClick}
+            className={ classes.expandButton }
+            onClick={ onClick }
             size="small"
-            disableRipple={true}
+            disableRipple={ true }
           >
-            {expand ? <RemoveIcon /> : <AddIcon />}
+            { expand ? <RemoveIcon /> : <AddIcon /> }
           </Fab>
         </div>
-        <Collapse in={expand} className={classes.collapsible}>
-          {child}
+        <Collapse in={ expand } className={ classes.collapsible }>
+          { child }
         </Collapse>
       </>
     );
   };
 
-  toggleShow = (groupName) => () => {
-    this.setState((state) => ({ ...state, [groupName]: !state[groupName] }));
+  toggleShow = ( groupName ) => () => {
+    this.setState( ( state ) => ( { ...state, [groupName]: !state[groupName] } ) );
   };
 
-  openCarousel = (index) => {
+  openCarousel = ( index ) => {
     const newIndex = index === speciesLst.length - 1 ? 0 : index;
-    this.setState({
+    this.setState( {
       showCarousel: true,
       carouselImageIndex: newIndex,
-    });
+    } );
   };
 
   closeCarousel = () => {
-    this.setState({
+    this.setState( {
       showCarousel: false,
       carouselImageIndex: 0,
-    });
+    } );
   };
 
-  getDialogFromMode = (mode) => {
-    switch (mode) {
+  getDialogFromMode = ( mode ) => {
+    switch ( mode ) {
       case DIALOG_MODES.CLOSED:
-        return <FormInfoDialog open={false} />;
+        return <FormInfoDialog open={ false } />;
       case DIALOG_MODES.ERROR:
         return (
           <FormInfoDialog
-            open={true}
-            onClose={this.handleClose}
-            message={ERROR_ON_SUBMISSION}
+            open={ true }
+            onClose={ this.handleClose }
+            message={ ERROR_ON_SUBMISSION }
           />
         );
       case DIALOG_MODES.LARGE_FILES:
         return (
           <FormInfoDialog
-            open={true}
-            onClose={() => this.setState({ dialogMode: DIALOG_MODES.CLOSED })}
-            message={FILES_TOO_LARGE}
+            open={ true }
+            onClose={ () => this.setState( { dialogMode: DIALOG_MODES.CLOSED } ) }
+            message={ FILES_TOO_LARGE }
           />
         );
       case DIALOG_MODES.PERMISSION:
         return (
           <FormInfoDialog
-            open={true}
-            onClose={() => this.setState({ dialogMode: DIALOG_MODES.CLOSED })}
+            open={ true }
+            onClose={ () => this.setState( { dialogMode: DIALOG_MODES.CLOSED } ) }
             message={
               "Is it ok if we store the images and audio that you've uploaded? If you say no, we will not be able to show your pictures to other users"
             }
-            noButton={{
-              onClick: () => this.handlePermissionResponse(false),
+            noButton={ {
+              onClick: () => this.handlePermissionResponse( false ),
               message: "No, don't use my media",
-            }}
-            yesButton={{
-              onClick: () => this.handlePermissionResponse(true),
+            } }
+            yesButton={ {
+              onClick: () => this.handlePermissionResponse( true ),
               message: "Yes, use my media",
-            }}
+            } }
           />
         );
       case DIALOG_MODES.THANKS:
         return (
           <FormInfoDialog
-            open={true}
-            onClose={this.handleClose}
-            message={THANKS_FOR_SUBMITTING}
+            open={ true }
+            onClose={ this.handleClose }
+            message={ THANKS_FOR_SUBMITTING }
           />
         );
       case DIALOG_MODES.MISSING_FIELD:
         return (
           <FormInfoDialog
-            open={true}
-            onClose={() => this.setState({ dialogMode: DIALOG_MODES.CLOSED })}
+            open={ true }
+            onClose={ () => this.setState( { dialogMode: DIALOG_MODES.CLOSED } ) }
             message={
               "Your report is missing some required fields! Please fill in all required fields and re-submit."
             }
@@ -617,14 +617,14 @@ class Form extends Component {
     }
   };
 
-  showInteractiveMap = (classes, neighborhood, mapLng, mapLat) => {
+  showInteractiveMap = ( classes, neighborhood, mapLng, mapLat ) => {
     return (
       <ScrollLock>
-        <div className={classes.interactiveMapContainer}>
+        <div className={ classes.interactiveMapContainer }>
           <p>Drag the map to mark your sighting</p>
-          <div className={classes.interactiveMapInnerContainer}>
+          <div className={ classes.interactiveMapInnerContainer }>
             <div
-              style={{
+              style={ {
                 backgroundColor: "#ff5200",
                 borderRadius: "50%",
                 width: "25px",
@@ -635,33 +635,33 @@ class Form extends Component {
                 right: 0,
                 margin: "0 auto",
                 zIndex: 10000,
-              }}
+              } }
             />
             <FormMap
-              passMapCoordinates={this.getMapCoordinates}
-              centerLng={mapLng}
-              centerLat={mapLat}
+              passMapCoordinates={ this.getMapCoordinates }
+              centerLng={ mapLng }
+              centerLat={ mapLat }
               className="interactiveMap"
             />
           </div>
-          {neighborhood ? (
-            <p style={{ alignText: "center" }}>{neighborhood}</p>
-          ) : null}
-          <div className={classes.doneButtonContainer}>
+          { neighborhood ? (
+            <p style={ { alignText: "center" } }>{ neighborhood }</p>
+          ) : null }
+          <div className={ classes.doneButtonContainer }>
             <Button
               size="small"
               color="primary"
               variant="contained"
-              onClick={() =>
-                this.setState({
+              onClick={ () =>
+                this.setState( {
                   editMode: true,
                   finalMap: true,
                   addMode: false,
-                })
+                } )
               }
             >
-              {" "}
-              DONE{" "}
+              { " " }
+              DONE{ " " }
             </Button>
           </div>
         </div>
@@ -669,29 +669,29 @@ class Form extends Component {
     );
   };
 
-  renderMap = (classes, isMobile, neighborhood, mapLng, mapLat) => {
+  renderMap = ( classes, isMobile, neighborhood, mapLng, mapLat ) => {
     return isMobile ? (
       <div className="formItem">
         <h4>Identify the location of your sighting</h4>
-        <div className={this.state.finalMap ? "" : "hiddenDiv"}>
+        <div className={ this.state.finalMap ? "" : "hiddenDiv" }>
           <StaticFormMap
-            passMapCoordinates={this.getMapCoordinates}
-            centerLng={mapLng}
-            centerLat={mapLat}
+            passMapCoordinates={ this.getMapCoordinates }
+            centerLng={ mapLng }
+            centerLat={ mapLat }
           />
-          <div className={classes.addButtonContainer}>
+          <div className={ classes.addButtonContainer }>
             <Button
               size="small"
               color="primary"
               variant="contained"
-              onClick={() => this.setState({ addMode: true })}
+              onClick={ () => this.setState( { addMode: true } ) }
             >
               EDIT LOCATION
             </Button>
           </div>
-          {neighborhood ? (
-            <p style={{ alignText: "center" }}>{neighborhood}</p>
-          ) : null}
+          { neighborhood ? (
+            <p style={ { alignText: "center" } }>{ neighborhood }</p>
+          ) : null }
         </div>
       </div>
     ) : (
@@ -699,14 +699,14 @@ class Form extends Component {
           <h4>Identify the location of your sighting</h4>
           <div
             className="constantHeightMapContainer"
-            style={{
+            style={ {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-            }}
+            } }
           >
             <div
-              style={{
+              style={ {
                 backgroundColor: "#ff5200",
                 borderRadius: "50%",
                 width: "25px",
@@ -716,15 +716,15 @@ class Form extends Component {
                 right: 0,
                 margin: "0 auto",
                 zIndex: 10000,
-              }}
+              } }
             />
             <FormMap
-              passMapCoordinates={this.getMapCoordinates}
-              centerLng={mapLng}
-              centerLat={mapLat}
+              passMapCoordinates={ this.getMapCoordinates }
+              centerLng={ mapLng }
+              centerLat={ mapLat }
             />
           </div>
-          {neighborhood && <p>{neighborhood}</p>}
+          {neighborhood && <p>{ neighborhood }</p> }
           {/* {!this.validateInWA(mapLng, mapLat) && (
             <div className={classes.notWA}>Not located in Washington State</div>
           )} */}
@@ -732,7 +732,7 @@ class Form extends Component {
       );
   };
 
-  render() {
+  render () {
     const {
       mapLat,
       mapLng,
@@ -776,136 +776,136 @@ class Form extends Component {
     const { classes, isMobile, history } = this.props;
 
     return (
-      <div className={classes.addReportFormWrapper}>
+      <div className={ classes.addReportFormWrapper }>
         {submitting && (
           <LoadingOverlay
-            active={submitting}
+            active={ submitting }
             spinner
             text="Submitting..."
-            className={classes.overlay}
+            className={ classes.overlay }
           />
-        )}
+        ) }
         {isMobile && (
-          <Fab aria-label="Add" className={classes.fab}>
+          <Fab aria-label="Add" className={ classes.fab }>
             <ClearIcon
-              style={{ color: "#FFFFFF" }}
-              onClick={() =>
-                history.location.pathname.includes("tacoma")
-                  ? history.push("/tacoma")
-                  : history.push("/")
+              style={ { color: "#FFFFFF" } }
+              onClick={ () =>
+                history.location.pathname.includes( "tacoma" )
+                  ? history.push( "/tacoma" )
+                  : history.push( "/" )
               }
             />
           </Fab>
-        )}
-        <h2 className={classes.reportCarnivoreTitle}>
+        ) }
+        <h2 className={ classes.reportCarnivoreTitle }>
           Report a carnivore sighting
         </h2>
         <ValidatorForm
-          onError={() =>
-            this.setState({ dialogMode: DIALOG_MODES.MISSING_FIELD })
+          onError={ () =>
+            this.setState( { dialogMode: DIALOG_MODES.MISSING_FIELD } )
           }
-          onSubmit={this.handleSubmit}
+          onSubmit={ this.handleSubmit }
           className="formWizardBody"
           autoComplete="off"
         >
-          {this.renderMap(classes, isMobile, neighborhood, mapLng, mapLat)}
+          { this.renderMap( classes, isMobile, neighborhood, mapLng, mapLat ) }
           <div className="formItem">
             <h4>When did you see the animal?</h4>
-            {/*See https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975 for more information*/}
+            {/*See https://github.com/Hacker0x01/react-datepicker/issues/942#issuecomment-485934975 for more information*/ }
             <DatePicker
-              selected={timestamp}
-              onChange={this.handleTimestampChange}
+              selected={ timestamp }
+              onChange={ this.handleTimestampChange }
               showTimeSelect
               timeFormat="HH:mm"
-              timeIntervals={15}
+              timeIntervals={ 15 }
               dateFormat="MMMM d, yyyy h:mm aa"
               timeCaption="time"
-              maxDate={new Date()}
-              customInput={<CustomDatePickerInput />}
+              maxDate={ new Date() }
+              customInput={ <CustomDatePickerInput /> }
             />
           </div>
           <div className="formItem">
             <Dialog
-              open={addMode}
-              onClose={() => this.setState({ addMode: false })}
+              open={ addMode }
+              onClose={ () => this.setState( { addMode: false } ) }
             >
               <DialogContent className="interactiveMapContainer">
-                {this.showInteractiveMap(classes, neighborhood, mapLng, mapLat)}
+                { this.showInteractiveMap( classes, neighborhood, mapLng, mapLat ) }
               </DialogContent>
             </Dialog>
           </div>
 
-          {/*Image*/}
+          {/*Image*/ }
           <div className="formItem">
             <h4>Upload pictures, videos or sound files</h4>
             <MediaUpload
-              uploadMedia={this.setMedia}
-              getMediaPaths={this.handleUploadSuccess}
-              setSpinner={(bool) => this.setState({ spinnerActive: bool })}
+              uploadMedia={ this.setMedia }
+              getMediaPaths={ this.handleUploadSuccess }
+              setSpinner={ ( bool ) => this.setState( { spinnerActive: bool } ) }
             />
             <MediaDisplay
-              filesOnDeck={media}
-              uploading={spinnerActive}
+              filesOnDeck={ media }
+              uploading={ spinnerActive }
               numUploadedFiles={
                 imagePaths.length + audioPaths.length + videoPaths.length
               }
-              removeFiles={() => this.setState({ media: null })}
+              removeFiles={ () => this.setState( { media: null } ) }
             />
-            {media && media.length > 0 ? (
+            { media && media.length > 0 ? (
               // Setting dialogMode to DIALOG_MODES.PERMISSION opens the permission dialog, where clicking "agree" actually calls the media upload function
               <Button
                 size="small"
                 color="secondary"
                 variant="contained"
-                onClick={() =>
-                  this.setState({ dialogMode: DIALOG_MODES.PERMISSION })
+                onClick={ () =>
+                  this.setState( { dialogMode: DIALOG_MODES.PERMISSION } )
                 }
               >
                 Confirm Upload
               </Button>
-            ) : null}
+            ) : null }
           </div>
 
           <div className="formItem">
             <h4>Which animal did you see?</h4>
-            <Dialog open={this.state.showCarousel} onClose={this.closeCarousel}>
+            <Dialog open={ this.state.showCarousel } onClose={ this.closeCarousel }>
               <DialogContent>
                 <Carousel
                   className={
                     isMobile ? classes.carouselMobile : classes.carouselDesktop
                   }
-                  useKeyboardArrows={true}
-                  selectedItem={this.state.carouselImageIndex}
-                  swipeable={true}
-                  showThumbs={false}
-                  showIndicators={false}
+                  useKeyboardArrows={ true }
+                  selectedItem={ this.state.carouselImageIndex }
+                  swipeable={ true }
+                  showThumbs={ false }
+                  showIndicators={ false }
                 >
-                  {getAllSpecies().map((type, idx) => {
-                    const data = getDataForSpecies(type);
+                  { getAllSpecies().map( ( type, idx ) => {
+                    const data = getDataForSpecies( type );
                     return (
                       <SpeciesCard
-                        key={idx}
-                        speciesName={data.name}
-                        latinName={data.latin}
-                        weight={data.weight}
-                        height={data.height}
-                        diet={data.diet}
-                        identTips={data.ident}
-                        largerThanLab={data.larger}
-                        imagePath={getImageBySpecies(data.shortname)}
+                        key={ idx }
+                        speciesName={ data.name }
+                        latinName={ data.latin }
+                        weight={ data.weight }
+                        height={ data.height }
+                        diet={ data.diet }
+                        identTips={ data.ident }
+                        largerThanLab={ data.larger }
+                        imagePath={ getImageBySpecies( data.shortname ) }
                       />
                     );
-                  })}
+                  } ) }
                 </Carousel>
               </DialogContent>
             </Dialog>
             <FormRadioButtons
-              species={speciesLst}
-              onChangeSelection={(species) => () => this.setState({ species })}
-              onClickInfo={(index) => () => this.openCarousel(index)}
-              validators={["required"]}
-              errorMessages={["This field is required"]}
-              value={species}
+              species={ speciesLst }
+              onChangeSelection={ ( species ) => () => this.setState( { species } ) }
+              onClickInfo={ ( index ) => () => this.openCarousel( index ) }
+              validators={ ["required"] }
+              errorMessages={ ["This field is required"] }
+              value={ species }
             />
           </div>
 
@@ -915,233 +915,233 @@ class Form extends Component {
               correctly?
             </h4>
             <FormSelect
-              selectedValue={confidence}
-              values={confidenceLevels}
-              handleChange={this.handleChange}
-              required={true}
-              label={"Confidence"}
-              id={"confidence"}
+              selectedValue={ confidence }
+              values={ confidenceLevels }
+              handleChange={ this.handleChange }
+              required={ true }
+              label={ "Confidence" }
+              id={ "confidence" }
             />
           </div>
 
           <div className="formItem">
             <h4>How many of the species did you see?</h4>
-            <div style={{ marginBottom: "15px" }}>
+            <div style={ { marginBottom: "15px" } }>
               <FormSelect
-                selectedValue={numberOfAdultSpecies}
-                values={counts.map((count) =>
+                selectedValue={ numberOfAdultSpecies }
+                values={ counts.map( ( count ) =>
                   count === 9 ? "9+" : count.toString()
-                )}
-                handleChange={this.handleChange}
-                required={true}
-                label={"Number of Adult"}
-                id={"numberOfAdultSpecies"}
+                ) }
+                handleChange={ this.handleChange }
+                required={ true }
+                label={ "Number of Adult" }
+                id={ "numberOfAdultSpecies" }
               />
             </div>
             <FormSelect
-              selectedValue={numberOfYoungSpecies}
-              values={counts.map((count) =>
+              selectedValue={ numberOfYoungSpecies }
+              values={ counts.map( ( count ) =>
                 count === 9 ? "9+" : count.toString()
-              )}
-              handleChange={this.handleChange}
-              required={true}
-              label={"Number of Young"}
-              id={"numberOfYoungSpecies"}
+              ) }
+              handleChange={ this.handleChange }
+              required={ true }
+              label={ "Number of Young" }
+              id={ "numberOfYoungSpecies" }
             />
           </div>
           <hr />
 
-          {/*Observer details*/}
+          {/*Observer details*/ }
           <div>
-            {/* Species Identification Tips */}
-            {this.getCollapse(
+            {/* Species Identification Tips */ }
+            { this.getCollapse(
               classes,
               "Observer Details (Optional)",
-              this.toggleShow("showObserverDetails"),
+              this.toggleShow( "showObserverDetails" ),
               showObserverDetails,
               <div>
                 <div className="formItem">
                   <h4>How many were in your group?</h4>
                   <FormSelect
-                    selectedValue={numberOfAdults}
-                    style={{ marginBottom: "15px" }}
-                    values={counts.map((count) =>
+                    selectedValue={ numberOfAdults }
+                    style={ { marginBottom: "15px" } }
+                    values={ counts.map( ( count ) =>
                       count === 9 ? "9+" : count.toString()
-                    )}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Number of Adults"}
-                    id={"numberOfAdults"}
+                    ) }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Number of Adults" }
+                    id={ "numberOfAdults" }
                   />
                   <h4>Children up to 9 years old</h4>
                   <FormSelect
-                    selectedValue={numberOfChildren}
-                    style={{ marginTop: "5px" }}
-                    values={counts.map((count) =>
+                    selectedValue={ numberOfChildren }
+                    style={ { marginTop: "5px" } }
+                    values={ counts.map( ( count ) =>
                       count === 9 ? "9+" : count.toString()
-                    )}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Number of Children"}
-                    id={"numberOfChildren"}
+                    ) }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Number of Children" }
+                    id={ "numberOfChildren" }
                   />
                 </div>
 
                 <div className="formItem">
                   <h4>How did you react?</h4>
                   <FormSelect
-                    selectedValue={reaction}
-                    values={reactions}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Reaction"}
-                    id={"reaction"}
+                    selectedValue={ reaction }
+                    values={ reactions }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Reaction" }
+                    id={ "reaction" }
                   />
-                  {reaction === "Other" ? (
+                  { reaction === "Other" ? (
                     <TextValidator
                       label="Describe (limit 80 char)"
                       multiline
                       rows="4"
-                      value={reactionDescription}
-                      inputProps={{
+                      value={ reactionDescription }
+                      inputProps={ {
                         name: "reactionDescription",
                         id: "reactionDescription",
                         maxLength: 80,
-                      }}
-                      onChange={this.handleChange}
+                      } }
+                      onChange={ this.handleChange }
                       margin="normal"
                       variant="outlined"
                     />
-                  ) : null}
+                  ) : null }
                 </div>
 
                 <div className="formItem">
                   <h4>Were there dog(s) present with you / your group?</h4>
                   <FormSelect
-                    selectedValue={numberOfDogs}
-                    style={{ marginBottom: "15px" }}
-                    values={counts}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Number of Dogs"}
-                    id={"numberOfDogs"}
+                    selectedValue={ numberOfDogs }
+                    style={ { marginBottom: "15px" } }
+                    values={ counts }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Number of Dogs" }
+                    id={ "numberOfDogs" }
                   />
-                  {numberOfDogs > 0 ? (
+                  { numberOfDogs > 0 ? (
                     <div>
                       <FormSelect
-                        selectedValue={dogSize}
-                        style={{ marginBottom: "15px" }}
-                        values={dogSizes}
-                        handleChange={this.handleChange}
-                        required={false}
-                        label={"Size of dog(s)"}
-                        id={"dogSize"}
+                        selectedValue={ dogSize }
+                        style={ { marginBottom: "15px" } }
+                        values={ dogSizes }
+                        handleChange={ this.handleChange }
+                        required={ false }
+                        label={ "Size of dog(s)" }
+                        id={ "dogSize" }
                       />
                       <FormSelect
-                        selectedValue={onLeash}
-                        values={leashOptions}
-                        handleChange={this.handleChange}
-                        required={false}
-                        label={"On Leash"}
-                        id={"onLeash"}
+                        selectedValue={ onLeash }
+                        values={ leashOptions }
+                        handleChange={ this.handleChange }
+                        required={ false }
+                        label={ "On Leash" }
+                        id={ "onLeash" }
                       />
                     </div>
-                  ) : null}
+                  ) : null }
                 </div>
 
                 <div className="formItem">
-                  <h4>Where did you observe the carnivore?</h4>
+                  <h4>Where did you observe the animal?</h4>
                   <FormSelect
-                    selectedValue={vantagePoint}
-                    values={vantagePoints}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Vantage Point"}
-                    id={"vantagePoint"}
+                    selectedValue={ vantagePoint }
+                    values={ vantagePoints }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Vantage Point" }
+                    id={ "vantagePoint" }
                   />
                 </div>
               </div>
-            )}
+            ) }
             <hr />
           </div>
           <br />
 
-          {/*Animal behavior*/}
+          {/*Animal behavior*/ }
           <div>
-            {/* Species Identification Tips */}
-            {this.getCollapse(
+            {/* Species Identification Tips */ }
+            { this.getCollapse(
               classes,
               "Animal Behavior (Optional)",
-              this.toggleShow("showAnimalBehavior"),
+              this.toggleShow( "showAnimalBehavior" ),
               showAnimalBehavior,
               <div>
                 <div className="formItem">
                   <h4>What was it doing?</h4>
                   <FormSelect
-                    selectedValue={animalBehavior}
-                    values={animalBehaviors}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Animal Behavior"}
-                    id={"animalBehavior"}
+                    selectedValue={ animalBehavior }
+                    values={ animalBehaviors }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Animal Behavior" }
+                    id={ "animalBehavior" }
                   />
-                  {animalBehavior === "Was eating" ? (
+                  { animalBehavior === "Was eating" ? (
                     <TextValidator
                       label="What it was eating (if observed):"
                       multiline
-                      style={{ minWidth: "300px" }}
+                      style={ { minWidth: "300px" } }
                       rows="4"
-                      value={animalEating}
-                      inputProps={{
+                      value={ animalEating }
+                      inputProps={ {
                         name: "animalEating",
                         id: "animalEating",
                         maxLength: 80,
-                      }}
-                      onChange={this.handleChange}
+                      } }
+                      onChange={ this.handleChange }
                       margin="normal"
                       variant="outlined"
                     />
-                  ) : null}
+                  ) : null }
                 </div>
 
                 <div className="formItem">
                   <h4>Did it vocalize?</h4>
                   <FormSelect
-                    selectedValue={vocalization}
-                    values={vocalizations}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Vocalization"}
-                    id={"vocalization"}
+                    selectedValue={ vocalization }
+                    values={ vocalizations }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Vocalization" }
+                    id={ "vocalization" }
                   />
-                  {vocalization === "Other" ? (
+                  { vocalization === "Other" ? (
                     <TextValidator
                       label="Describe (limit 80 char)"
                       multiline
                       required
                       rows="4"
-                      value={vocalizationDesc}
-                      inputProps={{
+                      value={ vocalizationDesc }
+                      inputProps={ {
                         name: "vocalizationDesc",
                         id: "vocalizationDesc",
                         maxLength: 80,
-                      }}
-                      onChange={this.handleChange}
+                      } }
+                      onChange={ this.handleChange }
                       margin="normal"
                       variant="outlined"
                     />
-                  ) : null}
+                  ) : null }
                 </div>
 
                 <div className="formItem" id="carnivoreResponse">
                   <h4>How did it react?</h4>
                   <FormSelect
-                    selectedValue={carnivoreResponse}
-                    values={carnivoreResponses}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Carnivore Response"}
-                    id={"carnivoreResponse"}
+                    selectedValue={ carnivoreResponse }
+                    values={ carnivoreResponses }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Carnivore Response" }
+                    id={ "carnivoreResponse" }
                   />
                 </div>
                 <div className="formItem" id="carnivoreConflict">
@@ -1150,95 +1150,95 @@ class Form extends Component {
                     or other items?
                   </h4>
                   <FormSelect
-                    selectedValue={carnivoreConflict}
-                    values={conflictOptions}
-                    handleChange={this.handleChange}
-                    required={false}
-                    label={"Carnivore Conflict"}
-                    id={"carnivoreConflict"}
+                    selectedValue={ carnivoreConflict }
+                    values={ conflictOptions }
+                    handleChange={ this.handleChange }
+                    required={ false }
+                    label={ "Carnivore Conflict" }
+                    id={ "carnivoreConflict" }
                   />
-                  {conflictOptions.indexOf(carnivoreConflict) === 0 ||
-                    conflictOptions.indexOf(carnivoreConflict) === 2 ? (
+                  { conflictOptions.indexOf( carnivoreConflict ) === 0 ||
+                    conflictOptions.indexOf( carnivoreConflict ) === 2 ? (
                       <TextValidator
                         label="Describe (limit 80 char)"
                         multiline
-                        style={{ minWidth: "300px" }}
+                        style={ { minWidth: "300px" } }
                         rows="4"
-                        value={conflictDesc}
-                        inputProps={{
+                        value={ conflictDesc }
+                        inputProps={ {
                           name: "conflictDesc",
                           id: "conflictDesc",
                           maxLength: 80,
-                        }}
-                        onChange={this.handleChange}
+                        } }
+                        onChange={ this.handleChange }
                         margin="normal"
                         variant="outlined"
                       />
-                    ) : null}
+                    ) : null }
                 </div>
               </div>
-            )}
+            ) }
             <hr />
           </div>
           <br />
 
-          {/*Contact*/}
+          {/*Contact*/ }
           <div>
-            {/* Species Identification Tips */}
-            {this.getCollapse(
+            {/* Species Identification Tips */ }
+            { this.getCollapse(
               classes,
               "Contact Information (Optional)",
-              this.toggleShow("showContactInformation"),
+              this.toggleShow( "showContactInformation" ),
               showContactInformation,
               <div>
                 <div className="formItem">
                   <p>
-                    {" "}
+                    { " " }
                     This information will not be shared and will be available to
                     project coordinators only.
                   </p>
                   <div>
                     <TextValidator
-                      value={contactName}
-                      style={{ minWidth: "300px", marginBottom: "15px" }}
+                      value={ contactName }
+                      style={ { minWidth: "300px", marginBottom: "15px" } }
                       variant="outlined"
                       label="Name"
-                      onChange={this.handleChange}
-                      inputProps={{
+                      onChange={ this.handleChange }
+                      inputProps={ {
                         name: "contactName",
                         id: "contactName",
-                      }}
+                      } }
                     ></TextValidator>
                   </div>
                   <div>
                     <TextValidator
-                      value={contactEmail}
+                      value={ contactEmail }
                       variant="outlined"
                       label="Email"
-                      style={{ minWidth: "300px", marginBottom: "15px" }}
-                      onChange={this.handleChange}
-                      validators={["isEmail"]}
-                      errorMessages={["Email is not valid"]}
-                      inputProps={{
+                      style={ { minWidth: "300px", marginBottom: "15px" } }
+                      onChange={ this.handleChange }
+                      validators={ ["isEmail"] }
+                      errorMessages={ ["Email is not valid"] }
+                      inputProps={ {
                         name: "contactEmail",
                         id: "contactEmail",
-                      }}
+                      } }
                     ></TextValidator>
                   </div>
                   <TextValidator
-                    value={contactPhone}
+                    value={ contactPhone }
                     variant="outlined"
                     label="Phone Number"
-                    style={{ minWidth: "300px" }}
-                    onChange={this.handleChange}
-                    inputProps={{
+                    style={ { minWidth: "300px" } }
+                    onChange={ this.handleChange }
+                    inputProps={ {
                       name: "contactPhone",
                       id: "contactPhone",
-                    }}
+                    } }
                   ></TextValidator>
                 </div>
               </div>
-            )}
+            ) }
             <hr />
           </div>
           <br />
@@ -1246,29 +1246,29 @@ class Form extends Component {
           <div className="formItem">
             <h4>Comments (Optional)</h4>
             <TextValidator
-              value={generalComments}
-              style={{ minWidth: "300px" }}
+              value={ generalComments }
+              style={ { minWidth: "300px" } }
               variant="outlined"
               label="General Comments"
-              onChange={this.handleChange}
-              inputProps={{
+              onChange={ this.handleChange }
+              inputProps={ {
                 name: "generalComments",
                 id: "generalComments",
-              }}
+              } }
             ></TextValidator>
           </div>
           <Button variant="contained" type="submit" color="primary">
             Submit
           </Button>
         </ValidatorForm>
-        {this.getDialogFromMode(dialogMode)}
+        {this.getDialogFromMode( dialogMode ) }
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ( state ) => {
   return { isMobile: state.isMobile };
 };
 
-export default withRouter(withStyles(styles)(connect(mapStateToProps)(Form)));
+export default withRouter( withStyles( styles )( connect( mapStateToProps )( Form ) ) );
