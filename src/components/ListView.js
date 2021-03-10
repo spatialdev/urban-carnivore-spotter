@@ -142,6 +142,8 @@ class ListView extends Component {
     if ( cachedReports ) {
       const parsedReports = JSON.parse( cachedReports );
       this.setState( { reports: parsedReports } );
+    } else if ( this.props.reports && this.props.reports.length > 0 ) {
+      this.setState( { reports: this.props.reports } );
     } else {
       const reports = await getReports();
       setReports( reports );
