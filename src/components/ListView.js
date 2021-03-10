@@ -13,15 +13,15 @@ import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import * as ReactGA from "react-ga";
 import { setReports, setReport } from "../store/actions";
-import { getReports, updateReports } from "../services/ReportsService";
+import { getReports, updateReports, getPaginatedReports } from "../services/ReportsService";
 import { getReport, getTacomaReport } from "../services/ReportService";
 import NeighborhoodService from "../services/NeighborhoodService";
 const neighborhoodService = new NeighborhoodService();
-const TACOMA_LINE_FOR_BBOX = turf.lineString([
+const TACOMA_LINE_FOR_BBOX = turf.lineString( [
   [-122.670442006814, 47.0600919913851],
   [-122.320456134032, 47.3206338868513],
-]);
-const TACOMA_BBOX = turf.bboxPolygon(turf.bbox(TACOMA_LINE_FOR_BBOX));
+] );
+const TACOMA_BBOX = turf.bboxPolygon( turf.bbox( TACOMA_LINE_FOR_BBOX ) );
 
 const styles = {
   mapViewButtonContainerMobile: {
@@ -132,18 +132,21 @@ class ListView extends Component {
   };
 
   componentDidMount = async () => {
-    ReactGA.pageview(window.location.pathname);
+    const paginated = await getPaginatedReports( this.state.pageNumber );
+    console.log( 'PAGINATED IN FRONT', paginated );
+
+    ReactGA.pageview( window.location.pathname );
     const { localStorage } = window;
 
-    const cachedReports = localStorage.getItem("reports");
-    if (cachedReports) {
-      const parsedReports = JSON.parse(cachedReports);
-      this.setState({ reports: parsedReports });
+    const cachedReports = localStorage.getItem( "reports" );
+    if ( cachedReports ) {
+      const parsedReports = JSON.parse( cachedReports );
+      this.setState( { reports: parsedReports } );
     } else {
       const reports = await getReports();
-      setReports(reports);
-      this.setState({ reports });
-      localStorage.setItem("reports", JSON.stringify(reports));
+      setReports( reports );
+      this.setState( { reports } );
+      localStorage.setItem( "reports", JSON.stringify( reports ) );
     }
 
     // Temporary: updates all reports' neighborhoods in DB
@@ -168,114 +171,114 @@ class ListView extends Component {
     //   }
     // });
 
-    const cachedPageNum = localStorage.getItem("lastPageNum");
-    if (cachedPageNum) {
-      this.setState({ pageNumber: cachedPageNum });
+    const cachedPageNum = localStorage.getItem( "lastPageNum" );
+    if ( cachedPageNum ) {
+      this.setState( { pageNumber: cachedPageNum } );
     }
   };
 
-  handlePageNumber = (e, page) => {
+  handlePageNumber = ( e, page ) => {
     const { localStorage } = window;
-    this.setState({ pageNumber: page });
+    this.setState( { pageNumber: page } );
 
-    const cachedPageNum = localStorage.getItem("lastPageNum");
-    if (cachedPageNum) {
-      localStorage.removeItem("lastPageNum");
-      localStorage.setItem("lastPageNum", page);
+    const cachedPageNum = localStorage.getItem( "lastPageNum" );
+    if ( cachedPageNum ) {
+      localStorage.removeItem( "lastPageNum" );
+      localStorage.setItem( "lastPageNum", page );
     } else {
-      localStorage.setItem("lastPageNum", page);
+      localStorage.setItem( "lastPageNum", page );
     }
   };
 
-  filterReports = (reports) => {
+  filterReports = ( reports ) => {
     const { filter } = this.props;
     return reports
-      .filter((report) => dataMatchesFilter(report, filter))
+      .filter( ( report ) => dataMatchesFilter( report, filter ) )
       .sort(
-        (one, two) =>
-          Date.parse(two.data.timestamp) - Date.parse(one.data.timestamp)
+        ( one, two ) =>
+          Date.parse( two.data.timestamp ) - Date.parse( one.data.timestamp )
       );
   };
 
-  renderReportsPerPage = (reports) => {
+  renderReportsPerPage = ( reports ) => {
     const { pageNumber, itemsPerPage } = this.state;
     const start = pageNumber - 1;
     return reports && reports.length > 10
       ? reports
-        .slice(start * itemsPerPage, start * itemsPerPage + itemsPerPage)
-        .map((report) => {
+        .slice( start * itemsPerPage, start * itemsPerPage + itemsPerPage )
+        .map( ( report ) => {
           return (
             <ListCard
-              key={report.id}
-              currReport={report}
-              handleReport={this.handleReport}
+              key={ report.id }
+              currReport={ report }
+              handleReport={ this.handleReport }
             />
           );
-        })
-      : reports.map((report) => {
+        } )
+      : reports.map( ( report ) => {
         return (
           <ListCard
-            key={report.id}
-            currReport={report}
-            handleReport={this.handleReport}
+            key={ report.id }
+            currReport={ report }
+            handleReport={ this.handleReport }
           />
         );
-      });
+      } );
   };
 
-  handleReport = async (id) => {
-    const tacomaReport = await getTacomaReport(id);
-    const report = await getReport(id);
+  handleReport = async ( id ) => {
+    const tacomaReport = await getTacomaReport( id );
+    const report = await getReport( id );
 
-    if (Object.keys(tacomaReport).length > 0) {
-      setReport({ tacomaReport });
-      this.showReportPage(tacomaReport, id);
+    if ( Object.keys( tacomaReport ).length > 0 ) {
+      setReport( { tacomaReport } );
+      this.showReportPage( tacomaReport, id );
     } else {
-      setReport({ report });
-      this.showReportPage(report, id);
+      setReport( { report } );
+      this.showReportPage( report, id );
     }
   };
 
-  showReportPage = async (report, id) => {
+  showReportPage = async ( report, id ) => {
     const { history } = this.props;
 
-    const isInTacoma = await neighborhoodService.isInTacoma(report.data.mapLat, report.data.mapLng).then((place) => {
+    const isInTacoma = await neighborhoodService.isInTacoma( report.data.mapLat, report.data.mapLng ).then( ( place ) => {
       // If place from neighborhoodService comes back as empty, check if the point lies within the TACOMA_BBOX
-      if (JSON.stringify(place) === "{}") {
-        const point = turf.point([report.data.mapLng, report.data.mapLat]);
-        return turf.booleanPointInPolygon(point, TACOMA_BBOX);
+      if ( JSON.stringify( place ) === "{}" ) {
+        const point = turf.point( [report.data.mapLng, report.data.mapLat] );
+        return turf.booleanPointInPolygon( point, TACOMA_BBOX );
       } else {
         return place.toString().toLowerCase() === "tacoma";
       }
-    });
+    } );
 
     const path = isInTacoma ? "/tacoma/reports" : "/reports";
-    history.push(isInTacoma ? `${path}/tacoma/${id}` : `${path}/${id}`);
+    history.push( isInTacoma ? `${ path }/tacoma/${ id }` : `${ path }/${ id }` );
   };
 
-  render() {
+  render () {
     const { reports, pageNumber, itemsPerPage } = this.state;
     const { isMobile, history, classes } = this.props;
 
-    if (!reports) {
+    if ( !reports ) {
       return <CircularProgress />;
     }
-    const filteredReports = this.filterReports(reports);
+    const filteredReports = this.filterReports( reports );
 
     return (
       <div className="backgroundCardContainer">
         {isMobile ? null : (
-          <div className={classes.filterContainer}>
+          <div className={ classes.filterContainer }>
             <FilterDrawer />
           </div>
-        )}
+        ) }
         <div className="cardContainer">
-          {this.renderReportsPerPage(filteredReports)}
+          { this.renderReportsPerPage( filteredReports ) }
           <button
-            onClick={() =>
-              history.location.pathname.indexOf("tacoma") === -1
-                ? history.push("/")
-                : history.push("/tacoma")
+            onClick={ () =>
+              history.location.pathname.indexOf( "tacoma" ) === -1
+                ? history.push( "/" )
+                : history.push( "/tacoma" )
             }
             className={
               isMobile
@@ -283,20 +286,20 @@ class ListView extends Component {
                 : classes.mapViewButtonContainerDesktop
             }
           >
-            {!isMobile && <div className={classes.mapViewText}>Map View</div>}
+            { !isMobile && <div className={ classes.mapViewText }>Map View</div> }
             <img
-              className={classes.mapViewIcon}
-              src={mapViewIcon}
+              className={ classes.mapViewIcon }
+              src={ mapViewIcon }
               alt="Map View"
             />
           </button>
         </div>
         <Pagination
-          classes={{ ul: classes.paginator }}
+          classes={ { ul: classes.paginator } }
           color="primary"
-          onChange={this.handlePageNumber}
-          count={Math.floor(filteredReports.length / itemsPerPage)}
-          page={Number(pageNumber)}
+          onChange={ this.handlePageNumber }
+          count={ Math.floor( filteredReports.length / itemsPerPage ) }
+          page={ Number( pageNumber ) }
           showFirstButton
           showLastButton
         />
@@ -305,7 +308,7 @@ class ListView extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = ( state ) => {
   return {
     isMobile: state.isMobile,
     filter: state.filter,
@@ -313,5 +316,5 @@ const mapStateToProps = (state) => {
   };
 };
 export default withRouter(
-  connect(mapStateToProps)(withStyles(styles)(ListView))
+  connect( mapStateToProps )( withStyles( styles )( ListView ) )
 );
