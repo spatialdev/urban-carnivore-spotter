@@ -274,36 +274,38 @@ exports.getReports = functions.https.onRequest( ( req, res ) => {
   );
 } );
 
-exports.getPaginatedReports = functions.https.onRequest( ( req, res ) => {
-  return cors(
-    req,
-    res,
-    () => {
-      if ( req.method !== "GET" ) {
-        return res.status( 401 ).json( {
-          message: "Not Allowed",
-        } );
-      }
-      return database
-        .collection( REPORTS )
-        .limit( /*req.query.pageNum*/ 10 )
-        .get()
-        .then( ( reports ) => {
-          console.log( 'reports results', reports );
-          res.status( 200 ).send( reports );
-        } )
-        .catch( ( err ) => {
-          console.log( 'err', err );
-          res.status( 500 ).send( `Error getting documents: ${ err }` );
-        } );
-    },
-    ( error ) => {
-      res.status( error.code ).json( {
-        message: `Error getting documents: ${ error.message }`,
-      } );
-    }
-  );
-} );
+// exports.getPaginatedReports = functions.https.onRequest( ( req, res ) => {
+//   return cors(
+//     req,
+//     res,
+//     () => {
+//       if ( req.method !== "GET" ) {
+//         return res.status( 401 ).json( {
+//           message: "Not Allowed",
+//         } );
+//       }
+//       return database
+//         .collection( REPORTS )
+//         .limit( /*req.query.pageNum*/ 10 )
+//         .get()
+//         .then( ( reports ) => {
+//           console.log( 'reports results', reports );
+
+//           res.status( 200 ).send( reports );
+//           return reports;
+//         } )
+//         .catch( ( err ) => {
+//           console.log( 'err', err );
+//           res.status( 500 ).send( `Error getting documents: ${ err }` );
+//         } );
+//     },
+//     ( error ) => {
+//       res.status( error.code ).json( {
+//         message: `Error getting documents: ${ error.message }`,
+//       } );
+//     }
+//   );
+// } );
 
 
 exports.getNeighborhoods = functions.https.onRequest( ( req, res ) => {

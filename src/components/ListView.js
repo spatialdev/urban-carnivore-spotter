@@ -132,8 +132,8 @@ class ListView extends Component {
   };
 
   componentDidMount = async () => {
-    const paginated = await getPaginatedReports( this.state.pageNumber );
-    console.log( 'PAGINATED IN FRONT', paginated );
+    // const paginated = await getPaginatedReports( this.state.pageNumber );
+    // console.log( 'PAGINATED IN FRONT', paginated );
 
     ReactGA.pageview( window.location.pathname );
     const { localStorage } = window;
