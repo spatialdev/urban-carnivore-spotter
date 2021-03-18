@@ -27,6 +27,10 @@ const styles = {
   headerTitle: {
     alignText: "left",
   },
+  filterWrapper: {
+    height: '250px',
+    overflow: 'auto',
+  },
   collapsible: {
     textAlign: "left",
   },
@@ -76,7 +80,9 @@ class Collapsible extends React.Component {
           </ResizableIconButton>
         </div>
         <Collapse in={ expand } className={ classes.collapsible }>
-          { children }
+          <div className={ classes.filterWrapper }>
+            { children }
+          </div>
         </Collapse>
         <hr className={ classes.separator } />
       </>
