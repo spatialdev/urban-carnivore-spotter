@@ -499,3 +499,52 @@ exports.weeklyDigestTacoma = functions.pubsub
         return sendWeeklyDigestEmail( snapshot.docs );
       } );
   } );
+
+// pulls all data
+exports.dataDump = functions.https.onRequest((req, res) => {
+  return cors(
+    req,
+    res,
+    () => {
+      if (req.method !== "GET") {
+        return res.status(404).json({
+          message: `Not Allowed`,
+        });
+      }
+      let reports = database.collection(REPORTS);
+      let reports_tacoma = database.collection(REPORTS_TACOMA);
+      let querySnapshotPromise = buildQuery(req.query, reports).get();
+      let querySnapshotPromiseTacoma = buildQuery(
+        req.query,
+        reports_tacoma
+      ).get();
+      return Promise.all([querySnapshotPromiseTacoma, querySnapshotPromise])
+        .then((values) => {
+          let items = [];
+          values.forEach((snapshot) => {
+            if (!snapshot.empty) {
+              snapshot.forEach((doc) => {
+                const all = doc.data();
+                items.push({
+                  id: doc.id,
+                  data: filterReports(doc),
+                  ...all,
+                });
+              });
+            }
+          });
+          return items.length === 0
+            ? res.status(200).send("No data!")
+            : res.status(200).send(items);
+        })
+        .catch((err) => {
+          res.status(500).send(`Error getting data dump: ${err}`);
+        });
+    },
+    (error) => {
+      res.status(error.code).json({
+        message: `Something went wrong. ${error.message}`,
+      });
+    }
+  );
+});
