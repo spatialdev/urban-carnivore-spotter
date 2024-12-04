@@ -9,7 +9,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@turf/turf": "^5.1.6",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "browser-image-compression": "^1.0.6",
     "cors": "^2.8.5",
