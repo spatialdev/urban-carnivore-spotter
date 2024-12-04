@@ -13,7 +13,7 @@
     "@turf/turf": "^5.1.6",
     "cors": "^2.8.5",
     "firebase": "^5.10.1",
-    "firebase-admin": "^8.13.0",
+    "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.7.0",
     "moment": "^2.24.0",
     "nodemailer": "^6.2.1",
